@@ -1,0 +1,75 @@
+\documentclass[]{scrartcl}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{
+	a4paper,
+	total={170mm,257mm},
+	left=20mm,
+	top=20mm,
+}
+
+
+%opening
+\title{SDD -Hearts Low Level Design}
+\author{Brandon Smith, Nieka Gutenberger, Joseph Coppin, Ryan Frazier, Trevor Jewkes}
+
+\begin{document}
+
+\maketitle
+
+\centerline{\includegraphics{Hearts_Class_diagram.png}}
+\centerline{Hearts Low Level Design Diagram}
+
+\section{Hearts Class}
+
+\subsection{Deck deck}
+	Object deck which holds an array of 52 cards.
+\subsection{Card[][] history}
+	Array holds previous cards in play, allows client to view history.
+\subsection{int turn}
+	Variable to hold turn number for use in game logic.
+\subsection{int round}
+	Variable to hold round number for use in game logic.
+\subsection{void startRound()}
+	Start round will first update each client with their hands and then ask which cards need to be passed, it then will call a private function take turn.  
+\subsection{void deal()}
+	This function gives each player the appropriate cards at the beginning of each game or round.
+\subsection{void updateScore()}
+	This function updates the score after each player goes (or after each round depending on specific game)
+\subsection{void whoseTurn()}
+	This function keeps track of which player is next to play.
+\subsection{void endGame()}
+	This funcion allows the client to exit or play an additional game.
+
+\section{Scoreboard Class}
+
+\subsection{string[] names}
+	String of player name.
+\subsection{string[] teams}
+	String of team player is on.
+\subsection{int bids}
+	Int of player bid.
+\subsection{int scores}
+	Int of player score.
+\subsection{void getInfo()}
+	This function calculates and updates information needed for displaying score for player.
+
+\section{DeckClass}
+
+\subsection{Card[] cards}
+	This is an array (of size 52) of card objects to be used in a game.
+\subsection{void shuffle()}
+	This function changes the id values to different array elements to randomize a deck to be played in a game.
+\subsection{void getDeck()}
+	This allows the game logic to pull the information of the Deck class and use it for a game.
+\section{Card Class}
+
+\subsection{int id}
+	This variable represents and corresponds to a specific card in a standard playing deck.
+\subsection{enum suite}
+	The card object will be one of four suites, enumerated to represent hearts, diamonds, spades, and clubs.
+\subsection{bool discarded}
+	This indicates whether a card has been discarded or played in a game.
+\subsection{bool validMove}
+	This indicates whether a card is playable in the current hand of play.
+\end{document}
