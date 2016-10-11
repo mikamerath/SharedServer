@@ -1,1 +1,7 @@
 # Ignored Files #
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*~
