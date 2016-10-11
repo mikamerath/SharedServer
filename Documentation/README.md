@@ -1,3 +1,5 @@
 This folder contains all of the Documentation for our shared server. Make a separate folder for your teams specific part of the server. Be sure to include your .tex files so we can build documentation and better keep track of changes.
 
 If you include any images in your documentation, they must be included with your .tex file when you push up to this branch so when we build documentation, the images are also included.
+
+Each document will have a directory. Inside the directory, there will be a main <filename>.tex file, a sections folder, a graphics folder, and any other folder as necessary. Therefore, the commit should consist of a .tex file added to the sections directory, any graphics added to graphics directory, and necessary changes to the main .tex file. Those changes include \include{sections/<sectionname>} inside the document and any necessary packages included in the preamble. I'll add a graphics path pointing to the graphics directory, so include graphics based on that relative path.
