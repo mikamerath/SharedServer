@@ -1,0 +1,1 @@
+This directory includes files that can be used to used to generate the sequence diagrams images found in the directory ../SequenceDiagrams. One website used to generate these images is http://www.planttext.com/planttext.

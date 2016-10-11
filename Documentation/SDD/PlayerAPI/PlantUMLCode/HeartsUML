@@ -1,0 +1,31 @@
+@startuml
+
+title "Hearts - Sequence Diagram"
+
+actor User
+control "Game Rules" as GR
+
+User -> GR: Start Game
+User -> GR: Start Round
+GR -> User: Dealt Cards
+User -> GR: Passed Cards
+GR -> User: New Hand
+User -> GR: Played Card
+GR -> User: Moves of 3 Other Players
+GR -> User: Updated Round Score (Trick Over)
+GR -> User: Move of 1 Other Player
+User -> GR: Played Card
+GR -> User: Moves of 2 Other Players
+GR -> User: Updated Round Score (Trick Over)
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <-> GR: Last Card Played in Round
+GR -> User: Round Over Information
+User -> GR: Start Round
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <-> GR: Last Card Played in Last Round
+GR -> User: Game Over Information
+@enduml
