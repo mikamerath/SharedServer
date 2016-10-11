@@ -1,0 +1,27 @@
+@startuml
+
+title "Crazy 8's - Sequence Diagram"
+
+actor User
+control "Game Rules" as GR
+
+User -> GR: Start Game
+User -> GR: Start Round
+GR -> User: Dealt Cards
+User -> GR: Card Played
+GR -> User: Moves of 3 Other Players
+User -> GR: Draw Card
+User -> GR: Card Played
+GR -> User: Moves of 3 Other Players
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <-> GR: Last Card Played in Round
+GR -> User: Round Over Information
+User -> GR: Start Round
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <<-->> GR: ...
+User <-> GR: Last Card Played in Last Round
+GR -> User: Game Over Information
+@enduml
