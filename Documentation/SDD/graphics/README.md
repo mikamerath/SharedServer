@@ -1,0 +1,1 @@
+Directory for graphics to include in SDD
