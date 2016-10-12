@@ -1,1 +1,5 @@
 # Ignored Files #
+build
+
+# Image Types #
+.pdf
