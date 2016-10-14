@@ -2,12 +2,12 @@
 build
 
 # Image Types #
-.pdf
+*.pdf
 
 # Other Types #
-.aux
-.log
-.out
-.toc
-.synctex.gz
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
 ~
