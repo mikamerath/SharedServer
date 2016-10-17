@@ -1,8 +1,13 @@
 # Ignored Files #
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
-*.pdf
-*~
+build
+
+# Image Types #
+.pdf
+
+# Other Types #
+.aux
+.log
+.out
+.toc
+.synctex.gz
+~
