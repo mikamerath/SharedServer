@@ -4,27 +4,29 @@
 * -Ligia Frangello and Katie Sweet
 *
 */
+#include <string>
+#include <vector>
 
 class Player{
     std::vector<Card> hand;
-    int bid;
-    int ip;
-    int port; 
-    int score;
+    std::string ip;
+    int roundScore; // Hearts
+    std::vector<int> overallScore; // Everyone
+    int bid; //Spades
+    int bags; // Spades
+    int tricksWon; // Spades
 
-    Player(int ip, int port);
+    Player(std::string ip);
     // If server does function calls (pull fashion)
-    std::vector<Card> requestCardsPassed();
-    std::vector<Card> requestMove();
-    std::vector<Card> requestMove(Card c); //If they draw in Crazy 8's
-    int requestBid();
+    std::vector<Card> requestCardsPassed(); //Hearts
+    std::vector<Card> requestMove(); // Everyone
+    int requestBid(); // Spades
 
-    void startGame(std::vector<Cards>);
-    //void updateField(Field f);
-    bool endTheRound(scores); //returns true if ready for next round
-    void endTheGame(scores);
+    void updateField(coded message of state); //takes message from Game and adds hand to it
+    void endTheRound(coded message of state); //returns true if ready for next round
+    void endTheGame(coded message of state); 
 
-    std::vector<Card> getHand( return hand);
+    std::vector<Card> getHand( return hand );
     void setHand(std::vector<card>);
 }
 
