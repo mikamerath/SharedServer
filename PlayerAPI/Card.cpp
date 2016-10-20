@@ -1,5 +1,5 @@
 /*
- * Card Struct
+ * Card Class
  *
  * -David Browning, Ligia Frangello & Katie Sweet
  *
@@ -50,6 +50,7 @@ class Card {
                   << std::endl;
         throw(2);
       }
+
       else {
         value = val;
       }
