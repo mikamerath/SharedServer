@@ -13,7 +13,7 @@ class Game{
         void initializeDeck();
         UpdateGameStateMessage(){
           for (auto&& player: players){
-              player.updateField(coded message)  
+              player.updateGameStatus(coded message)  
           }
         }
         void deal(int numCards);
