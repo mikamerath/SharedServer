@@ -22,7 +22,7 @@ class Player{
     std::vector<Card> requestMove(); // Everyone
     int requestBid(); // Spades
 
-    void updateField(coded message of state); //takes message from Game and adds hand to it
+    void updateGameStatus(coded message of state); //takes message from Game and adds hand to it
     void endTheRound(coded message of state); //returns true if ready for next round
     void endTheGame(coded message of state); 
 
