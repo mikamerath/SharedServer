@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-enum Suit { HEARTS, SPADES, CLUBS, DIAMONDS, JOKER };
+enum Suit { HEARTS, SPADES, CLUBS, DIAMONDS, UNDEFINED };
 
 class Card {
   //	card(){} Commented out the default constructor as an empty card object
@@ -24,10 +24,18 @@ class Card {
   ~card() {}
   Suit suit;
   int value;
+  int id;
+  static int numCardsConstructed;
+  
+  bool operator<(const Card& a) const
+  {
+      return id < a.id; 
+  }
 
   card(Suit su){
+      id = ++numCardsConstructed;
       suit = su;
-      if (su == JOKER){
+      if (su == UNDEFINED){
           value =-1;
       }
       else{
@@ -37,6 +45,7 @@ class Card {
   }
 
   card(Suit su, int val) {
+      id = ++numCardsConstructed;
       // Assign suit
       suit = su;
 
