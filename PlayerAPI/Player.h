@@ -1,5 +1,6 @@
 /*
-* Player Class
+* The Player Class holds information about each player in the game.
+* The functions in this class will need to be written by the Player Networking group.
 *
 * -Ligia Frangello and Katie Sweet
 *
@@ -17,25 +18,14 @@ class Player{
     int tricksWon; // Spades
 
     Player(std::string ip);
-    // If server does function calls (pull fashion)
     std::vector<Card> requestCardsPassed(); //Hearts
     std::vector<Card> requestMove(); // Everyone
     int requestBid(); // Spades
 
-    void updateGameStatus(coded message of state); //takes message from Game and adds hand to it
-    void endTheRound(coded message of state); //returns true if ready for next round
-    void endTheGame(coded message of state); 
+    void updateGameStatus(/*coded message of state*/); //takes message from Game and adds hand to it
+    void endTheRound(/*coded message of state*/); //returns true if ready for next round
+    void endTheGame(/*coded message of state*/); 
 
     std::vector<Card> getHand( return hand );
     void setHand(std::vector<card>);
 }
-
-// In Game Class (Hearts):
-//   std::vector<Player> players; (players would be 0 indexed)
-//   for (auto&& p: players){
-//     p.requestCardsPassed(Field);
-//   }
-//   players[0].requestMove()
-//   for (auto&& p: players){
-//     p.updateField(Field);
-//   }
