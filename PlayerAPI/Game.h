@@ -1,4 +1,9 @@
- 
+ /*
+ * The Game class holds information that will be needed for each game.
+ * The functions in the class should be filled in by the Game Lobby group.
+ *
+ *
+ */
 
 class Game{
     private:
@@ -13,7 +18,7 @@ class Game{
         void initializeDeck();
         UpdateGameStateMessage(){
           for (auto&& player: players){
-              player.updateGameStatus(coded message)  
+              player.updateGameStatus(/*coded message*/)  
           }
         }
         void deal(int numCards);
