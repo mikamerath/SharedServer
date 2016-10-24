@@ -1,0 +1,188 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{minted}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\title{Coding Standard}
+\author{michael.kamerath }
+\date{October 2016}
+
+\begin{document}
+
+\maketitle
+
+\renewcommand\listoflistingscaption{List of code examples}
+\listoflistings
+
+\newpage\section{Clang}
+All code SHALL be formatted with clang format with the .clang\_format file found in the repository. \\ \\
+\textit{Rationale: This ensures that all code has similar white spacing and is therefore, easy to read.}
+
+\section{Naming Conventions}
+\subsection{Variable Names}
+Global variable SHALL be prefaced with g\_ \\
+Static variables SHALL be prefaced with s\_ \\
+Pointers SHALL be preceded by a p \\
+Non Const references shall be preceded by an r \\
+Combinations of the above attributes can happen and both prefaces SHALL be accounted for \\
+\textit{Rationale: Consistent naming conventions ensures that proper care is taken for special cases, ie static variables and pointers.} \\
+
+\begin{listing}[ht]
+\begin{minted}[bgcolor=LightGray]{cpp}
+int g_someGlobal = 10;
+int gs_someStaticGlobal = 10;
+int someFunction()
+{
+    static int s_num = 0;
+    return ++s_num;
+}
+int main()
+{
+    std::unique_ptr<MyClass> pClassPtr(new MyClass);
+}
+\end{minted}
+\caption{Variable Naming}
+\end{listing}
+
+\newpage\subsection{Enums and Constants}
+Enum values and compile time constants SHALL be in all capital letters. \\
+\textit{Rationale: All caps lets developers know a value is immutable which helps in debugging purposes} \\
+
+\begin{listing}[ht]
+\begin{minted}[bgcolor=LightGray]{cpp}
+const int SIZE = 100;
+enum Color
+{
+    RED,
+    ORANGE,
+    YELLOW
+};
+\end{minted}
+\caption{All Caps}
+\end{listing}
+
+\subsection{User Defined Types}
+\noindent Enums, Structs, Classes, and Typedefs SHALL be PascalCase. \\
+\textit{Rationale: PascalCase allows for easy identification of user defined types.} \\
+
+\begin{listing}[ht]
+\begin{minted}[bgcolor=LightGray]{cpp}
+enum AllTheColors
+{
+};
+struct MyStruct
+{
+};
+class MyClass
+{
+};
+typdef unsigned long long UInt64;
+\end{minted}
+\caption{User Defined Types}
+\end{listing}
+
+\newpage\subsection{Primitive Data Types}
+\noindent variables and function names SHALL be camelCase. \\
+\textit{Rationale: camelCase allows for easy identification of user defined types.} \\
+
+\begin{listing}[ht]
+\begin{minted}[bgcolor=LightGray]{cpp}
+int someFunction()
+{
+    std::string firstName;
+    int value = 0;
+    return value;
+}
+
+\end{minted}
+\caption{Primitive Data Types}
+\end{listing}
+
+\section{Logic}
+Logic errors SHALL be fixed before code is merged. It is not reasonable to enumerate all of these practices. Guides for industry best practices in C++ include \\
+\begin{enumerate}
+    \item \textit{Effective C++: Scott Meyers}
+    \item \textit{Effective Modern C++: Scott Meyers}
+    \item \textit{Exceptional C++: Herb Sutter}
+\end{enumerate}
+\textit{Rationale: The books listed above are considered by many to be industry standard and give a good overview of good practices.}
+
+\section{Comments}
+Functions should be named in a way that they can be easily understood by the name. Any function with at least one parameter SHALL have a brief comment saying what the function does. Any part of a block of code that is hard to follow SHOULD be prefaced with TRICKY: with an explanation on why the code is that way. \\
+\textit{Rationale: Although aptly named functions are preferred, comments help to communicate developer intent.}
+
+\newpage\section{Initialization}
+\subsection{Class Member Initialization}
+All variables SHALL be initialized, member variables SHALL be initialized in an initialization list. \\
+\textit{Rationale: Uninitialized variables can lead to unexpected errors that are hard to debug.}
+
+\begin{listing}[ht]
+\begin{minted}[bgcolor=LightGray]{cpp}
+int num = 0;
+class Car
+{
+    private:
+    string model;
+    string make;
+    int year;
+    
+    Car() :
+    model(""),
+    make(""),
+    year(1900)
+    {
+    }
+};
+\end{minted}
+\caption{Class Member Lists}
+\end{listing}
+
+\newpage\noindent
+\subsection{RAII}
+Use the RAII (Resource Acquisition is Initialization) idiom for resource management. Pointers SHALL be handled in this way with the exception of wxWidgets. Mutexes SHALL be handled by lock\_guard rather than mutex.lock() \\
+\textit{Rationale: If an exception is ever thrown, poorly managed memory can be leaked causing the state of a program to become unstable.} \\
+
+\begin{listing}[ht]
+\begin{minted}[bgcolor=LightGray]{cpp}
+std::mutex mx;
+void problem()
+{
+    mx.lock();          //Acquires the mutex
+    functionCall();     //If this function throws an exception,
+                        //the mutex is never released.
+    if (someCondition)
+    {
+        return 0;       //If the condition is met and the
+                        //function returns early, the
+                        //mutex is never released.
+    }
+    mx.unlock();        //Release the mutex
+}
+
+void RAII()
+{
+    std::lock_guard<std::mutex> lck(mx); //RAII: mutex
+                                         //acquisition is
+                                         //Initialization
+    
+    functionCall()                       //If this throws an 
+                                         //exception, the 
+                                         //mutex is released
+    
+    if (someCondition)
+    {
+        return 0;       //Early return statement if fine.
+                        //The mutex is released
+    }
+}
+\end{minted}
+\caption{RAII}
+\end{listing}
+
+
+
+\end{document}
