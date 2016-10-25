@@ -1,0 +1,64 @@
+\section{Crazy Eights Game Logic}
+
+\subsection{Crazy Eights Class}
+
+\subsubsection{Refill deck}
+Fills the deck with the discarded cards.
+
+\subsubsection{Deck deck}
+    Object deck which holds an array of 52 cards.
+
+\subsubsection{enum Suit}
+    Enumeration to represent the 4 suits: Hearts, Spades, Clubs, and Diamonds.
+
+\subsubsection{int turnID}
+    Variable to hold turn number for use in game logic.
+
+\subsubsection{Suit currentSuit}
+    Variable to hold current playable suit of the game.  Allows for 8s cards (wildcards) to switch the current playable suit.
+    
+\subsubsection{bool isPlayerTurn}
+    flag that will switch depending on if you are allowed to make a move.
+
+\subsubsection{int playerScore}
+    variable to hold the final score of the winning player.
+    
+\subsubsection{start Round Function}
+    Deal 5 Cards, decide who plays fist.
+    
+\subsubsection{deal card function}
+    This function gives players appropriate number of cards at the beginning of each game.
+\subsubsection{update Player Score }
+    count cards for each player and assign an appropriate score.
+\subsubsection{determine next turn}
+    This function will figure out who makes the next turn.
+\subsubsection{check for win condition}
+    This function will check to see if a player has won the game.
+
+\subsection{Deck class}
+
+\subsubsection{Card[] cards}
+    a vector of 52 cards.
+
+\subsection{Discard pile class}
+vector of cards.
+
+\subsubsection{void shuffle()}
+    shuffles the deck.
+    
+
+\subsection{Card Class}
+
+\subsubsection{int cardRank}
+    integer that represents a value for a card.
+    
+\subsubsection{Suit suit}
+    Variable for the card to represent 1 of the 4 suits: Hearts, Spades, Clubs, and Diamonds.
+    
+\subsubsection{bool discarded}
+    This indicates whether a card has been discarded or played in a game.
+    
+\subsubsection{bool validMove}
+    checks to make sure a move is valid
+
+
