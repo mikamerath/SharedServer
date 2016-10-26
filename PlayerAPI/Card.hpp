@@ -13,7 +13,7 @@
  * suit. The reason for the UNDEFINED suit type is that in the Player Class,
  * there is a function called requestMove() that returns a vector of Cards.
  * In the game Crazy Eight's, a move can consist of drawing a card from the
- * deck. We need an UNDEFINED type to alertnthe Crazy Eight's game logic that
+ * deck. We need an UNDEFINED type to alert the Crazy Eight's game logic that
  * they chose the draw pile instead of playing a card.
  *
  * The integer (2-14) determines the value. We have established Ace to be 14
@@ -21,6 +21,7 @@
  * Spades.
  *
  */
+
 #include <vector>
 
 enum Suit
@@ -39,11 +40,10 @@ private:
   unsigned int value;
 
 public:
-  ~Card() {}
   Card(Suit su);
   Card(Suit su, int val);
-  Suit getSuit() const { return suit; }
-  unsigned int getValue() const { return value; }
+  Suit getSuit() const;
+  unsigned int getValue() const;
 };
 
 bool operator<(const Card&, const Card&);

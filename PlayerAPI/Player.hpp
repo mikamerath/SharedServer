@@ -1,7 +1,10 @@
 /*
 * The Player Class holds information about each player in the game.
-* The functions in this class will need to be written by the Player Networking
-* group.
+* Further details about what each function does are outlined above the
+* respective function in the Card.cpp file.
+*
+* Many of the functions in this class will need to be written by the Player
+* Networking group.
 *
 * -Ligia Frangello and Katie Sweet
 *
@@ -26,39 +29,37 @@ private:
   void alertClientEndOfGame(/*coded message of state*/);
 
 public:
-  Player(std::string ip);
+  Player(std::string ipAddress);
+
+  // The functions below allow for communication from the server to the client.
   std::vector<Card> requestCardsPassed(); // Hearts
   std::vector<Card> requestMove();        // Everyone
   void requestBid();                      // Spades
-
   void updateGameStatus(
     /*coded message of state*/); // takes message from Game and adds hand to it
 
+  // The functions below reset the neccesary variables at the end of game/round.
+  // They also alert the client of a change in game status.
   void endTheRound();
   void endTheGame();
 
+  // The functions below allow for the management of a player's hand.
   void initializeHand(std::vector<Card>& deck, unsigned int numCards);
-  std::vector<Card> getHand() { return hand; };
+  std::vector<Card> getHand() const;
   void insertCardToHand(const Card&);
   bool removeCardFromHand(const Card&);
 
-  std::string getIp() { return ip; };
-  void setIp(std::string s) { ip = s; };
+  // The functions below allow for the management of a player's score.
+  int getRoundScore() const;
+  void setRoundScore(int);
+  void incrementRoundScore(int);
+  std::vector<int> getOverallScores() const;
 
-  int getRoundScore() { return roundScore; };
-  void setRoundScore(int i) { roundScore = i; };
-  void incrementRoundScore(int i) { roundScore += i; };
-
-  // void addRoundScoreToOverallScore() { overallScore.push_back(roundScore); };
-  std::vector<int> getOverallScores() { return overallScore; };
-
-  int getBid() { return bid; };
-  void setBid(int b) { bid = b; };
-
-  int getBags() { return bags; };
-  void setBags(int b) { bags = b; };
-
-  int getTricksWon() { return tricksWon; };
-  void setTricksWon(int t) { tricksWon = t; };
-  void incrementTricksWon() { tricksWon++; };
+  // The functions below are for use in the game Spades.
+  int getBid() const;
+  int getBags() const;
+  void setBags(int);
+  int getTricksWon() const;
+  void setTricksWon(int);
+  void incrementTricksWon();
 };

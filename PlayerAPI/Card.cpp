@@ -1,47 +1,55 @@
+/*
+* This file includes the function definitions for the card class.
+*
+* Above each function is a short description of what each function does. If
+* there are any questions, please do not hesitate to contact Katie Sweet or
+* Ligia Frangello.
+*
+* -Ligia Frangello, Katie Sweet
+*/
+
 #include "Card.hpp"
 #include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <random>
 
-Card::Card(Suit su)
+// Constructor for a UNDEFINED card. Needed for if the client chooses to draw
+// from the deck in Crazy Eight's.
+Card::Card(Suit su) : suit(su), value(0)
 {
-  suit = su;
-  if (su == UNDEFINED)
+  if (suit != UNDEFINED)
   {
-    value = 0;
-  }
-  else
-  {
-    std::cout << "Error. Cannot instantiate a card without a value."
-              << std::endl;
-    throw(2);
+    std::string error = "Error. Cannot instantiate a card without a value.";
+    throw std::invalid_argument(error);
   }
 }
 
-Card::Card(Suit su, int val)
+// Constructor for a card in a standard 52 card deck.
+// Values are from 2 to 14 corrosponding from 2 - Ace.
+Card::Card(Suit su, int val) : suit(su), value(val)
 {
-  // Assign suit
-  suit = su;
-
-  // Assign Value
-  if (su == UNDEFINED)
+  if (val < 2 || val > 14)
   {
-    value = -1; // a card of type UNDEFINED will take any value.
-  }
-  else if (val < 2 || val > 14)
-  {
-    // Values are from 2 to 14 corrosponding from 2 - Ace.
-    std::cout << "Error: Tried to instantiate a card of undefined value"
-              << std::endl;
-    throw(2);
-  }
-  else
-  {
-    value = val;
+    std::string error = "Error: Tried to instantiate a card of undefined value";
+    throw std::invalid_argument(error);
   }
 }
 
+// Returns the suit of a card.
+Suit Card::getSuit() const
+{
+  return suit;
+}
+
+// Returns a value of a card.
+unsigned int Card::getValue() const
+{
+  return value;
+}
+
+// Allows for the '<' comparison of two Card objects.
+// Will potentially be used to sort the hand.
 bool operator<(const Card& a, const Card& b)
 {
   if (a.getSuit() < b.getSuit())
@@ -56,6 +64,7 @@ bool operator<(const Card& a, const Card& b)
     return a.getValue() < b.getValue();
 }
 
+// Allows for the '==' comparison of two Card objects.
 bool operator==(const Card& a, const Card& b)
 {
   if (a.getSuit() == b.getSuit() && a.getValue() == b.getValue())
