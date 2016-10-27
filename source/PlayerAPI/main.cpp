@@ -1,3 +1,5 @@
+#include <boost/algorithm/clamp.hpp>
+
 int main()
 {
 
