@@ -1,24 +1,12 @@
-// Boost Includes
-#include <boost/algorithm/string.hpp>
+/*This file is where all unit testing will be going. All you need to do
+ *is include the appropriate header files and then perform your test.
+ */
 
-// Standard Includes
-#include <iostream>
-#include <string>
-#include <vector>
+//Boost Includes
+#include <boost/test/unit_test.hpp>
 
 int main()
 {
-  std::string line("Test\tOtherTest\tAnotherTest");
-  std::vector<std::string> stringVector;
-  boost::split(stringVector, line, boost::is_any_of("\t"));
 
-  std::cout << "The size of the vector is: " << stringVector.size()
-            << std::endl;
-  for (std::string s : stringVector)
-  {
-    std::cout << s << std::endl;
-  }
-
-  std::cin.get();
   return 0;
 }
