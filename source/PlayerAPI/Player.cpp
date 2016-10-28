@@ -46,12 +46,11 @@ void Player::startNewRound()
 // new game.
 void Player::startNewGame()
 {
-  overallScore.push_back(roundScore);
+  overallScore.clear();
   roundScore = 0;
   bid = 0;
   bags = 0;
   tricksWon = 0;
-  overallScore.clear();
 }
 
 // Initializes a players hand with the 'numCards' specified.
