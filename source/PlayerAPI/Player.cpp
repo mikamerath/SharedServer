@@ -52,42 +52,6 @@ void Player::endTheGame()
   overallScore.clear();
 }
 
-// Inserts card into the hand in order.
-void Player::insertCardToHand(const Card& c)
-{
-  auto iterator = hand.begin();
-  while (c < *iterator)
-  {
-    iterator++;
-  }
-  hand.emplace(iterator, c);
-}
-
-// Attempts to remove card from hand. If card is in hand, it will be removed
-// and the function will return true. If the card is not in the hand, it will
-// return false and no cards will be removed.
-bool Player::removeCardFromHand(const Card& c)
-{
-  // for (auto&& card : hand)
-  // {
-  //   if (card == c)
-  //   {
-  //     hand.erase()
-  //     return true;
-  //   }
-  // }
-  // return false;
-  for (auto i = hand.begin(); i < hand.end(); i++)
-  {
-    if (c == *i)
-    {
-      hand.erase(i);
-      return true;
-    }
-  }
-  return false;
-}
-
 // Initializes a players hand with the 'numCards' specified.
 // The deck must be passed in so that the cards can be removed from the deck
 // when added to the player's hand.
@@ -100,6 +64,33 @@ void Player::initializeHand(std::vector<Card>& deck, unsigned int numCards)
     deck.pop_back();
   }
   std::sort(hand.begin(), hand.end());
+}
+
+// Inserts card into the hand in order.
+void Player::insertCardToHand(const Card& c)
+{
+  auto iterator = hand.begin();
+  while (c < *iterator && iterator < hand.end())
+  {
+    iterator++;
+  }
+  hand.emplace(iterator, c);
+}
+
+// Attempts to remove card from hand. If card is in hand, it will be removed
+// and the function will return true. If the card is not in the hand, it will
+// return false and no cards will be removed.
+bool Player::removeCardFromHand(const Card& c)
+{
+  for (auto i = hand.begin(); i < hand.end(); i++)
+  {
+    if (c == *i)
+    {
+      hand.erase(i);
+      return true;
+    }
+  }
+  return false;
 }
 
 // Returns a vector of Cards that matches the Player's hand.
@@ -136,6 +127,17 @@ void Player::incrementRoundScore(int i)
 std::vector<int> Player::getOverallScores() const
 {
   return overallScore;
+}
+
+// Returns the sum of the player's round scores (i.e. their total score)
+int Player::getTotalScore() const
+{
+  int totalScore = 0;
+  for (auto&& score : overallScore)
+  {
+    totalScore += score;
+  }
+  return totalScore;
 }
 
 // Gets the value that a player bid (Spades).

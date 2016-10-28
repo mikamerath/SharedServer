@@ -44,8 +44,7 @@ public:
   void requestMove(); // Everyone
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
-  void updateGameStatus(
-    /*coded message of state*/); // takes message from Game and adds hand to it
+  void updateGameStatus(/*coded message of state*/);
 
   // The functions below are callback functions for server/client communication.
   std::vector<Card> receivedMove();
@@ -54,9 +53,9 @@ public:
 
   // The functions below allow for the management of a player's hand.
   void initializeHand(std::vector<Card>& deck, unsigned int numCards);
-  std::vector<Card> getHand() const;
   void insertCardToHand(const Card&);
   bool removeCardFromHand(const Card&);
+  std::vector<Card> getHand() const;
 
   // The functions below allow for the management of a player's score.
   int getRoundScore() const;
