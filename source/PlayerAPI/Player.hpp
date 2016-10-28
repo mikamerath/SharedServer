@@ -34,11 +34,11 @@ public:
   Player(int idNumber, std::string ipAddress);
 
   void setName(std::string);
-  std::string getName();
+  std::string getName() const;
 
   // The functions below reset the necessary variables at the end of round/game.
-  void endTheRound();
-  void endTheGame();
+  void startNewRound();
+  void startNewGame();
 
   // The functions below allow for communication from the server to the client.
   void requestMove(); // Everyone

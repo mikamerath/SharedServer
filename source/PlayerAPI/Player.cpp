@@ -25,24 +25,26 @@ void Player::setName(std::string n)
 }
 
 // Returns the name of the player.
-std::string Player::getName()
+std::string Player::getName() const
 {
   return name;
 }
 
-// Function called at the end of a round. Updates the overallScore vector with
-// the roundScore, clears the scores and bids to get ready for the next round.
-void Player::endTheRound()
+// Function called at the start of a round. Updates the overallScore vector with
+// the previous roundScore, clears the scores and bids to get ready for the next
+// round.
+void Player::startNewRound()
 {
   overallScore.push_back(roundScore);
   roundScore = 0;
   bid = 0;
+  tricksWon = 0;
 }
 
-// Function called at the end of a game. Updates the overallScore vector with
-// the roundScore, clears the game dependent variables to get ready for a new
-// game.
-void Player::endTheGame()
+// Function called at the start of a new game. Updates the overallScore vector
+// with the roundScore, clears the game dependent variables to get ready for a
+// new game.
+void Player::startNewGame()
 {
   overallScore.push_back(roundScore);
   roundScore = 0;
@@ -137,6 +139,7 @@ int Player::getTotalScore() const
   {
     totalScore += score;
   }
+  totalScore += roundScore;
   return totalScore;
 }
 
