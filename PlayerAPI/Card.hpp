@@ -21,6 +21,8 @@
  * Spades.
  *
  */
+#ifndef CARD_HPP
+#define CARD_HPP
 
 #include <vector>
 
@@ -49,3 +51,5 @@ public:
 bool operator<(const Card&, const Card&);
 bool operator==(const Card&, const Card&);
 std::vector<Card> initializeDeck();
+
+#endif

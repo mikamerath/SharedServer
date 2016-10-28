@@ -9,71 +9,42 @@
 */
 
 #include "Player.hpp"
+#include <algorithm>
 
 // Constructor for the Player class. Takes in the IP address of the client.
-Player::Player(std::string ipAddress)
-  : ip(ipAddress), roundScore(0), bid(0), bags(0), tricksWon(0)
+Player::Player(int idNumber, std::string ipAddress)
+  : id(idNumber), ip(ipAddress), roundScore(0), bid(0), bags(0), tricksWon(0)
 {
 }
 
-// Requests from client which cards they want to pass and returns their choice.
-std::vector<Card> Player::requestCardsPassed()
+// Sets the name of the Player. In the future, this function will query the
+// database for the name instead.
+void Player::setName(std::string n)
 {
-  std::vector<Card> c;
-  // NEEDS TO BE FILLED IN BY PLAYER NETWORKING GROUP
-  return c;
+  name = n;
 }
 
-// Requests a move from client and returns their choice.
-std::vector<Card> Player::requestMove()
+// Returns the name of the player.
+std::string Player::getName()
 {
-  std::vector<Card> c;
-  // NEEDS TO BE FILLED IN BY PLAYER NETWORKING GROUP
-  return c;
-}
-
-// Requests a bid from client and returns their choice.
-void Player::requestBid()
-{
-  // NEEDS TO BE FILLED IN BY PLAYER NETWORKING GROUP
-}
-
-// Sends client an updated game status.
-void Player::updateGameStatus()
-{
-  // NEEDS TO BE FILLED IN BY PLAYER NETWORKING GROUP
-}
-
-// Sends client information about end of round, including overallScore, etc.
-void Player::alertClientEndOfRound()
-{
-  // NEEDS TO BE FILLED IN BY PLAYER NETWORKING GROUP
-}
-
-// Sends client information about end of game.
-void Player::alertClientEndOfGame()
-{
-  // NEEDS TO BE FILLED IN BY PLAYER NETWORKING GROUP
+  return name;
 }
 
 // Function called at the end of a round. Updates the overallScore vector with
-// the roundScore, alerts the client of the change in game status, then clears
-// the scores and bids to get ready for the next round.
+// the roundScore, clears the scores and bids to get ready for the next round.
 void Player::endTheRound()
 {
   overallScore.push_back(roundScore);
-  alertClientEndOfRound();
   roundScore = 0;
   bid = 0;
 }
 
 // Function called at the end of a game. Updates the overallScore vector with
-// the roundScore, alerts the client of the change in game status, then clears
-// the game dependent variables to get ready the next game.
+// the roundScore, clears the game dependent variables to get ready for a new
+// game.
 void Player::endTheGame()
 {
   overallScore.push_back(roundScore);
-  alertClientEndOfGame();
   roundScore = 0;
   bid = 0;
   bags = 0;
@@ -81,10 +52,15 @@ void Player::endTheGame()
   overallScore.clear();
 }
 
-// Inserts card into the hand. The hand will not be sorted, unless necessary.
+// Inserts card into the hand in order.
 void Player::insertCardToHand(const Card& c)
 {
-  hand.push_back(c);
+  auto iterator = hand.begin();
+  while (c < *iterator)
+  {
+    iterator++;
+  }
+  hand.emplace(iterator, c);
 }
 
 // Attempts to remove card from hand. If card is in hand, it will be removed
@@ -92,12 +68,20 @@ void Player::insertCardToHand(const Card& c)
 // return false and no cards will be removed.
 bool Player::removeCardFromHand(const Card& c)
 {
-  for (auto&& card : hand)
+  // for (auto&& card : hand)
+  // {
+  //   if (card == c)
+  //   {
+  //     hand.erase()
+  //     return true;
+  //   }
+  // }
+  // return false;
+  for (auto i = hand.begin(); i < hand.end(); i++)
   {
-    if (card == c)
+    if (c == *i)
     {
-      std::swap(card, hand[hand.size() - 1]);
-      hand.pop_back();
+      hand.erase(i);
       return true;
     }
   }
@@ -115,6 +99,7 @@ void Player::initializeHand(std::vector<Card>& deck, unsigned int numCards)
     hand.push_back(deck.back());
     deck.pop_back();
   }
+  std::sort(hand.begin(), hand.end());
 }
 
 // Returns a vector of Cards that matches the Player's hand.
