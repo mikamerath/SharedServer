@@ -1,5 +1,7 @@
 # Ignored Files #
 build
+CMakeFiles
+
 
 # Image Types #
 *.pdf
