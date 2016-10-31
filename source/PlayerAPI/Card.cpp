@@ -16,7 +16,7 @@
 
 // Constructor for a UNDEFINED card. Needed for if the client chooses to draw
 // from the deck in Crazy Eight's.
-Card::Card(Suit su) : suit(su), value(0)
+Card::Card(Suit su) : suit(su), value(TWO)
 {
   if (suit != UNDEFINED)
   {
@@ -27,7 +27,7 @@ Card::Card(Suit su) : suit(su), value(0)
 
 // Constructor for a card in a standard 52 card deck.
 // Values are from 2 to 14 corrosponding from 2 - Ace.
-Card::Card(Suit su, int val) : suit(su), value(val)
+Card::Card(Suit su, Value val) : suit(su), value(val)
 {
   if (val < 2 || val > 14)
   {
@@ -43,7 +43,7 @@ Suit Card::getSuit() const
 }
 
 // Returns a value of a card.
-unsigned int Card::getValue() const
+Value Card::getValue() const
 {
   return value;
 }
@@ -87,7 +87,7 @@ std::vector<Card> initializeDeck()
   {
     for (int i = 2; i < 15; i++)
     {
-      deck.push_back(Card(suit, i));
+      deck.push_back(Card(suit, static_cast<Value>(i)));
     }
   }
   std::random_device rd;

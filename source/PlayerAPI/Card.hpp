@@ -35,17 +35,34 @@ enum Suit
   UNDEFINED
 };
 
+enum Value
+{
+  TWO = 2,
+  THREE = 3,
+  FOUR = 4,
+  FIVE = 5,
+  SIX = 6,
+  SEVEN = 7,
+  EIGHT = 8,
+  NINE = 9,
+  TEN = 10,
+  JACK = 11,
+  QUEEN = 12,
+  KING = 13,
+  ACE = 14
+};
+
 class Card
 {
 private:
   Suit suit;
-  unsigned int value;
+  Value value;
 
 public:
   Card(Suit su);
-  Card(Suit su, int val);
+  Card(Suit su, Value val);
   Suit getSuit() const;
-  unsigned int getValue() const;
+  Value getValue() const;
 };
 
 bool operator<(const Card&, const Card&);
