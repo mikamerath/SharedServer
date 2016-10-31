@@ -36,7 +36,7 @@ public:
   void setName(std::string);
   std::string getName() const;
 
-  // The functions below reset the necessary variables at the end of round/game.
+  // The functions below reset the necessary variables at the start of round/game.
   void startNewRound();
   void startNewGame();
 
