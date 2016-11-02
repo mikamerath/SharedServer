@@ -4,8 +4,12 @@
 class TCPConnection
 {
 public:
-  TCPConnection();
-  ~TCPConnection();
+  TCPConnection()
+  {
+  }
+  ~TCPConnection()
+  {
+  }
 
 private:
 
