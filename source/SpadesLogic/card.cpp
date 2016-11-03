@@ -1,80 +1,55 @@
-
 /*
- * Card Class
- *
- * -David Browning, Ligia Frangello & Katie Sweet
- *
- * The purpose of this file is to allow others to build a card object.
- * Cards contain a suit and a value.
- * Suit is an enum {HEARTS}
- *
- * The constuctor accepts the suit enum and one integer.
- * The suit enum (HHEARTS, SPADES, CLUBS, DIAMONDS, JOKER) determines the suit.
- * The integer (1-13) determines the value. Value is on a 1 based index for easier
- * scoring.
- *
- */
+* This file includes the function definitions for the card class.
+*
+* Above each function is a short description of what each function does. If
+* there are any questions, please do not hesitate to contact Katie Sweet or
+* Ligia Frangello.
+*
+* -Ligia Frangello, Katie Sweet
+*/
 
-#ifndef CARD_CPP
-#define CARD_CPP
-
-#include <string>
+#include "Card.hpp"
+#include <algorithm>
 #include <iostream>
+#include <iterator>
+#include <random>
+#include <string>
 
-enum Suit { HEARTS, SPADES, CLUBS, DIAMONDS, JOKER, UNDEFINED };
-
-struct Card {
-  //	card(){} Commented out the default constructor as an empty card object
-  //is meaningless.
-  
-  Suit suit;
-  int value;
-  int id;
-  int numCardsConstructed;
-  
-
-
-  bool operator<(const Card& a) const
+// Constructor for a UNDEFINED card. Needed for if the client chooses to draw
+// from the deck in Crazy Eight's.
+Card::Card(Suit su) : suit(su), value(TWO)
+{
+  if (suit != UNDEFINED)
   {
-      return id < a.id; 
+    std::string error = "Error. Cannot instantiate a card without a value.";
+    throw std::invalid_argument(error);
   }
+}
 
-  Card(Suit su){
-      id = ++numCardsConstructed;
-      suit = su;
-      if (su == UNDEFINED){
-          value =-1;
-      }
-      else{
-        std::cout << "Error. Cannot instantiate a card without a value." << std::endl;
-        throw(2);
-      }
+// Constructor for a card in a standard 52 card deck.
+// Values are from 2 to 14 corrosponding from 2 - Ace.
+Card::Card(Suit su, Value val) : suit(su), value(val)
+{
+  if (val < 2 || val > 14)
+  {
+    std::string error = "Error: Tried to instantiate a card of undefined value";
+    throw std::invalid_argument(error);
   }
+}
 
-  Card(Suit su, int val) {
-      id = ++numCardsConstructed;
-      // Assign suit
-      suit = su;
+// Returns the suit of a card.
+Suit Card::getSuit() const
+{
+  return suit;
+}
 
-      // Assign Value
-      if (su == JOKER) {
-        value = -1; // a card of type JOKER will take any value.
-      }
-      else if (val < 1 || val > 13) {
-        // Values are from 1 to 13 corrosponding from Ace - King.
-        std::cout << "Error: Tried to instantiate a card of undefined value"
-                  << std::endl;
-        throw(2);
-      }
+// Returns a value of a card.
+Value Card::getValue() const
+{
+  return value;
+}
 
-      else {
-        value = val;
-      }
-  }
-
-  ~Card(){}
-
- void print(){
+void Card::print(){
 	std::string s;
 	switch(suit){
 		case(HEARTS):s = "Hearts";
@@ -88,9 +63,10 @@ struct Card {
 		default:{s= "?";}	
 	}
 	std::cout << value << " of " << s << std::endl;
-  }
+  
+}
 
-void tableprint(){
+void Card::tablePrint(){
 	std::string s;
 	switch(suit){
 		case(HEARTS):s = "Hearts";
@@ -106,156 +82,50 @@ void tableprint(){
 	std::cout << "................................." <<  value << " of " << s << ".............................." << std::endl;
   }
 
-  int getSuit() { return suit; }
-  int getValue() { return value; }
-
-  bool operator==(const Card &other) const {
-	  return (suit == other.suit && value == other.value);
+// Allows for the '<' comparison of two Card objects.
+// Will potentially be used to sort the hand.
+bool operator<(const Card& a, const Card& b)
+{
+  if (a.getSuit() < b.getSuit())
+  {
+    return true;
   }
-};
-
-#endif
-
-
-/*
- * Card Struct
- *
- * -David Browning
- *
- * The purpose of this file is to allow others to build a card object.
- * Cards contain a suit and a value, both of type int.
- *
- * The constuctor accepts two integers, the first (0-4) determines the suit, the
- * second (1-14) determines the value. Value is on a 1 based index for easier
- * scoring.
- *
- * Might be overkill.
- *
-
- void print(){
-	std::string s;
-	switch(suit){
-		case(HEARTS):s = "Hearts";
-			break;
-		case(SPADES):s="Spades";
-			break;
-		case(DIAMONDS):s="Diamonds";
-			break;
-		case(CLUBS):s="Clubs";
-			break;
-		default:{s= "?";}	
-	}
-	std::cout << value << " of " << s << std::endl;
+  else if (a.getSuit() > b.getSuit())
+  {
+    return false;
   }
+  else
+    return a.getValue() < b.getValue();
+}
 
-#include <iostream>
+// Allows for the '==' comparison of two Card objects.
+bool operator==(const Card& a, const Card& b)
+{
+  if (a.getSuit() == b.getSuit() && a.getValue() == b.getValue())
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 
-// If there is a controversial aspect to this file it is the following
-// enumeration.
-// I'm thinking that if this is declared in the card file (and therfore
-// accessible everywhere) it would be beneficial to the rest of the program.
-// Very open to changing if others feel differently.
-
-enum suit { HEARTS, SPADES, CLUBS, DIAMONDS, JOKER, UNDEF };
-
-struct card {
-  //	card(){} Commented out the default constructor as an empty card object
-  // is meaningless.
-  ~card() {}
-  suit _s;
-  int value;
-  card(suit su, int val) {
-    try {
-      _s = su;
-      if (_s == JOKER) {
-        value = val; // a card of type JOKER will take any value.
-      } else if (val < 1 || val > 14) {
-        // Values are from 1 to 14 corrosponding from Ace - King.
-        std::cout << "Error: Tried to instantiate a card of undefined value"
-                  << std::endl;
-        throw(2);
-      } else {
-        value = val;
-      }
-
-    } catch (int n) {
-      std::cout << "Error: " << n << " an illegal card was attempted"
-                << std::endl;
-      _s = UNDEF;
-      value = -1;
-      return;
+// Function used to deal out a random deck of 52 cards
+/*std::vector<Card> initializeDeck()
+{
+  std::vector<Card> deck;
+  deck.reserve(52);
+  std::vector<Suit> suits = {HEARTS, SPADES, CLUBS, DIAMONDS};
+  for (auto&& suit : suits)
+  {
+    for (int i = 2; i < 15; i++)
+    {
+      deck.push_back(Card(suit, static_cast<Value>(i)));
     }
   }
-  void print() { // Prints the suit and value of the card. e.g. card c(2, 7);
-                 // c.print(); will print "CLUBS 7"
-    switch (_s) {
-    case (HEARTS): {
-      std::cout << "HEARTS ";
-    } break;
-    case (SPADES): {
-      std::cout << "SPADES ";
-    } break;
-    case (CLUBS): {
-      std::cout << "CLUBS ";
-    } break;
-    case (DIAMONDS): {
-      std::cout << "DIAMONDS ";
-    } break;
-    case (JOKER): {
-      std::cout << "JOKER ";
-    } break;
-    default: { std::cout << "UNDEFINED "; } //
-    }
-
-    std::cout << value << std::endl;
-  }
-  int getSuit() { return _s; }
-  int getValue() { return value; }
-};
-
-bool testCardStruct() {
-  bool pass = false;
-  // Create all Cards in a 52 card deck. if getSuit() and getValue() return the
-  // correct value, the test passes.
-  for (int i = 0; i < 4; i++) {
-    for (int j = 1; j < 14; j++) {
-      if (i == 0) {
-        card c(HEARTS, j);
-        // c.print();
-        pass = true;
-      } else if (i == 1) {
-        card c(SPADES, j);
-        // c.print();
-        pass = true;
-      } else if (i == 2) {
-        card c(CLUBS, j);
-        // c.print();
-        pass = true;
-      } else if (i == 3) {
-        card c(DIAMONDS, j);
-        // c.print();
-        pass = true;
-      }
-    }
-    pass = false;
-  } // Disclaimer, I realize that this isn't a very good test, but so long as
-    // all cards can be constructed, the test should pass.
-
-  // Create a joker. Once again, if getSuit() and getValue() return the correct
-  // value, the test passes.
-  card j(
-      JOKER,
-      100); // purposefully demonstrate any value is assigned to a joker card.
-  if (j.getValue() == 100) {
-    // j.print();
-    pass = true;
-  } else {
-    pass = false;
-  }
-  // card c(-1, 15);// spits out an error;
-  // card d("string", "string"); //Won't compile.
-  // card e('c', 'c');// spits out an error;
-  // card f(2.3, 8.7);// works if you really want to use a float or somethihng.
-  return pass;
-}*/
-
+  std::random_device rd;
+  std::mt19937 generator(rd());
+  std::shuffle(deck.begin(), deck.end(), generator);
+  return deck;
+}*/ //Makes more sense to me to have this function as a member of Game.
