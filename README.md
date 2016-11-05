@@ -8,3 +8,4 @@ CMake is also necessary as we will be using it for our build system. Install ver
 
 To test that you have everything configured correctly, build the project which includes example.cpp. If it builds and runs, you are good to go and can use boost and wx libraries.
 
+After configuring externpro and CMake, go to the documentation folder where you can build the documentation for the Server. It contains both Coding Standard, and a Pull Request sections. Be sure to build these and read through them carefully BEFORE making a pull request. They describe what the code should look like and how to go about these procedures.

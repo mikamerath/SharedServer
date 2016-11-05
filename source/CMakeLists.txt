@@ -1,2 +1,3 @@
 add_subdirectory(PlayerAPI)
 add_subdirectory(CrazyEightsLogic)
+add_subdirectory(NetworkInterface)
