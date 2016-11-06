@@ -2,8 +2,8 @@
 #define NETWORK_INTERFACE
 
 #include <boost\asio.hpp>
-#include "GeneralMessage.h"
-#include "../PlayerAPI/Player.hpp"
+#include "TCPConnection.hpp"
+#include <iostream>
 
 using namespace boost::asio;
 
@@ -14,37 +14,14 @@ send and recieve messages based on a single request-reply pattern.
 class NetworkInterface
 {
 public:
-  NetworkInterface(int port)
-  {
-  }
-  ~NetworkInterface()
-  {
-  }
 
-  /*
-  Sends a message to the given player and then calls the callback function when the 
-  server recieves a response from the player.
-  */
-  void sendMessage(Player*p_player, GeneralMessage msg, void(*callBack)(GeneralMessage))
-  {
-  }
-  /*
-  Begins looping logic to recieve and route any messages from any connected clients.
-  */
-  void beginRecieve()
-  {
-  }
-  /*
-  Closes all connections in preperation for server shutdown.
-  */
-  void closeConnection()
-  {
-  }
+protected:
+  NetworkInterface(int port, io_service& service, std::ostream& outStream);
 
-private:
-  io_service ioService;
-  ip::tcp::acceptor acceptor;
-  
+  io_service& ioService;
+  int activePort;
+  std::ostream& out;
+
 
 };
 #endif // !NETWORK_INTERFACE

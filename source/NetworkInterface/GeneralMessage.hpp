@@ -4,12 +4,8 @@
 class GeneralMessage
 {
 public:
-  GeneralMessage()
-  {
-  }
-  ~GeneralMessage()
-  {
-  }
+  GeneralMessage();
+  ~GeneralMessage();
 
 private:
 
