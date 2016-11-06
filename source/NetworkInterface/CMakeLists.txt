@@ -7,4 +7,8 @@ ClientNetworkInterface.hpp
 GeneralMessage.hpp
 TCPConnection.hpp
 ServerNetworkInterface.cpp
+ClientNetworkInterface.cpp
+NetworkInterface.cpp
+GeneralMessage.cpp
+TCPConnection.cpp
 )
