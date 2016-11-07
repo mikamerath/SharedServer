@@ -327,7 +327,7 @@ void Spades::printPlayerHands()
 {
 }
 
-int main()
+/*int main()
 {
   Player one(0, "192.168.0.1");
   Player two(1, "192.168.0.2");
@@ -340,4 +340,4 @@ int main()
   p.push_back(four);
   Spades mySpades(p);
   return 0;
-} //Working test.
+} //Working test.*/
