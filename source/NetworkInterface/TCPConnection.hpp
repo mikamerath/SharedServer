@@ -1,7 +1,6 @@
 #ifndef TCP_CONNECTION
 #define TCP_CONNECTION
 
-<<<<<<< HEAD
 #include <iostream>
 #include <exception>
 #include <array>
@@ -40,6 +39,8 @@ public:
   // closes the exsisting connection
   void close();
 
+  //void aSyncRead(void*f(std::string));
+
   // Read from the connection until a '/n' is found
   std::string read();
   // Write to the connection. Automatically appends a '/n' to the end of the message.
@@ -67,19 +68,3 @@ private:
 
 
 #endif // TCP_CONNECTION
-=======
-class TCPConnection
-{
-public:
-  TCPConnection()
-  {
-  }
-  ~TCPConnection()
-  {
-  }
-
-private:
-
-};
-#endif // !TCP_CONNECTION
->>>>>>> refs/remotes/michaelkamerath/master

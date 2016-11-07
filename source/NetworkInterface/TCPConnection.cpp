@@ -8,7 +8,6 @@ TCPConnection::TCPConnection(boost::asio::io_service& ioService, int port)
 
 }
 
-
 TCPConnection::pointer TCPConnection::create(boost::asio::io_service & io_service, int port)
 {
   return pointer(new TCPConnection(io_service,port));
@@ -46,6 +45,20 @@ void TCPConnection::close()
 {
   socket.close();
 }
+
+//void TCPConnection::aSyncRead(void*f(std::string))
+//{
+//  boost::system::error_code error;
+//  boost::asio::streambuf buffer;
+//  try
+//  {
+//    boost::asio::async_read_until(socket, buffer, "\n", f);
+//  }
+//  catch (std::exception& e)
+//  {
+//    std::cerr << "Exception: " << e.what() << std::endl;
+//  }
+//}
 
 std::string TCPConnection::read()
 {
