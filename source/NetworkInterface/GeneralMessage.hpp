@@ -4,8 +4,17 @@
 class GeneralMessage
 {
 public:
+<<<<<<< HEAD
   GeneralMessage();
   ~GeneralMessage();
+=======
+  GeneralMessage()
+  {
+  }
+  ~GeneralMessage()
+  {
+  }
+>>>>>>> refs/remotes/michaelkamerath/master
 
 private:
 

@@ -1,6 +1,7 @@
 #ifndef TCP_CONNECTION
 #define TCP_CONNECTION
 
+<<<<<<< HEAD
 #include <iostream>
 #include <exception>
 #include <array>
@@ -66,3 +67,19 @@ private:
 
 
 #endif // TCP_CONNECTION
+=======
+class TCPConnection
+{
+public:
+  TCPConnection()
+  {
+  }
+  ~TCPConnection()
+  {
+  }
+
+private:
+
+};
+#endif // !TCP_CONNECTION
+>>>>>>> refs/remotes/michaelkamerath/master
