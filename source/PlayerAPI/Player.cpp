@@ -10,6 +10,7 @@
 
 #include "Player.hpp"
 #include <algorithm>
+#include <iostream>
 
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int idNumber, std::string ipAddress)
@@ -178,3 +179,31 @@ void Player::incrementTricksWon()
 {
   tricksWon++;
 }
+
+int Player::getId(){
+ return id;
+}
+
+//Command Line Garbage please get rid of me ;)
+void Player::requestBid(){
+	std::cout << "Bid:" << std::endl;
+	int temp;
+	std::cin >> temp;
+	bid = temp;
+	return;
+}
+
+//Command Line Garbage please get rid of me ;)
+Card Player::requestMove(){
+	for(int i = 0; i < hand.size(); ++i){
+		std::cout << i << ":";
+		hand.at(i).print();
+	}
+	std::cout << "Move:" << std::endl;
+	int temp;
+	std::cin >> temp;
+	auto move = temp;
+	//auto move = temp % hand.size();
+	return hand.at(move);
+}
+

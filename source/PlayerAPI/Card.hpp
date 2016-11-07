@@ -63,10 +63,12 @@ public:
   Card(Suit su, Value val);
   Suit getSuit() const;
   Value getValue() const;
+  void print();
+  void tablePrint();
 };
 
 bool operator<(const Card&, const Card&);
 bool operator==(const Card&, const Card&);
-std::vector<Card> initializeDeck();
+//std::vector<Card> initializeDeck();
 
 #endif

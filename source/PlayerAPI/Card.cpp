@@ -48,6 +48,39 @@ Value Card::getValue() const
   return value;
 }
 
+void Card::print(){
+	std::string s;
+	switch(suit){
+		case(HEARTS):s = "Hearts";
+			break;
+		case(SPADES):s="Spades";
+			break;
+		case(DIAMONDS):s="Diamonds";
+			break;
+		case(CLUBS):s="Clubs";
+			break;
+		default:{s= "?";}	
+	}
+	std::cout << value << " of " << s << std::endl;
+  
+}
+
+void Card::tablePrint(){
+	std::string s;
+	switch(suit){
+		case(HEARTS):s = "Hearts";
+			break;
+		case(SPADES):s="Spades";
+			break;
+		case(DIAMONDS):s="Diamonds";
+			break;
+		case(CLUBS):s="Clubs";
+			break;
+		default:{s= "?";}	
+	}
+	std::cout << "................................." <<  value << " of " << s << ".............................." << std::endl;
+  }
+
 // Allows for the '<' comparison of two Card objects.
 // Will potentially be used to sort the hand.
 bool operator<(const Card& a, const Card& b)
@@ -78,7 +111,7 @@ bool operator==(const Card& a, const Card& b)
 }
 
 // Function used to deal out a random deck of 52 cards
-std::vector<Card> initializeDeck()
+/*std::vector<Card> initializeDeck()
 {
   std::vector<Card> deck;
   deck.reserve(52);
@@ -94,4 +127,4 @@ std::vector<Card> initializeDeck()
   std::mt19937 generator(rd());
   std::shuffle(deck.begin(), deck.end(), generator);
   return deck;
-}
+}*/ //Makes more sense to me to have this function as a member of Game.
