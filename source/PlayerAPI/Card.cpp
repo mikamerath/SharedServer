@@ -48,39 +48,6 @@ Value Card::getValue() const
   return value;
 }
 
-void Card::print(){
-	std::string s;
-	switch(suit){
-		case(HEARTS):s = "Hearts";
-			break;
-		case(SPADES):s="Spades";
-			break;
-		case(DIAMONDS):s="Diamonds";
-			break;
-		case(CLUBS):s="Clubs";
-			break;
-		default:{s= "?";}	
-	}
-	std::cout << value << " of " << s << std::endl;
-  
-}
-
-void Card::tablePrint(){
-	std::string s;
-	switch(suit){
-		case(HEARTS):s = "Hearts";
-			break;
-		case(SPADES):s="Spades";
-			break;
-		case(DIAMONDS):s="Diamonds";
-			break;
-		case(CLUBS):s="Clubs";
-			break;
-		default:{s= "?";}	
-	}
-	std::cout << "................................." <<  value << " of " << s << ".............................." << std::endl;
-  }
-
 // Allows for the '<' comparison of two Card objects.
 // Will potentially be used to sort the hand.
 bool operator<(const Card& a, const Card& b)
