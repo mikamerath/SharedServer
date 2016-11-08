@@ -12,6 +12,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "../NetworkInterface/NetworkInterface.hpp"
 #include "Card.hpp"
 #include <string>
 #include <vector>
@@ -22,6 +23,7 @@ private:
   int id;
   std::string ip;
   std::string name;
+
 
   std::vector<Card> hand;
   int roundScore;                // Hearts
