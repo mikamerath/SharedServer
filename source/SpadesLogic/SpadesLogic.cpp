@@ -1,10 +1,6 @@
 #include "Game.hpp"
-//#include"Player.hpp"
-//#include<random>
-//#include<algorithm>
 #include <iostream>
 #include <vector>
-//#include<unistd.h>
 
 class Spades : public Game
 {
@@ -16,7 +12,7 @@ public:
   void beginRound(int);
   void startTrick();
   bool validMove(std::vector<Card>, int, Suit&, int);
-  void getTrickWinner(std::vector<Card>, int&);
+  int getTrickWinner(std::vector<Card>, int);
   int getNextPlayer(int);
   void score();
   void recordMove(std::vector<Card>);
@@ -105,22 +101,19 @@ void Spades::recordMove(std::vector<Card> m)
   //m.at(0).print();
 }
 
-void Spades::getTrickWinner(std::vector<Card> trick, int& tw)
+int Spades::getTrickWinner(std::vector<Card> trick, int tw)
 {
-
-  // holy hell it cannot possibly be as difficult as it feels to determine the
-  // winner of this thing.
   auto prevTw = tw;
   auto currentPlayer = tw;
   auto winningCard = trick.at(0);
   for (int i = 1; i < 4; i++)
   {
-    currentPlayer = getNextPlayer(currentPlayer); // look at next player
+    currentPlayer = getNextPlayer(currentPlayer); 
     if (trick.at(i).getSuit() == winningCard.getSuit())
-    { // same suit?
+    { 
       if (trick.at(i).getValue() > winningCard.getValue())
-      {                            // compare value
-        winningCard = trick.at(i); // replace if greater value
+      {                            
+        winningCard = trick.at(i); 
         tw = currentPlayer;
       }
     }
@@ -141,25 +134,24 @@ void Spades::getTrickWinner(std::vector<Card> trick, int& tw)
       }
     }
   }
+  return tw;
 }
 
-bool Spades::validMove(std::vector<Card> tr, int pl, Suit& ls, int currentTurn)
-{ // I'd like this to make sure of two things, one: validity of the move, and
-  // two: the winner of the trick(thus far).
+bool Spades::validMove(std::vector<Card> tr, int pl, Suit& leadSuit, int currentTurn)
+{
   auto h = players.at(pl).getHand();
   if (tr.at(0).getSuit() == tr.back().getSuit() &&
       tr.at(0).getValue() == tr.back().getValue())
-  { // If this is the first card played in the trick
+  { 
     if (tr.back().getSuit() == SPADES)
-    { // If it's spades, spades has to be broken first
+    { 
       if (spadesBroken == true)
       {
-        ls = SPADES;
+        leadSuit = SPADES;
         return true;
       }
       else
-      { // If spades isn't broken, you can only play spades if that is all you
-        // have. (For the first move.)
+      { 
         for (auto c : h)
         {
           if (c.getSuit() != SPADES)
@@ -170,27 +162,22 @@ bool Spades::validMove(std::vector<Card> tr, int pl, Suit& ls, int currentTurn)
       }
     }
     else
-    { // It is the first move, and the lead suit is not spades
-      ls = (Suit)tr.back().getSuit();
-      //tr.back().print();
+    { 
+      leadSuit = (Suit)tr.back().getSuit();
       std::cout << "tr.back() was led" << std::endl;
     }
   }
-  if (tr.back().getSuit() == ls)
+  if (tr.back().getSuit() == leadSuit)
   {
     return true;
   }
-  // first thing, check the hand, if the player has any card of lead suit, he
-  // can't make the move he is trying to.
   for (auto c : h)
   {
-    if (c.getSuit() == ls)
+    if (c.getSuit() == leadSuit)
     {
       return false;
     }
   }
-  // at this point, two things are true, the card played was NOT of the suit
-  // led, and the player does NOT have any cards of the led suit.
   if (tr.back().getSuit() == SPADES)
   {
     spadesBroken = true;
@@ -285,7 +272,7 @@ void Spades::beginRound(int starter)
               c.print();
       }*/
     }
-    getTrickWinner(trick, trickWinner);
+    trickWinner = getTrickWinner(trick, trickWinner);
     std::cout << "Player " << trickWinner << " won the trick." << std::endl;
     players.at(trickWinner).incrementTricksWon();
     std::cout << players.at(trickWinner).getId() << " has won "
