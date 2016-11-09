@@ -78,7 +78,7 @@ bool operator==(const Card& a, const Card& b)
 }
 
 // Function used to deal out a random deck of 52 cards
-std::vector<Card> initializeDeck()
+/*std::vector<Card> initializeDeck()
 {
   std::vector<Card> deck;
   deck.reserve(52);
@@ -94,4 +94,4 @@ std::vector<Card> initializeDeck()
   std::mt19937 generator(rd());
   std::shuffle(deck.begin(), deck.end(), generator);
   return deck;
-}
+}*/ //Makes more sense to me to have this function as a member of Game.

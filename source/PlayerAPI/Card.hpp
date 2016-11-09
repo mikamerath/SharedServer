@@ -67,6 +67,6 @@ public:
 
 bool operator<(const Card&, const Card&);
 bool operator==(const Card&, const Card&);
-std::vector<Card> initializeDeck();
+//std::vector<Card> initializeDeck();
 
 #endif
