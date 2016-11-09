@@ -11,31 +11,31 @@ public:
   HeartsGame(std::vector<Player>& players);
   ~HeartsGame();
   void play_Hearts();
-
-  // private:
-
+  // looks through each hand to find the 2 of clubs
+  int findTwoOfClubs();
+  // function for passing cards at beginging of round
+  void passCards(int round);
+  int endTurn(int currentPlayer);
+  void endRound();
+  void setPassCards(std::vector<int> cards, std::string name);
+  int playCard(int values, std::string name);
+  std::vector<Player> getPlayers() { return players; }
+  std::vector<Card> getCenterPile() { return centerPile; }
+private:
   std::vector<Card> initializeDeck();
-  std::vector<Player> creatPlayers(
-    int p); // Creats a vector of Players to play the game.
-  void dealCards(std::vector<Player>& players, std::vector<Card>& Deck);
-  int findTwoOfClubs(); // looks through each hand to find the 2 of clubs
+  void dealCards(std::vector<Card>& Deck);
+
   int fixPass(int r, int p, int c);
-  void passCards(int round); // function for passing cards at beginging of round
-  int scoretrick(std::vector<Card>& center,
-                 std::vector<Player>& players,
-                 int& turn);
-  bool allhearts(
-    std::vector<Card> h); // checks to see if a players hand is all hearts.
-  bool noLeadSuit(Suit s,
-                  std::vector<Card> h); // compares hand against the lead suit
+  // checks to see if a players hand is all hearts.
+  bool allhearts(std::vector<Card> h);
+  // compares hand against the lead suit
+  bool noLeadSuit(Suit s, std::vector<Card> h);
   bool validateMove(int index, Card move, int t, int i);
   std::vector<Player> players;
   std::vector<Card> centerPile;
-  void setPassCards(std::vector<int> cards, std::string name);
-  int playCard(std::string values, std::string name);
+
   bool brokenHearts = false;
-  int endTurn(int currentPlayer);
-  void endRound();
+
   int turn = 0;
   std::vector<std::vector<Card>> cardsToPass;
   void passCard(Card tmp, int i);

@@ -1,6 +1,8 @@
 #include "HeartsGame.hpp"
 #include <iostream>
 
+// constructor
+// takes in a vector of players
 HeartsGame::HeartsGame(std::vector<Player>& players)
 {
   this->players = players;
@@ -15,8 +17,9 @@ HeartsGame::~HeartsGame()
 {
 }
 
-std::vector<Card> HeartsGame::
-  initializeDeck() // creates deck of cards taken from Card.cpp
+// creates deck of cards taken from Card.cpp
+// returns the deck
+std::vector<Card> HeartsGame::initializeDeck()
 
 {
   std::vector<Card> deck;
@@ -32,23 +35,9 @@ std::vector<Card> HeartsGame::
   return deck;
 }
 
-std::vector<Player> HeartsGame::creatPlayers(
-  int p) // Creats a vector of Players to play the game.
-{
-  std::vector<Player> players;
-  players.reserve(p);
-
-  /*for (auto i = 0; i < p; ++i)
-  {
-          players.push_back(Player(makename(i)));
-          players[i].setScore(0);
-  }*/
-
-  return players;
-}
-
-int HeartsGame::
-  findTwoOfClubs() // looks through each hand to find the 2 of clubs
+// looks through each hand to find the 2 of clubs
+// returns the index of the player with the 2 of clubs
+int HeartsGame::findTwoOfClubs()
 {
   for (size_t i = 0; i < players.size(); ++i)
   {
@@ -64,75 +53,9 @@ int HeartsGame::
   return -1;
 }
 
-int HeartsGame::fixPass(int r, int p, int c)
-{
-  if (r == 1) // pass to the Left
-  {
-    switch (p)
-    {
-    case 0:
-      return c + 9;
-      break;
-    case 1:
-      return c;
-      break;
-    case 2:
-      return c + 3;
-      break;
-    case 3:
-      return c + 6;
-      break;
-    default:
-      return -1;
-    }
-  }
-
-  if (r == 2) // pass to the Right
-  {
-    switch (p)
-    {
-    case 0:
-      return c + 3;
-      break;
-    case 1:
-      return c + 6;
-      break;
-    case 2:
-      return c + 9;
-      break;
-    case 3:
-      return c;
-      break;
-    default:
-      return -1;
-    }
-  }
-
-  if (r == 3) // pass across the Table
-  {
-    switch (p)
-    {
-    case 0:
-      return c + 6;
-      break;
-    case 1:
-      return c + 9;
-      break;
-    case 2:
-      return c;
-      break;
-    case 3:
-      return c + 3;
-      break;
-    default:
-      return -1;
-    }
-  }
-  return -1;
-}
-
-void HeartsGame::passCards(
-  int round) // function for passing cards at beginging of round
+// function for passing cards at beginging of round
+// takes the round number
+void HeartsGame::passCards(int round)
 {
   for (size_t i = 0; i < players.size(); i++)
   {
@@ -147,43 +70,10 @@ void HeartsGame::passCards(
   cardsToPass.clear();
 }
 
-int HeartsGame::scoretrick(std::vector<Card>& center,
-                           std::vector<Player>& players,
-                           int& turn)
-{
-  int winner = turn;
-  Suit lead = center[0].getSuit();
-  int high = center[0].getValue();
-  int score = 0;
-  for (size_t i = 0; i < center.size(); ++i)
-  {
-    if (center[i].getSuit() == HEARTS)
-    {
-      ++score;
-    }
-    if ((center[i].getSuit() == lead) && (center[i].getValue() > high))
-    {
-      winner = (turn + i) % 4;
-      high = center[i].getValue();
-    }
-    if ((center[i].getSuit() == lead) && (center[i].getValue() == 1))
-    {
-      winner = (turn + i) % 4;
-      high = 14;
-    } // aces are high but its not a value in our cards
-    if ((center[i].getSuit() == SPADES) && (center[i].getValue() == 12))
-    {
-      score = score + 13;
-      high = center[i].getValue();
-    }
-  }
-
-  // players[winner].setroundScore((players[winner].getroundScore()) + score);
-  return winner;
-}
-
-bool HeartsGame::allhearts(
-  std::vector<Card> h) // checks to see if a players hand is all hearts.
+// checks to see if a players hand is all hearts.
+// takes a vector of cards, ie the player's hand
+// returns a bool of whether all the cards are hearts
+bool HeartsGame::allhearts(std::vector<Card> h)
 {
 
   for (size_t i = 0; i < h.size(); ++i)
@@ -196,8 +86,11 @@ bool HeartsGame::allhearts(
   return true;
 }
 
-bool HeartsGame::noLeadSuit(
-  Suit s, std::vector<Card> h) // compares hand against the lead suit
+// compares hand against the lead suit
+// Takes in a suit and the player's hand
+// returns a bool whether there is a card with suit s
+// in the hand
+bool HeartsGame::noLeadSuit(Suit s, std::vector<Card> h)
 {
   for (size_t i = 0; i < h.size(); ++i)
   {
@@ -209,6 +102,10 @@ bool HeartsGame::noLeadSuit(
   return true;
 }
 
+// checks to see if a move is valid
+// takes index of player in vector, the proposed card,
+// the trick number, and the turn number
+// returns a bool of whether the card is a valid move
 bool HeartsGame::validateMove(int index, Card move, int numTrick, int turn)
 {
   Suit lead;
@@ -283,41 +180,12 @@ bool HeartsGame::validateMove(int index, Card move, int numTrick, int turn)
         return true;
     }
   }
-  /*
-  if (i != 0 && centerPile.size() > 0) { lead = centerPile[0].getSuit(); }//sets
-  the lead suit
-  if (t == 1 && move.getSuit() == HEARTS) { return false; }//cannot play hearts
-  in first round
-  if ((t == 1 && move.getSuit() == SPADES) && (move.getValue() == 12)) { return
-  false; }//cannot play queen of spades in first round
-  if ((t == 1 && i == 0) && (move.getSuit() != CLUBS && move.getValue() != 2)) {
-  return false; }//must play 2 of clubs at the first of each round
-  if ((i == 0 && move.getSuit() == CLUBS) && (move.getValue() == 2)) { return
-  true; }
-  if (i == 0 && allhearts(players[index].getHand())) { true; return true; }
-  //if player only has hearts hearts are broken and move is valid
-  if (i == 0 && brokenHearts) { return true; }  //can play any card on first
-  move once hearts are broken
-  if (i != 0 && move.getSuit() == lead) { return true; }//if you play the same
-  suit as lead it is valid
-  if (i == 0 && move.getSuit() != HEARTS) { return true; } //can play anything
-  but hearts to start
-  if (i != 0 && move.getSuit() != lead)
-  {
-          if (noLeadSuit(lead, players[index].getHand()) && move.getSuit() ==
-  HEARTS) { brokenHearts = true;  return true; }
-          else if (noLeadSuit(lead, players[index].getHand())) { return true; }
-          else return false;*/
-
-  //} //if no lead suit any play is valid, if valid play is hearts hearts is
-  //broken
-
-  // else { return false; }
   return false;
 }
 
-void HeartsGame::dealCards(std::vector<Player>& players,
-                           std::vector<Card>& Deck)
+// shuffle and deals the cards to the players
+// takes in a deck of cards
+void HeartsGame::dealCards(std::vector<Card>& Deck)
 {
 
   std::random_device rd;
@@ -330,19 +198,22 @@ void HeartsGame::dealCards(std::vector<Player>& players,
       players[i].insertCardToHand(Deck[(j) + (13 * i)]);
     }
   }
-  /*for (int i = 0; i < players.size(); i++)
-  {
-          std::sort(players[i].getHand().begin(), players[i].getHand().end());
-  }*/
 }
 
+// begins the game of hearts
+// can be called multiple times to
+// play again
 void HeartsGame::play_Hearts()
 {
-  auto deck = initializeDeck(); // creates deck of cards
+  // creates deck of cards
+  auto deck = initializeDeck();
 
-  dealCards(players, deck); // deals cards and resets round scores to 0
+  // deals cards and resets round scores to 0
+  dealCards(deck);
 }
 
+// preps the passing cards
+// takes the vector of card indexes and the name of the player
 void HeartsGame::setPassCards(std::vector<int> cards, std::string name)
 {
 
@@ -360,14 +231,18 @@ void HeartsGame::setPassCards(std::vector<int> cards, std::string name)
   }
 }
 
-int HeartsGame::playCard(std::string values, std::string name)
+// plays a card
+// takes the card index value in hand and player's name
+// returns -1 if card was invalid else returns the player
+// that made the move
+int HeartsGame::playCard(int value, std::string name)
 {
   int j = 0;
   for (int i = 0; i < players.size(); i++)
   {
     if (players[i].getName() == name)
     {
-      Card tmp = players[i].getHand()[atoi(values.data()) - 1];
+      Card tmp = players[i].getHand()[value - 1];
       if (!validateMove(i, tmp, 13 - players[i].getHand().size(), turn))
       {
         return -1;
@@ -378,11 +253,13 @@ int HeartsGame::playCard(std::string values, std::string name)
       j = i;
     }
   }
-  turn++;
-  if (turn > 3) turn = 0;
+  turn = (turn + 1) % 4;
   return j;
 }
 
+// finished the turn
+// takes the index of the current player
+// returns the player index who won the trick
 int HeartsGame::endTurn(int currentPlayer)
 {
   Suit leadSuit = centerPile[0].getSuit();
@@ -406,6 +283,7 @@ int HeartsGame::endTurn(int currentPlayer)
   return (maxIndex + currentPlayer) % players.size();
 }
 
+// finishes the round and applies scores
 void HeartsGame::endRound()
 {
   for (int i = 0; i < players.size(); i++)
@@ -424,6 +302,8 @@ void HeartsGame::endRound()
   }
 }
 
+// passes a card
+// takes a card and index of player
 void HeartsGame::passCard(Card tmp, int i)
 {
   cardsToPass[i].push_back(tmp);
