@@ -214,7 +214,7 @@ void HeartsGame::play_Hearts()
 
 // preps the passing cards
 // takes the vector of card indexes and the name of the player
-void HeartsGame::setPassCards(std::vector<int> cards, std::string name)
+bool HeartsGame::setPassCards(std::vector<Card> cards, std::string name)
 {
 
   for (int i = 0; i < players.size(); i++)
@@ -223,33 +223,32 @@ void HeartsGame::setPassCards(std::vector<int> cards, std::string name)
     {
       for (int j = cards.size() - 1; j >= 0; j--)
       {
-        Card tmp = players[i].getHand()[cards[j] - 1];
-        passCard(tmp, i);
-        if (players[i].removeCardFromHand(tmp)) std::cout << "yes" << std::endl;
+        passCard(cards[j], i);
+        if (!players[i].removeCardFromHand(cards[j])) return false;
       }
     }
   }
+  return true;
 }
 
 // plays a card
 // takes the card index value in hand and player's name
 // returns -1 if card was invalid else returns the player
 // that made the move
-int HeartsGame::playCard(int value, std::string name)
+int HeartsGame::playCard(Card card, std::string name)
 {
   int j = 0;
   for (int i = 0; i < players.size(); i++)
   {
     if (players[i].getName() == name)
     {
-      Card tmp = players[i].getHand()[value - 1];
-      if (!validateMove(i, tmp, 13 - players[i].getHand().size(), turn))
+      if (!validateMove(i, card, 13 - players[i].getHand().size(), turn))
       {
         return -1;
       }
 
-      players[i].removeCardFromHand(tmp);
-      centerPile.push_back(tmp);
+      players[i].removeCardFromHand(card);
+      centerPile.push_back(card);
       j = i;
     }
   }

@@ -17,15 +17,14 @@ public:
   void passCards(int round);
   int endTurn(int currentPlayer);
   void endRound();
-  void setPassCards(std::vector<int> cards, std::string name);
-  int playCard(int values, std::string name);
+  bool setPassCards(std::vector<Card> cards, std::string name);
+  int playCard(Card card, std::string name);
   std::vector<Player> getPlayers() { return players; }
   std::vector<Card> getCenterPile() { return centerPile; }
 private:
   std::vector<Card> initializeDeck();
   void dealCards(std::vector<Card>& Deck);
 
-  int fixPass(int r, int p, int c);
   // checks to see if a players hand is all hearts.
   bool allhearts(std::vector<Card> h);
   // compares hand against the lead suit
