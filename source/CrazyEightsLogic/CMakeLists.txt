@@ -1,17 +1,6 @@
 xpGetExtern(externIncs externLibs PUBLIC boost wxWidgets)
-include_directories(${externIncs} ${CMAKE_SOURCE_DIR})
-add_library(Game
-Card.hpp
-Card.cpp
-Game.hpp
-Player.hpp
-Player.cpp
-PlayerNetworking.cpp
-CrazyEightsLogic.hpp
-CrazyEightsLogic.cpp
-)
-add_executable(demo main.cpp)
-target_link_libraries(
-demo
-Game
-)
+add_library(CrazyEights, CrazyEightsLogic.cpp, CrazyEightsLogic.hpp)
+target_link_libraries(CrazyEights ${
+externLibs
+} Game)
+target_include_directories(CrazyEights ${externIncs})
