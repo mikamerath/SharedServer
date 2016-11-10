@@ -7,6 +7,9 @@
 // Boost Includes
 #include <boost/test/unit_test.hpp>
 
+#include "source\HeartsLogic\HeartsGame.hpp"
+#include "source\PlayerAPI\Player.hpp"
+
 BOOST_AUTO_TEST_CASE(cardInitialization)
 {
   BOOST_CHECK_EQUAL(0, 0);
@@ -19,4 +22,17 @@ BOOST_AUTO_TEST_CASE(otherTest)
   BOOST_CHECK_EQUAL(5, 5);
 }
 
+BOOST_AUTO_TEST_CASE(heartsGameInitialization)
+{
+	std::vector<Player> players;
+	for (int i = 0; i < 4; i++)
+	{
+		Player newPlayer(i,"123.123.123.123");
+		players.push_back(newPlayer);
+	}
+	HeartsGame game(players);
+	BOOST_CHECK_EQUAL(game.getPlayers().size(), 4);
+	BOOST_CHECK_EQUAL(game.getCenterPile().size(), 0);
+
+}
 //EOF
