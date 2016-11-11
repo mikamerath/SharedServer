@@ -39,7 +39,7 @@ Card::Card(Suit su, Value val) : suit(su), value(val)
 // Returns the suit of a card.
 Suit Card::getSuit() const
 {
-    return suit;
+  return suit;
 }
 
 // Returns a value of a card.

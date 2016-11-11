@@ -35,13 +35,14 @@ public:
 
   void setName(std::string);
   std::string getName() const;
+  int getId();
 
   // The functions below reset the necessary variables at the start of round/game.
   void startNewRound();
   void startNewGame();
 
   // The functions below allow for communication from the server to the client.
-  void requestMove(); // Everyone
+  Card requestMove(); // Everyone
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
   void updateGameStatus(/*coded message of state*/);
