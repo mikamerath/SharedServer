@@ -26,40 +26,6 @@ int next(int plId)
 	}
 }
 
-void printBoard(std::vector<Card> trick, std::vector<Card> hand, int turn)
-{
-	int posZero = turn;
-	int posOne = next(turn);
-	int posTwo = next(posOne);
-	int posThree = next(posTwo);
-	std::cout << "..........................................Player " << posTwo
-		<< "...........................\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout
-		<< ".Player " << posOne
-		<< "....................................................................\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	for (auto c : trick)
-	{
-		//c.tablePrint();
-	}
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..............................................................."
-		".....player "
-		<< posThree << ".\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..................Player " << turn
-		<< "...................................................\n";
-}
-
 Spades::Spades(std::vector<Player> p)
 {
 	players = p;
@@ -72,12 +38,6 @@ void Spades::getBids()
 	{
 		p.requestBid();
 	}
-}
-
-void Spades::recordMove(std::vector<Card> m)
-{
-	// essentially update field, then setup and send message to clients.
-	//m.at(0).print();
 }
 
 int Spades::getTrickWinner(std::vector<Card> trick, int tw)
@@ -272,7 +232,6 @@ void Spades::beginRound(int starter)
 				{
 					s = ROUND_OVER;
 				}
-				//printBoard(trick, players.at(turn).getHand(), turn); <- These are the three pieces of information that need to be sent to the player.
 				std::cout << "Updating Connected Games..." << std::endl;
 				/*std::cout << "Trick: " << std::endl;
 				for(auto c : trick){
@@ -317,10 +276,6 @@ void Spades::startTrick()
 void Spades::setDeck()
 {
 	initializeDeck();
-}
-
-void Spades::printPlayerHands()
-{
 }
 
 /*int main()
