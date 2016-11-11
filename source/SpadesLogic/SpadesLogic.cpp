@@ -1,4 +1,5 @@
-#include "Game.hpp"
+#include "source/PlayerAPI/Game.hpp"
+
 #include <iostream>
 #include <vector>
 
@@ -229,7 +230,7 @@ void Spades::beginRound(int starter)
     for (int i = 0; i < 4; i++)
     {
 
-      trick.push_back(players.at(turn).requestMove());
+      //trick.push_back(players.at(turn).requestMove());
       if (validMove(trick, turn, ledSuit, i))
       {
         std::vector<Card> m;
@@ -249,7 +250,7 @@ void Spades::beginRound(int starter)
           //	c.print();
           //}
           players.at(turn).insertCardToHand(sendBack);
-          trick.push_back(players.at(turn).requestMove());
+          //trick.push_back(players.at(turn).requestMove());
           vm = validMove(trick, turn, ledSuit, i);
           if (vm && i == 0)
           {
