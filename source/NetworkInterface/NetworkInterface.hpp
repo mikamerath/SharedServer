@@ -2,8 +2,13 @@
 #define NETWORK_INTERFACE
 
 #include <boost\asio.hpp>
+<<<<<<< HEAD
+#include "TCPConnection.hpp"
+#include <iostream>
+=======
 #include "GeneralMessage.h"
 #include "../PlayerAPI/Player.hpp"
+>>>>>>> refs/remotes/michaelkamerath/master
 
 using namespace boost::asio;
 
@@ -14,6 +19,16 @@ send and recieve messages based on a single request-reply pattern.
 class NetworkInterface
 {
 public:
+<<<<<<< HEAD
+
+protected:
+  NetworkInterface(int port, io_service& service, std::ostream& outStream);
+
+  io_service& ioService;
+  int activePort;
+  std::ostream& out;
+
+=======
   NetworkInterface(int port)
   {
   }
@@ -45,6 +60,7 @@ private:
   io_service ioService;
   ip::tcp::acceptor acceptor;
   
+>>>>>>> refs/remotes/michaelkamerath/master
 
 };
 #endif // !NETWORK_INTERFACE
