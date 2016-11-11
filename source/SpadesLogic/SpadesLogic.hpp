@@ -10,7 +10,7 @@ class Spades : public Game
 public:
 	void setDeck();
 	void printPlayerHands();
-	void start();
+	//void start();
 	void getBids();
 	void beginRound(int);
 	void startTrick();
