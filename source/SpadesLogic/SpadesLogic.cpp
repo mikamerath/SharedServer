@@ -1,4 +1,32 @@
+<<<<<<< HEAD
 #include"SpadesLogic.hpp"
+=======
+#include "source/PlayerAPI/Game.hpp"
+
+#include <iostream>
+#include <vector>
+
+class Spades : public Game
+{
+public:
+  void setDeck();
+  void printPlayerHands();
+  void start();
+  void getBids();
+  void beginRound(int);
+  void startTrick();
+  bool validMove(std::vector<Card>, int, Suit&, int);
+  int getTrickWinner(std::vector<Card>, int);
+  int getNextPlayer(int);
+  void score();
+  void recordMove(std::vector<Card>);
+  Spades(std::vector<Player>);
+  ~Spades() {}
+private:
+  int starter;
+  bool spadesBroken;
+};
+>>>>>>> refs/remotes/michaelkamerath/master
 
 int Spades::getNextPlayer(int plId)
 {
@@ -206,6 +234,7 @@ void Spades::beginRound(int starter)
 		for (int i = 0; i < 4; i++)
 		{
 
+<<<<<<< HEAD
 			//trick.push_back(players.at(turn).requestMove());
 			if (validMove(trick, turn, ledSuit, i))
 			{
@@ -233,6 +262,35 @@ void Spades::beginRound(int starter)
 						ledSuit = (Suit)trick.at(0).getSuit();
 					}
 				}
+=======
+      //trick.push_back(players.at(turn).requestMove());
+      if (validMove(trick, turn, ledSuit, i))
+      {
+        std::vector<Card> m;
+        m.push_back(trick.at(i));
+      }
+      else
+      {
+        bool vm = false;
+        while (vm == false)
+        {
+          std::cout << "Invalid Move!!!" << std::endl;
+          std::cout << std::endl;
+          // std::cout << "Trick: " << std::endl;
+          auto sendBack = trick.back();
+          trick.pop_back();
+          // for(auto c : trick){
+          //	c.print();
+          //}
+          players.at(turn).insertCardToHand(sendBack);
+          //trick.push_back(players.at(turn).requestMove());
+          vm = validMove(trick, turn, ledSuit, i);
+          if (vm && i == 0)
+          {
+            ledSuit = (Suit)trick.at(0).getSuit();
+          }
+        }
+>>>>>>> refs/remotes/michaelkamerath/master
 
 				// severe connection to client (you don't want to play with them
 				// anyway).

@@ -68,5 +68,4 @@ public:
 bool operator<(const Card&, const Card&);
 bool operator==(const Card&, const Card&);
 
-
 #endif

@@ -42,7 +42,7 @@ public:
   void startNewGame();
 
   // The functions below allow for communication from the server to the client.
-  Card requestMove(); // Everyone
+  void requestMove(); // Everyone
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
   void updateGameStatus(/*coded message of state*/);
