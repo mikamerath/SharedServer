@@ -4,4 +4,5 @@ add_library(NetworkInterface
 NetworkInterface.hpp
 GeneralMessage.hpp
 TCPConnection.hpp
+PlayerNetworking.cpp
 )

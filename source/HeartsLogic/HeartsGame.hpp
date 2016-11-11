@@ -1,7 +1,7 @@
 #ifndef HEARTS_GAME_HPP
 #define HEARTS_GAME_HPP
 
-#include "Player.hpp"
+#include "source\PlayerAPI\Player.hpp"
 #include <boost/asio.hpp>
 #include <random>
 
