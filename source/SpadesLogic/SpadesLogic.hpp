@@ -26,4 +26,4 @@ private:
 	bool spadesBroken;
 };
 
-#endiff
+#endif
