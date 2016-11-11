@@ -7,9 +7,3 @@ Game.hpp
 Player.hpp
 Player.cpp
 )
-add_executable(demo main.cpp)
-target_link_libraries(
-demo
-Game
-NetworkInterface
-)
