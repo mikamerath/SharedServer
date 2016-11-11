@@ -1,3 +1,4 @@
 add_subdirectory(PlayerAPI)
 add_subdirectory(NetworkInterface)
 add_subdirectory(HeartsLogic)
+add_subdirectory(CrazyEightsLogic)
