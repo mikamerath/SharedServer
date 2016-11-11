@@ -1,7 +1,7 @@
 #ifndef SPADESLOGIC_HPP
 #define SPADESLOGIC_HPP
 
-#include "Game.hpp"
+#include "source/PlayerAPI/Game.hpp"
 #include <iostream>
 #include <vector>
 
