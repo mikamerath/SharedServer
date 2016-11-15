@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{minted}
+
+\definecolor{LightGray}{gray}{0.9}
+
+\title{Making A Pull Request}
+\author{michael.kamerath }
+\date{November 2016}
+
+\begin{document}
+
+\maketitle
+
+\section{Getting Started}
+First, be sure you are up to date with the current project. To do this, run the following commands: (Remember, remote name should point to \\ https://github.com/michaelkamerath/SharedServer) \\ \\
+\begin{minted}[bgcolor=LightGray]{c}
+    git fetch remoteName
+    git pull remoteName master
+\end{minted}
+\\ \\
+Now your code is all up to date with what is currently happening on the SharedServer.
+
+\section{Changing the CMake}
+If you are adding a directory under the /source folder, update the bottom of the CMakeList.txt with the name of your new subdirectory. \\ \\
+\begin{minted}[bgcolor=LightGray]{cmake}
+    add_subdirectory(PlayerAPI)
+    ...
+    add_subdirectory(yourNewDirectory)
+\end{minted}
+\\ \\
+This allows you to keep your section of the code independent from others. Next, create your directory in your local file system and add a CMakeList.txt to it. All files must be in this CMakeList.txt in order to be included by CMake. An example of your CMakeList.txt for your directory would look something like this. \\ \\
+\begin{minted}[bgcolor=LightGray]{cmake}
+xpGetExtern(externIncs externLibs PUBLIC boost wxWidgets)
+include_directories(${externIncs} ${CMAKE_SOURCE_DIR})
+add_library(Game
+Thing.hpp
+Thing.cpp
+RandomHeader.hpp
+OtherThing.hpp
+OtherThing.cpp
+)
+\end{minted}
+
+\section{Building your Code}
+Now that you are up to date with what is happening on the SharedServer and have your CMakeList, there's one more thing to do before running CMake. Go to the directory you just created and add all of the files listed in the CMakeList.txt file you created. Now you can run CMake, which will put the files in your project and allow you to modify and build them. Once you have finished coding your files, right click on ALL\_BUILD to build everything in your project. If everything builds, you're good to go. Clang format all of the code that you added and save it to be sure we have a clean, consistent style for the code.
+
+\section{Unit Testing}
+In order to be sure your code works correctly without the entire server working, we have a testing framework that you can add tests to. Navigate down to Test->Source Files->Test.cpp and you will see that everything to create unit tests is available for you. Simply include the header files you need, and then test the functionality of your code. We are aiming for at least line coverage so be sure that your code tests all of that.
+
+\section{Submitting the Pull Request}
+After you have checked off all of these things (Unit Testing can be done in a separate pull request), create a pull request to the Shared Server. Give a brief description of the changes you made and how they apply to the Server as a whole, this will help us document what changes have occurred. Add @username to those people whom the code will affect so they will know what changes you made and a code review can occur. After we have a super majority of approvals or it has been 48 hours and CM (Michael Kamerath) approves, it will be merged.
+
+\end{document}
