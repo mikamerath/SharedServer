@@ -14,6 +14,10 @@
 #include <iterator>
 #include <random>
 
+Card::Card() : suit(), value()
+{
+}
+
 // Constructor for a UNDEFINED card. Needed for if the client chooses to draw
 // from the deck in Crazy Eight's.
 Card::Card(Suit su) : suit(su), value(TWO)
@@ -46,6 +50,13 @@ Suit Card::getSuit() const
 Value Card::getValue() const
 {
   return value;
+}
+
+template <class Archive>
+void Card::serialize(Archive& ar, const unsigned int version)
+{
+  ar& suit;
+  ar& value;
 }
 
 // Allows for the '<' comparison of two Card objects.
