@@ -53,10 +53,10 @@ Value Card::getValue() const
 }
 
 template <class Archive>
-void Card::serialize(Archive &ar, const unsigned int version)
+void Card::serialize(Archive& ar, const unsigned int version)
 {
-  ar & suit;
-  ar & value;
+  ar& suit;
+  ar& value;
 }
 
 // Allows for the '<' comparison of two Card objects.
