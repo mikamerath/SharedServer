@@ -1,6 +1,28 @@
+#include "source/PlayerAPI/Game.hpp"
 
-#include"SpadesLogic.hpp"
+#include <iostream>
+#include <vector>
 
+class Spades : public Game
+{
+public:
+	void setDeck();
+	void printPlayerHands();
+	void start();
+	void getBids();
+	void beginRound(int);
+	void startTrick();
+	bool validMove(std::vector<Card>, int, Suit&, int);
+	int getTrickWinner(std::vector<Card>, int);
+	int getNextPlayer(int);
+	void score();
+	void recordMove(std::vector<Card>);
+	Spades(std::vector<Player>);
+	~Spades() {}
+private:
+	int starter;
+	bool spadesBroken;
+};
 
 int Spades::getNextPlayer(int plId)
 {
@@ -26,10 +48,44 @@ int next(int plId)
 	}
 }
 
+void printBoard(std::vector<Card> trick, std::vector<Card> hand, int turn)
+{
+	int posZero = turn;
+	int posOne = next(turn);
+	int posTwo = next(posOne);
+	int posThree = next(posTwo);
+	std::cout << "..........................................Player " << posTwo
+		<< "...........................\n";
+	std::cout << "..............................................................."
+		"..............\n";
+	std::cout
+		<< ".Player " << posOne
+		<< "....................................................................\n";
+	std::cout << "..............................................................."
+		"..............\n";
+	std::cout << "..............................................................."
+		"..............\n";
+	for (auto c : trick)
+	{
+		//c.tablePrint();
+	}
+	std::cout << "..............................................................."
+		"..............\n";
+	std::cout << "..............................................................."
+		"..............\n";
+	std::cout << "..............................................................."
+		".....player "
+		<< posThree << ".\n";
+	std::cout << "..............................................................."
+		"..............\n";
+	std::cout << "..................Player " << turn
+		<< "...................................................\n";
+}
+
 Spades::Spades(std::vector<Player> p)
 {
 	players = p;
-	startTrick();
+	start();
 }
 
 void Spades::getBids()
@@ -38,6 +94,12 @@ void Spades::getBids()
 	{
 		p.requestBid();
 	}
+}
+
+void Spades::recordMove(std::vector<Card> m)
+{
+	// essentially update field, then setup and send message to clients.
+	//m.at(0).print();
 }
 
 int Spades::getTrickWinner(std::vector<Card> trick, int tw)
@@ -168,7 +230,6 @@ void Spades::beginRound(int starter)
 		for (int i = 0; i < 4; i++)
 		{
 
-
 			//trick.push_back(players.at(turn).requestMove());
 			if (validMove(trick, turn, ledSuit, i))
 			{
@@ -196,71 +257,43 @@ void Spades::beginRound(int starter)
 						ledSuit = (Suit)trick.at(0).getSuit();
 					}
 				}
-				//trick.push_back(players.at(turn).requestMove());
-				if (validMove(trick, turn, ledSuit, i))
-				{
-					std::vector<Card> m;
-					m.push_back(trick.at(i));
-				}
-				else
-				{
-					bool vm = false;
-					while (vm == false)
-					{
-						std::cout << "Invalid Move!!!" << std::endl;
-						std::cout << std::endl;
-						// std::cout << "Trick: " << std::endl;
-						auto sendBack = trick.back();
-						trick.pop_back();
-						// for(auto c : trick){
-						//	c.print();
-						//}
-						players.at(turn).insertCardToHand(sendBack);
-						//trick.push_back(players.at(turn).requestMove());
-						vm = validMove(trick, turn, ledSuit, i);
-						if (vm && i == 0)
-						{
-							ledSuit = (Suit)trick.at(0).getSuit();
-						}
-					}
 
-					// severe connection to client (you don't want to play with them
-					// anyway).
-				}
-				turn = getNextPlayer(turn);
-				if (players.at(turn).getHand().empty())
-				{
-					s = ROUND_OVER;
-				}
-				std::cout << "Updating Connected Games..." << std::endl;
-				/*std::cout << "Trick: " << std::endl;
-				for(auto c : trick){
-				c.print();
-				}*/
+				// severe connection to client (you don't want to play with them
+				// anyway).
 			}
-			trickWinner = getTrickWinner(trick, trickWinner);
-			std::cout << "Player " << trickWinner << " won the trick." << std::endl;
-			players.at(trickWinner).incrementTricksWon();
-			std::cout << players.at(trickWinner).getId() << " has won "
-				<< players.at(trickWinner).getTricksWon() << " tricks."
-				<< std::endl;
-			trick.clear();
-			turn = trickWinner;
+			turn = getNextPlayer(turn);
+			if (players.at(turn).getHand().empty())
+			{
+				s = ROUND_OVER;
+			}
+			//printBoard(trick, players.at(turn).getHand(), turn); <- These are the three pieces of information that need to be sent to the player.
+			std::cout << "Updating Connected Games..." << std::endl;
+			/*std::cout << "Trick: " << std::endl;
+			for(auto c : trick){
+			c.print();
+			}*/
 		}
-		score();
-		initializeDeck();
-		s = BIDDING;
-		getBids();
-		s = PLAYING;
-		spadesBroken = false;
-		beginRound(getNextPlayer(starter));
-		return;
+		trickWinner = getTrickWinner(trick, trickWinner);
+		std::cout << "Player " << trickWinner << " won the trick." << std::endl;
+		players.at(trickWinner).incrementTricksWon();
+		std::cout << players.at(trickWinner).getId() << " has won "
+			<< players.at(trickWinner).getTricksWon() << " tricks."
+			<< std::endl;
+		trick.clear();
+		turn = trickWinner;
 	}
+	score();
+	initializeDeck();
+	s = BIDDING;
+	getBids();
+	s = PLAYING;
+	spadesBroken = false;
+	beginRound(getNextPlayer(starter));
 }
 
-void Spades::startTrick()
+void Spades::start()
 {
-	initializeDeck();
+	setDeck();
 	players.at(0).initializeHand(deck, 13);
 	players.at(1).initializeHand(deck, 13);
 	players.at(2).initializeHand(deck, 13);
@@ -276,6 +309,10 @@ void Spades::startTrick()
 void Spades::setDeck()
 {
 	initializeDeck();
+}
+
+void Spades::printPlayerHands()
+{
 }
 
 /*int main()
