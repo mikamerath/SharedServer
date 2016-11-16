@@ -305,5 +305,4 @@ void HeartsGame::endRound()
 // takes a card and index of player
 void HeartsGame::passCard(Card tmp, int i)
 {
-  cardsToPass[i].push_back(tmp);
-}
+  cardsToPass[i].push_back(tmp);}

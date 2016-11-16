@@ -49,4 +49,88 @@ BOOST_AUTO_TEST_CASE(heartsGameInitialization)
 	}
 	BOOST_CHECK_EQUAL(game.findTwoOfClubs(), playerWithTwoOfClubs);
 }
+
+BOOST_AUTO_TEST_CASE(heartsGamefindTwoOfClubs)
+{
+/*
+ * 
+ */
+
+}
+
+
+BOOST_AUTO_TEST_CASE(heartsGamePassCards)
+{
+/*
+ * show that 3 cards are passed to each player
+ */
+
+}
+
+
+BOOST_AUTO_TEST_CASE(heartsGameAllHearts)
+{
+/*
+ * test whether hand of player is all hearts
+ */
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGameNoLeadSuit)
+{
+/*
+ * compare hand against lead suit
+ * returns a bool whether there is a card with the suit in it
+ */
+
+}
+
+
+BOOST_AUTO_TEST_CASE(heartsGameValidateMove)
+{
+/*
+ * test whether card is valid 
+ * 	right suit
+ *
+ */
+
+}
+
+
+BOOST_AUTO_TEST_CASE(heartsGameDealCards)
+{
+
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGamePlayHearts)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGameSetPassCards)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGamePlayCard)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGameEndTurn)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGameEndRound)
+{
+
+}
+
+BOOST_AUTO_TEST_CASE(heartsGamePassCard)
+{
+
+}
+
 //EOF
