@@ -24,7 +24,11 @@
 #ifndef CARD_HPP
 #define CARD_HPP
 
+// Standard Includes
 #include <vector>
+
+// Boost Includes
+#include <boost/serialization/access.hpp>
 
 enum Suit
 {
@@ -57,12 +61,16 @@ class Card
 private:
   Suit suit;
   Value value;
+  friend class boost::serialization::access;
 
 public:
+  Card();
   Card(Suit su);
   Card(Suit su, Value val);
   Suit getSuit() const;
   Value getValue() const;
+  template <class Archive>
+  void serialize(Archive& ar, const unsigned int);
 };
 
 bool operator<(const Card&, const Card&);
