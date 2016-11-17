@@ -14,6 +14,10 @@
 #include <iterator>
 #include <random>
 
+Card::Card() : suit(), value()
+{
+}
+
 // Constructor for a UNDEFINED card. Needed for if the client chooses to draw
 // from the deck in Crazy Eight's.
 Card::Card(Suit su) : suit(su), value(TWO)
