@@ -70,7 +70,7 @@ public:
   Suit getSuit() const;
   Value getValue() const;
   template <class Archive>
-  inline void Card::serialize(Archive& ar, const unsigned int version)
+  inline void serialize(Archive& ar, const unsigned int version)
   {
     ar& suit;
     ar& value;
