@@ -39,6 +39,7 @@ public:
 
   void setName(std::string);
   std::string getName() const;
+  int getId();
 
   void setValidateSuit(std::function<void(Suit)>);
   void setValidateMove(std::function<void(Card)>);

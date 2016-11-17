@@ -4,8 +4,14 @@
 *
 *
 */
+
+#ifndef GAME_HPP
+#define GAME_HPP
+
 #include "Card.hpp"
 #include "Player.hpp"
+
+#include <algorithm>
 #include <random>
 
 enum State
@@ -64,3 +70,5 @@ class Message
   bool turn;
   std::vector<Card> field;
 };
+
+#endif

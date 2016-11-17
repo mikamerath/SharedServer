@@ -10,6 +10,7 @@
 
 #include "Player.hpp"
 #include <algorithm>
+#include <iostream>
 
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int idNumber, std::string ipAddress)

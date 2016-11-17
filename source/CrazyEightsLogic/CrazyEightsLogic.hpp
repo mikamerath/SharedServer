@@ -1,9 +1,9 @@
 #ifndef CRAZY_EIGHTS_LOGIC_H
 #define CRAZY_EIGHTS_LOGIC_H
 
-#include "Card.hpp"
-#include "Game.cpp"
-#include "Player.hpp"
+#include "source/PlayerAPI/Card.hpp"
+#include "source/PlayerAPI/Game.hpp"
+#include "source/PlayerAPI/Player.hpp"
 
 class CrazyEightsLogic : public Game
 {
