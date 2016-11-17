@@ -13,6 +13,7 @@
 #define PLAYER_HPP
 
 #include "Card.hpp"
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -29,6 +30,9 @@ private:
   int bid;                       // Spades
   int bags;                      // Spades
   int tricksWon;                 // Spades
+  std::function<void(Suit)> validateSuit;
+  std::function<void(Card)> validateMove;
+  std::function<void(int)> validateBid;
 
 public:
   Player(int idNumber, std::string ipAddress);
@@ -36,7 +40,12 @@ public:
   void setName(std::string);
   std::string getName() const;
 
-  // The functions below reset the necessary variables at the start of round/game.
+  void setValidateSuit(std::function<void(Suit)>);
+  void setValidateMove(std::function<void(Card)>);
+  void setValidateBid(std::function<void(int)>);
+
+  // The functions below reset the necessary variables at the start of
+  // round/game.
   void startNewRound();
   void startNewGame();
 
