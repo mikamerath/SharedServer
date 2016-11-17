@@ -1,4 +1,4 @@
-xpGetExtern(externIncs externLibs PUBLIC boost wxWidgets)
+xpGetExtern(externIncs externLibs PUBLIC boost)
 include_directories(${externIncs} ${CMAKE_SOURCE_DIR})
 add_library(Game
 Card.hpp
@@ -7,3 +7,4 @@ Game.hpp
 Player.hpp
 Player.cpp
 )
+link_libraries(Game ${externLibs})

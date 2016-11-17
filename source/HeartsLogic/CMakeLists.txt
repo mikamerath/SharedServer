@@ -3,3 +3,4 @@ include_directories(${externIncs} ${CMAKE_SOURCE_DIR})
 add_library(Hearts
 HeartsGame.cpp
 HeartsGame.hpp)
+link_libraries(Hearts ${externLibs})
