@@ -4,3 +4,4 @@ add_library(CrazyEights
 CrazyEightsLogic.cpp
 CrazyEightsLogic.hpp
 )
+link_libraries(CrazyEights ${externLibs})
