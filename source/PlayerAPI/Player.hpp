@@ -67,6 +67,7 @@ public:
 
   // The functions below are for use in the game Spades.
   int getBid() const;
+  void setBid(int);
   int getBags() const;
   void setBags(int);
   int getTricksWon() const;

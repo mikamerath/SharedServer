@@ -71,12 +71,8 @@ void Player::initializeHand(std::vector<Card>& deck, unsigned int numCards)
 // Inserts card into the hand in order.
 void Player::insertCardToHand(const Card& c)
 {
-  auto iterator = hand.begin();
-  while (c < *iterator && iterator < hand.end())
-  {
-    iterator++;
-  }
-  hand.emplace(iterator, c);
+  hand.push_back(c);
+  std::sort(hand.begin(), hand.end());
 }
 
 // Attempts to remove card from hand. If card is in hand, it will be removed
@@ -149,6 +145,11 @@ int Player::getBid() const
   return bid;
 }
 
+void Player::setBid(int b)
+{
+  bid = b;
+}
+
 // Gets the number of bags a player had (Spades).
 int Player::getBags() const
 {
@@ -183,6 +184,3 @@ void Player::incrementTricksWon()
 int Player::getId(){
  return id;
 }
-
-
-
