@@ -1,3 +1,6 @@
+#ifndef SPADESLOGIC_HPP
+#define SPADESLOGIC_HPP
+
 class Spades : public Game
 {
 public:
@@ -17,3 +20,5 @@ public:
 private:
 	int starter;
 	bool spadesBroken;
+};
+#endif
