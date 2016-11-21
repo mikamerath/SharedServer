@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-
+/*
 class Spades : public Game
 {
 public:
@@ -23,7 +23,7 @@ private:
 	int starter;
 	bool spadesBroken;
 };
-
+*/
 int Spades::getNextPlayer(int plId)
 {
 	if (plId == 3)
