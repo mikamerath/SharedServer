@@ -1,7 +1,4 @@
-#include "source/PlayerAPI/Game.hpp"
-
-#include <iostream>
-#include <vector>
+#include "source/SpadesLogic/SpadesLogic.hpp"
 /*
 class Spades : public Game
 {

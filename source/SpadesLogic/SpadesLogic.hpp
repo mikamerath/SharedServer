@@ -2,7 +2,6 @@
 #define SPADESLOGIC_HPP
 
 #include "source/PlayerAPI/Game.hpp"
-#include <iostream>
 #include <vector>
 
 class Spades : public Game
