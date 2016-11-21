@@ -3,6 +3,7 @@
 
 #include "source/PlayerAPI/Game.hpp"
 #include <vector>
+#include <iostream>
 
 class Spades : public Game
 {
