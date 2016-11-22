@@ -10,127 +10,93 @@
 #include "source\HeartsLogic\HeartsGame.hpp"
 #include "source\PlayerAPI\Player.hpp"
 
-BOOST_AUTO_TEST_CASE(cardInitialization)
-{
-  BOOST_CHECK_EQUAL(0, 0);
-  BOOST_CHECK_EQUAL(20, 20);
-}
-
-BOOST_AUTO_TEST_CASE(otherTest)
-{
-  BOOST_CHECK_EQUAL(10, 10);
-  BOOST_CHECK_EQUAL(5, 5);
-}
-
 BOOST_AUTO_TEST_CASE(heartsGameInitialization)
 {
-	std::vector<Player> players;
-	for (int i = 0; i < 4; i++)
-	{
-		Player newPlayer(i,"123.123.123." + std::to_string(i));
-		players.push_back(newPlayer);
-	}
-	HeartsGame game(players);
-	BOOST_CHECK_EQUAL(game.getPlayers().size(), 4);
-	for (int i = 0; i < 4; i++)
-		BOOST_CHECK_EQUAL(game.getPlayers()[i].getId(), i);
-	BOOST_CHECK_EQUAL(game.getCenterPile().size(), 0);
-	game.play_Hearts();
-	for (int i = 0; i < 4; i++)
-		BOOST_CHECK_EQUAL(game.getPlayers()[i].getHand().size(), 13);
-	Card twoOfClubs(CLUBS, TWO);
-	int playerWithTwoOfClubs = -1;
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < game.getPlayers()[i].getHand().size(); j++)
-		{
-			if (game.getPlayers()[i].getHand()[j] == twoOfClubs) playerWithTwoOfClubs = i;
-		}
-	}
-	BOOST_CHECK_EQUAL(game.findTwoOfClubs(), playerWithTwoOfClubs);
+    std::vector<Player> players;
+    for (int i = 0; i < 4; i++)
+    {
+        Player newPlayer(i,"123.123.123." + std::to_string(i));
+        players.push_back(newPlayer);
+    }
+    HeartsGame game(players);
+    BOOST_CHECK_EQUAL(game.getPlayers().size(), 4);
+    for (int i = 0; i < 4; i++)
+        BOOST_CHECK_EQUAL(game.getPlayers()[i].getId(), i);
+    BOOST_CHECK_EQUAL(game.getCenterPile().size(), 0);
+    game.play_Hearts();
+    for (int i = 0; i < 4; i++)
+        BOOST_CHECK_EQUAL(game.getPlayers()[i].getHand().size(), 13);
+    Card twoOfClubs(CLUBS, TWO);
+    int playerWithTwoOfClubs = -1;
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < game.getPlayers()[i].getHand().size(); j++)
+        {
+            if (game.getPlayers()[i].getHand()[j] == twoOfClubs) playerWithTwoOfClubs = i;
+        }
+    }
+    BOOST_CHECK_EQUAL(game.findTwoOfClubs(), playerWithTwoOfClubs);
 }
 
-BOOST_AUTO_TEST_CASE(heartsGamefindTwoOfClubs)
-{
-/*
- * 
- */
+//int findTwoOfClubs();
+BOOST_AUTO_TEST_CASE(heartsGamefindTwoOfClubs){
+    
+    std::vector<Player> players;
+    for (int i = 0; i < 4; i++){
+        Player newPlayer(i,"123.123.123." + std::to_string(i));
+        players.push_back(newPlayer);
+    }
+    HeartsGame game(players);
+    game.play_Hearts();
+    
+    for (size_t i = 0; i < players.size(); ++i){
+        std::vector<Card> temp = players[i].getHand();
+        for (auto j = 0; j < temp.size(); ++j){
+            if (temp[j].getSuit() == Suit::CLUBS && temp[j].getValue() == 2){
+                BOOST_CHECK(game.findTwoOfClubs() == i);
+                return;
+            }
+        }
+    }
+}
 
+//bool setPassCards(std::vector<Card> cards, std::string name);
+BOOST_AUTO_TEST_CASE(heartsGameSetPassCards){
+    Card aceofSpades = Card(SPADES, ACE);
+    Card threeOfHearts(HEARTS, THREE);
+    Card kingOfClubs(CLUBS, KING);
+    std::vector<Player> players;
+    
+    for (int i = 0; i < 4; i++){
+        Player newPlayer(i,"123.123.123." + std::to_string(i));
+        players.push_back(newPlayer);
+    }
+    std::vector<Card> v;
+    v.push_back(aceofSpades);
+    v.push_back(threeOfHearts);
+    v.push_back(kingOfClubs);
+    HeartsGame game(players);
+    
+    BOOST_CHECK(game.setPassCards(v, "abc") == true);
+}
+
+//int playCard(Card card, std::string name);
+BOOST_AUTO_TEST_CASE(heartsGamePlayCard){
+    std::vector<Player> players;
+    for (int i = 0; i < 4; i++){
+        Player newPlayer(i,"123.123.123." + std::to_string(i));
+        players.push_back(newPlayer);
+    }
+    HeartsGame game(players);
+    Card twoOfClubs(CLUBS, TWO);
+    game.play_Hearts();
+    
+    BOOST_CHECK(game.playCard(twoOfClubs, "0") == 0);
 }
 
 
-BOOST_AUTO_TEST_CASE(heartsGamePassCards)
-{
-/*
- * show that 3 cards are passed to each player
- */
-
+//int endTurn(int currentPlayer);
+BOOST_AUTO_TEST_CASE(heartsGameEndTurn){
+    
 }
-
-
-BOOST_AUTO_TEST_CASE(heartsGameAllHearts)
-{
-/*
- * test whether hand of player is all hearts
- */
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGameNoLeadSuit)
-{
-/*
- * compare hand against lead suit
- * returns a bool whether there is a card with the suit in it
- */
-
-}
-
-
-BOOST_AUTO_TEST_CASE(heartsGameValidateMove)
-{
-/*
- * test whether card is valid 
- * 	right suit
- *
- */
-
-}
-
-
-BOOST_AUTO_TEST_CASE(heartsGameDealCards)
-{
-
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGamePlayHearts)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGameSetPassCards)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGamePlayCard)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGameEndTurn)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGameEndRound)
-{
-
-}
-
-BOOST_AUTO_TEST_CASE(heartsGamePassCard)
-{
-
-}
-
 //EOF
