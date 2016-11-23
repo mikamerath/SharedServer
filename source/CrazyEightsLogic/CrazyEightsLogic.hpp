@@ -23,6 +23,7 @@ public:
   int getNumCardsDrawnCounter();
   void playCard(Card&);
   int calculateScore(std::vector<Player> players);
+  int getCardScoreValue(Card card);
   void nextTurn();
   int getTurn();
   void playGame();
