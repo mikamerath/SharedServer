@@ -181,6 +181,17 @@ void Player::incrementTricksWon()
   tricksWon++;
 }
 
-int Player::getId(){
- return id;
+void Player::setValidateSuit(std::function<void(Suit)> func)
+{
+  validateSuit = func;
+}
+
+void Player::setValidateMove(std::function<void(Card)> func)
+{
+  validateMove = func;
+}
+
+void Player::setValidateBid(std::function<void(int)> func)
+{
+  validateBid = func;
 }
