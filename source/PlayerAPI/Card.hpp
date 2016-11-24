@@ -70,7 +70,11 @@ public:
   Suit getSuit() const;
   Value getValue() const;
   template <class Archive>
-  void serialize(Archive& ar, const unsigned int);
+  inline void serialize(Archive& ar, const unsigned int version)
+  {
+    ar& suit;
+    ar& value;
+  }
 };
 
 bool operator<(const Card&, const Card&);
