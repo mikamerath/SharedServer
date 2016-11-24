@@ -16,11 +16,6 @@ void Player::requestBid()
 {
 }
 
-// Constructs and sends a message to ask for a suit from the client. (Eights)
-void Player::requestSuit()
-{
-}
-
 // Called from within the game. Sends the client a message with all of the
 // information about the game state (including field information).
 // This function appends the hand of the Player onto the message and sends
@@ -39,13 +34,21 @@ std::vector<Card> Player::receivedMove()
 // This is the callback function for requestBid.
 int Player::receivedBid()
 {
+  // CALL validateBid();
   int b = 0;
   return b;
+}
+
+// Constructs and sends a message to ask for a suit from the client. (Eights)
+void Player::requestSuit()
+{
+  // CALL validateSuit();
 }
 
 // This is the callback function for requestSuit.
 Suit Player::receivedSuit()
 {
+  // CALL validateSuit();
   Suit s = HEARTS;
   return s;
 }
