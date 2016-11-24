@@ -82,6 +82,10 @@ public:
   int getTricksWon() const;
   void setTricksWon(int);
   void incrementTricksWon();
+
+  // Make player comparable for BOOST_CHECK_EQUAL
+  friend bool operator==(const Player& p1, const Player& p2);
+  friend std::ostream& operator<<(std::ostream& out, const Player& p);
 };
 
 #endif

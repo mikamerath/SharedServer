@@ -31,6 +31,12 @@ std::string Player::getName() const
   return name;
 }
 
+// Returns the id of the player.
+int Player::getId()
+{
+  return id;
+}
+
 // Function called at the start of a round. Updates the overallScore vector with
 // the previous roundScore, clears the scores and bids to get ready for the next
 // round.
@@ -194,4 +200,31 @@ void Player::setValidateMove(std::function<void(Card)> func)
 void Player::setValidateBid(std::function<void(int)> func)
 {
   validateBid = func;
+}
+
+void Player::setValidateMove(std::function<void(Card)> func)
+{
+  validateMove = func;
+}
+
+void Player::setValidateBid(std::function<void(int)> func)
+{
+  validateBid = func;
+}
+
+bool operator==(const Player& p1, const Player& p2)
+{
+  if (p1.hand.size() != p2.hand.size()) return false;
+  for (auto i = 0u; i < p1.hand.size(); i++)
+  {
+    if (!(p1.hand[i] == p2.hand[i])) return false;
+  }
+  return (p1.id == p2.id && p1.ip.compare(p2.ip) == 0 &&
+          p1.name.compare(p2.name) == 0);
+}
+
+std::ostream& operator<<(std::ostream& out, const Player& p)
+{
+  out << p.id << ", " << p.ip << ", " << p.name;
+  return out;
 }
