@@ -20,8 +20,9 @@ public:
   void displayHand(std::vector<Card> hand);
   void drawCard();
   void setCardsDrawnCounter(int numDrawn);
-  int getNumCardsDrawnCounter();
+  int getCardsDrawnCounter();
   void playCard(Card&);
+  bool validateSuit();
   int calculateScore(std::vector<Player> players);
   int getCardScoreValue(Card card);
   void nextTurn();

@@ -5,8 +5,7 @@ CrazyEightsLogic::CrazyEightsLogic(std::vector<Player>& netPlayers)
 {
   players = netPlayers;
   //    for (auto && player: players){
-  //        player.setValidateMove([this](Card c){validateMove(c);}); //create
-  //        validateMove
+  //        player.setValidateMove([this](Card c){isValidCard(c);});
   //        player.setValidateSuit([this](Suit s){validateSuit(s);}); //
   //        create validateSuit
   //    }
@@ -39,7 +38,7 @@ void CrazyEightsLogic::playGame()
     std::cout << "Pick a card to play or enter negative number to draw: ";
     std::cin >> cardIndex;
     std::cout << std::endl;
-    // request move function instead of stuff above
+    // players[turn].requestMove();  // request move function instead of stuff above
 
     bool isPlayerTurn = true;
 
@@ -47,7 +46,7 @@ void CrazyEightsLogic::playGame()
     {
       if (cardIndex < 0)
       {
-        if (getNumCardsDrawnCounter() > 2)
+        if (getCardsDrawnCounter() > 2)
         {
           std::cout
             << "You have drawn the max number of cards! Your turn is over!"
@@ -65,7 +64,7 @@ void CrazyEightsLogic::playGame()
           players = getPlayers();
           playerCards = players[getTurn()].getHand();
           displayHand(playerCards);
-          setCardsDrawnCounter(getNumCardsDrawnCounter() + 1);
+          setCardsDrawnCounter(getCardsDrawnCounter() + 1);
           std::cout << "Discard pile has "
                     << convertRankToString(getDiscardPile().back().getValue())
                     << " of "
@@ -208,6 +207,46 @@ int CrazyEightsLogic::getTurn()
 {
   return turn;
 }
+/**
+*
+* validateSuit is used for Networking
+*
+**/
+
+// bool CrazyEightsLogic::validateSuit()
+// {
+//   int turn = getTurn();
+//   std::vector<Player> players = getPlayers();
+//   Suit selection = players[turn].receivedSuit();
+//
+//   if (selection < 1 || selection > 4)
+//   {
+//     std::cout << "Invalid selection.  Select a suit: " << std::endl;
+//     std::cout << "1 - Hearts" << std::endl;
+//     std::cout << "2 - Spades" << std::endl;
+//     std::cout << "3 - Clubs" << std::endl;
+//     std::cout << "4 - Diamonds" << std::endl;
+//     players[turn].requestSuit();
+//   }
+//  else {
+//     UpdateGameStateMessage();
+//     nextTurn();
+//     players[turn].requestMove();
+//   }
+// }
+
+/**
+*
+* This playCard is used for Networking
+*
+*/
+// void CrazyEightsLogic::playCard(Card& card)
+// {
+//
+//
+//   discardPile.push_back(card);
+//   players[turn].removeCardFromHand(card);
+// }
 
 void CrazyEightsLogic::playCard(Card& card)
 {
@@ -222,8 +261,8 @@ void CrazyEightsLogic::playCard(Card& card)
     std::cout << "3 - Clubs" << std::endl;
     std::cout << "4 - Diamonds" << std::endl;
     std::cin >> selection;
-    // player[turn].requestSuit
-
+    // players[turn].requestSuit
+//////////////////////////////////////////////////////////////////
     // receivedSuit will return a suit
     // this part below should be separate function if request suit working
     while (selection < 1 || selection > 4)
@@ -275,7 +314,7 @@ void CrazyEightsLogic::setCardsDrawnCounter(int numDrawn)
   cardsDrawnCounter = numDrawn;
 }
 
-int CrazyEightsLogic::getNumCardsDrawnCounter()
+int CrazyEightsLogic::getCardsDrawnCounter()
 {
   return cardsDrawnCounter;
 }

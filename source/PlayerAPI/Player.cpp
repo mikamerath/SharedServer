@@ -194,3 +194,8 @@ void Player::setValidateBid(std::function<void(int)> func)
 {
   validateBid = func;
 }
+
+int Player::getId()
+{
+  return id;
+}
