@@ -31,6 +31,12 @@ std::string Player::getName() const
   return name;
 }
 
+// Returns the id of the player.
+int Player::getId()
+{
+  return id;
+}
+
 // Function called at the start of a round. Updates the overallScore vector with
 // the previous roundScore, clears the scores and bids to get ready for the next
 // round.
