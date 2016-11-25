@@ -82,14 +82,13 @@ void printBoard(std::vector<Card> trick, std::vector<Card> hand, int turn)
 Spades::Spades(std::vector<Player> p)
 {
 	players = p;
-	start();
 }
 
 void Spades::getBids()
 {
 	for (auto&& p : players)
 	{
-		p.requestBid();
+		//p.requestBid();
 	}
 }
 
@@ -207,8 +206,9 @@ void Spades::score()
 		{
 			p.setRoundScore(0);
 		}
-		std::cout << "p.getId() + p.getRoundScore() " << p.getId() << ":"
-			<< p.getRoundScore() << std::endl;
+		if (p.getTotalScore() > 100) {
+			s = GAME_OVER;
+		}
 	}
 }
 
@@ -240,12 +240,8 @@ void Spades::beginRound(int starter)
 				{
 					std::cout << "Invalid Move!!!" << std::endl;
 					std::cout << std::endl;
-					// std::cout << "Trick: " << std::endl;
 					auto sendBack = trick.back();
 					trick.pop_back();
-					// for(auto c : trick){
-					//	c.print();
-					//}
 					players.at(turn).insertCardToHand(sendBack);
 					//trick.push_back(players.at(turn).requestMove());
 					vm = validMove(trick, turn, ledSuit, i);
@@ -254,28 +250,17 @@ void Spades::beginRound(int starter)
 						ledSuit = (Suit)trick.at(0).getSuit();
 					}
 				}
-
-				// severe connection to client (you don't want to play with them
-				// anyway).
 			}
 			turn = getNextPlayer(turn);
 			if (players.at(turn).getHand().empty())
 			{
 				s = ROUND_OVER;
 			}
-			//printBoard(trick, players.at(turn).getHand(), turn); <- These are the three pieces of information that need to be sent to the player.
 			std::cout << "Updating Connected Games..." << std::endl;
-			/*std::cout << "Trick: " << std::endl;
-			for(auto c : trick){
-			c.print();
-			}*/
 		}
 		trickWinner = getTrickWinner(trick, trickWinner);
 		std::cout << "Player " << trickWinner << " won the trick." << std::endl;
 		players.at(trickWinner).incrementTricksWon();
-		std::cout << players.at(trickWinner).getId() << " has won "
-			<< players.at(trickWinner).getTricksWon() << " tricks."
-			<< std::endl;
 		trick.clear();
 		turn = trickWinner;
 	}
@@ -311,18 +296,3 @@ void Spades::setDeck()
 void Spades::printPlayerHands()
 {
 }
-
-/*int main()
-{
-Player one(0, "192.168.0.1");
-Player two(1, "192.168.0.2");
-Player three(2, "192.168.0.3");
-Player four(3, "192.168.0.4");
-std::vector<Player> p;
-p.push_back(one);
-p.push_back(two);
-p.push_back(three);
-p.push_back(four);
-Spades mySpades(p);
-return 0;
-} //Working test.*/
