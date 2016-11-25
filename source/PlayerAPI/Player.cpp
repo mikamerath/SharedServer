@@ -64,6 +64,7 @@ void Player::startNewGame()
   tricksWon = 0;
 }
 
+
 // Initializes a players hand with the 'numCards' specified.
 // The deck must be passed in so that the cards can be removed from the deck
 // when added to the player's hand.
@@ -222,3 +223,39 @@ std::ostream& operator<<(std::ostream& out, const Player& p)
   out << p.id << ", " << p.ip << ", " << p.name;
   return out;
 }
+
+void Player::requestMove()
+{
+  connection->write("Give Move");
+  connection->aSyncRead(boost::bind(&Player::receivedMove, this, _1));
+}
+
+void Player::requestBid()
+{
+  connection->write("Give Bid");
+  connection->aSyncRead(boost::bind(&Player::receivedBid, this, _1));
+}
+
+void Player::requestSuit()
+{
+  connection->write("Give Suit");
+  connection->aSyncRead(boost::bind(&Player::receivedSuit, this, _1));
+}
+
+void Player::updateGameStatus()
+{
+  connection->write("Coded Message");
+}
+
+void Player::readMessage()
+{
+  connection->aSyncRead(boost::bind(&Player::recivedMessage,this,_1));
+}
+
+void Player::recivedMessage(std::string msg)
+{
+  std::cout << "Message from : " << *this << std::endl;
+  std::cout << msg << std::endl;
+  readMessage();
+}
+

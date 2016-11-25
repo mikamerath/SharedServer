@@ -103,5 +103,12 @@ void TCPConnection::handleAsyncRead(const boost::system::error_code & e)
     std::getline(is, line);
     nextCallback(line);
   }
+  else {
+    // something bad happened, no easy way to handle it... best way may be to 
+    // send the error up to the callback, but not sure... This block means most
+    // likely the client disconnected. Exception does not work since it will be 
+    // delt with in the io_service internally and cause a crash.
+    //throw new std::exception();
+  }
 }
 
