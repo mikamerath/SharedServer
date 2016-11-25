@@ -109,6 +109,7 @@ void TCPConnection::handleAsyncRead(const boost::system::error_code & e)
     // likely the client disconnected. Exception does not work since it will be 
     // delt with in the io_service internally and cause a crash.
     //throw new std::exception();
+    connected = false;
   }
 }
 
