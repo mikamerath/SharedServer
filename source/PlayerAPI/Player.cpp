@@ -252,6 +252,35 @@ void Player::readMessage()
   connection->aSyncRead(boost::bind(&Player::recivedMessage,this,_1));
 }
 
+std::vector<Card> Player::receivedMove(std::string)
+{
+  // see Player::receivedSuit
+  return std::vector<Card>();
+}
+
+int Player::receivedBid(std::string)
+{
+  // see Player::receivedSuit
+  return 0;
+}
+
+Suit Player::receivedSuit(std::string)
+{
+  // not sure how to make this work with the async design... there is no
+  // in game methods to update the game states, and none of the game logic
+  // seems to play well with an async network connection...
+  // possible sync operation is below. The problem with this though is that
+  // it will block untill a message is recieved. That might be a good thing
+  // but that means each game will need to run on its own thread. and will be
+  // unable to handle disconnects or even update the game state on clients
+  // until this operation completes.
+
+  std::string msg = connection->read();
+  // decode the message
+  // ex if(msg == "h") suit is hearts
+  return Suit();
+}
+
 void Player::recivedMessage(std::string msg)
 {
   std::cout << "Message from : " << *this << std::endl;
