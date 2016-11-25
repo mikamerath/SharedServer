@@ -48,7 +48,7 @@ public:
 
   // returns the current active port
   const char* getPort();
-  //boost::asio::ip::tcp::socket getSocket();
+  boost::asio::ip::tcp::socket& getSocket();
 
 private:
   // Constructor used by the create method

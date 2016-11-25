@@ -8,6 +8,7 @@
 #include "source/PlayerAPI/Player.hpp"
 
 using namespace boost::asio;
+using ip::tcp;
 
 /*
 Core interface for creating a network connection. It encapsulates all the logic needed to 
@@ -18,13 +19,13 @@ class NetworkInterface
 public:
 
 protected:
-  NetworkInterface(int port, io_service& service, std::ostream& outStream);
-
   io_service& ioService;
   int activePort;
   std::ostream& out;
 
-  NetworkInterface(int port);
+
+  NetworkInterface(int port, io_service& service, std::ostream& outStream);
+
   ~NetworkInterface()
   {
   }
@@ -49,8 +50,6 @@ protected:
   {
   }
 
-private:
-  io_service ioService;
-  ip::tcp::acceptor acceptor;
+  
 };
 #endif // !NETWORK_INTERFACE

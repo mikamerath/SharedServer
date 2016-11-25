@@ -97,3 +97,8 @@ const char * TCPConnection::getPort()
   return (port.c_str());
 }
 
+boost::asio::ip::tcp::socket& TCPConnection::getSocket()
+{
+  return socket;
+}
+

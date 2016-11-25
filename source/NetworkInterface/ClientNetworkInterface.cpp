@@ -10,14 +10,23 @@ void ClientNetworkInterface::connect(std::string ip, int port)
 {
   out << "Attempting to connect to " << ip << ":" << port << "..." << std::endl;
 
-  boost::asio::ip::tcp::endpoint endpoint(
-    boost::asio::ip::address::from_string(ip), 12345);
 
   try {
-    conn->connect(endpoint);
+    conn->connect(ip.data(),std::to_string(port).data());
   }
   catch(boost::system::system_error e){
     out << "Failed to connect to " << ip << ":" << port << "..." << std::endl;
     out << "Error code = " << e.code() <<  " : " << e.code().message() << std::endl;
   }
+  out << "Connected...";
+}
+//
+//std::string ClientNetworkInterface::tryRecieve()
+//{
+//  return std::string();
+//}
+//
+void ClientNetworkInterface::send(std::string msg)
+{
+  conn->write(msg);
 }

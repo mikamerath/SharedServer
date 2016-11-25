@@ -12,8 +12,10 @@ public:
   ClientNetworkInterface(int port, io_service& service, std::ostream& outStream);
 
   void connect(std::string ip, int port);
-
-private: 
+//  std::string tryRecieve();
+  void send(std::string msg);
+//
+//private: 
   TCPConnection::pointer conn;
 
 };
