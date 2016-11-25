@@ -15,6 +15,8 @@ public:
   std::string recieve();
   void send(std::string msg);
 
+  bool isConnected();
+
 private:
   TCPConnection::pointer conn;
 

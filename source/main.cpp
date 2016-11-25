@@ -20,7 +20,6 @@ void addPlayer(Player p) {
 int main() {
   io_service service;
   ServerNetworkInterface NI(12000, service, std::cout, addPlayer);
-  std::cout << "Hello World" << std::endl;
   NI.startAccepting();
   std::string msg = "<NONE>";
   while (msg != "EXIT") {

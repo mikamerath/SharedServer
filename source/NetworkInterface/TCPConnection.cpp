@@ -19,12 +19,12 @@ void TCPConnection::connect(const char * host, const char * port)
     boost::asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(
       boost::asio::ip::tcp::resolver::query(host, port));
     boost::asio::connect(socket, endpoint);
+    connected = true;
   }
   catch (std::exception& e)
   {
     std::cerr << e.what() << std::endl;
   }
-  connected = true;
 }
 
 void TCPConnection::accept()
@@ -100,5 +100,10 @@ const char * TCPConnection::getPort()
 boost::asio::ip::tcp::socket& TCPConnection::getSocket()
 {
   return socket;
+}
+
+bool TCPConnection::isConnected()
+{
+  return connected;
 }
 

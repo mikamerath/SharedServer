@@ -46,8 +46,14 @@ void ServerNetworkInterface::acceptConnection()
 
 void ServerNetworkInterface::handleAccept(const boost::system::error_code & error)
 {
+  time_t rawtime;
+  struct tm * timeinfo;
+
+  time(&rawtime);
+  timeinfo = localtime(&rawtime);
+
   out << "Connection established with client : " 
-      << waitingConn->getSocket().remote_endpoint() << ". At <Time stamp here>." << std::endl;
+      << waitingConn->getSocket().remote_endpoint() << ". At :" << asctime(timeinfo);
   if (!error)
   {
     addPlayer(Player(playerCounter,waitingConn));

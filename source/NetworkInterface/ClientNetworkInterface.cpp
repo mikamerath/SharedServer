@@ -10,15 +10,14 @@ void ClientNetworkInterface::connect(std::string ip, int port)
 {
   out << "Attempting to connect to " << ip << ":" << port << "..." << std::endl;
 
-
   try {
     conn->connect(ip.data(),std::to_string(port).data());
+    out << "Connected...";
   }
   catch(boost::system::system_error e){
     out << "Failed to connect to " << ip << ":" << port << "..." << std::endl;
     out << "Error code = " << e.code() <<  " : " << e.code().message() << std::endl;
   }
-  out << "Connected...";
 }
 std::string ClientNetworkInterface::recieve()
 {
@@ -33,4 +32,9 @@ std::string ClientNetworkInterface::recieve()
 void ClientNetworkInterface::send(std::string msg)
 {
   conn->write(msg);
+}
+
+bool ClientNetworkInterface::isConnected()
+{
+  return conn->isConnected();
 }
