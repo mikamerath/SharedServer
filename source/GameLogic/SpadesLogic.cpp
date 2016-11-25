@@ -1,4 +1,4 @@
-#include "source/SpadesLogic/SpadesLogic.hpp"
+#include "source\GameLogic\SpadesLogic.hpp"
 /*
 class Spades : public Game
 {
