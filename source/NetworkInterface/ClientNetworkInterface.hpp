@@ -14,8 +14,8 @@ public:
   void connect(std::string ip, int port);
   std::string recieve();
   void send(std::string msg);
-//
-//private: 
+
+private:
   TCPConnection::pointer conn;
 
 };
