@@ -306,6 +306,7 @@ void Player::recivedMessage(std::string msg)
 {
   std::cout << "Message from : " << *this << std::endl;
   std::cout << msg << std::endl;
+  connection->write("Got Messaage : " + msg);
   readMessage();
 }
 

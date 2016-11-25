@@ -11,8 +11,10 @@ int main() {
   if (NI.isConnected()) { // start the client in online mode
     std::string msg = "";
     while (msg != "EXIT") {
+      std::cout << "Enter message (EXIT to quit) :" << std::endl;
       std::getline(std::cin, msg);
       NI.send(msg);
+      std::cout << "Server says : " << NI.recieve() << std::endl;
     }
   }
   else { // start in offline mode

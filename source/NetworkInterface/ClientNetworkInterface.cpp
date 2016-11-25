@@ -12,7 +12,7 @@ void ClientNetworkInterface::connect(std::string ip, int port)
 
   try {
     conn->connect(ip.data(),std::to_string(port).data());
-    out << "Connected...";
+    out << "Connected..." << std::endl;
   }
   catch(boost::system::system_error e){
     out << "Failed to connect to " << ip << ":" << port << "..." << std::endl;
