@@ -88,27 +88,28 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 BOOST_AUTO_TEST_CASE(heartsGameInitialization)
 {
   boost::asio::io_service service;
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
   for (int i = 0; i < 4; i++)
   {
-    Player newPlayer(i, TCPConnection::create(service));
+    std::shared_ptr<Player> newPlayer = 
+      std::make_shared<Player>(i, TCPConnection::create(service));
     players.push_back(newPlayer);
   }
   HeartsGame game(players);
   BOOST_CHECK_EQUAL(game.getPlayers().size(), 4);
   for (int i = 0; i < 4; i++)
-    BOOST_CHECK_EQUAL(game.getPlayers()[i].getId(), i);
+    BOOST_CHECK_EQUAL(game.getPlayers()[i]->getId(), i);
   BOOST_CHECK_EQUAL(game.getCenterPile().size(), 0);
   game.play_Hearts();
   for (int i = 0; i < 4; i++)
-    BOOST_CHECK_EQUAL(game.getPlayers()[i].getHand().size(), 13);
+    BOOST_CHECK_EQUAL(game.getPlayers()[i]->getHand().size(), 13);
   Card twoOfClubs(CLUBS, TWO);
   int playerWithTwoOfClubs = -1;
   for (int i = 0; i < 4; i++)
   {
-    for (int j = 0; j < game.getPlayers()[i].getHand().size(); j++)
+    for (int j = 0; j < game.getPlayers()[i]->getHand().size(); j++)
     {
-      if (game.getPlayers()[i].getHand()[j] == twoOfClubs)
+      if (game.getPlayers()[i]->getHand()[j] == twoOfClubs)
         playerWithTwoOfClubs = i;
     }
   }
@@ -119,10 +120,11 @@ BOOST_AUTO_TEST_CASE(heartsGameInitialization)
 BOOST_AUTO_TEST_CASE(heartsGamefindTwoOfClubs)
 {
   boost::asio::io_service service;
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
   for (int i = 0; i < 4; i++)
   {
-    Player newPlayer(i, TCPConnection::create(service));
+    std::shared_ptr<Player> newPlayer =
+      std::make_shared<Player>(i, TCPConnection::create(service));
     players.push_back(newPlayer);
   }
   HeartsGame game(players);
@@ -130,7 +132,7 @@ BOOST_AUTO_TEST_CASE(heartsGamefindTwoOfClubs)
 
   for (size_t i = 0; i < players.size(); ++i)
   {
-    std::vector<Card> temp = players[i].getHand();
+    std::vector<Card> temp = players[i]->getHand();
     for (auto j = 0; j < temp.size(); ++j)
     {
       if (temp[j].getSuit() == Suit::CLUBS && temp[j].getValue() == 2)
@@ -149,11 +151,12 @@ BOOST_AUTO_TEST_CASE(heartsGameSetPassCards)
   Card aceofSpades = Card(SPADES, ACE);
   Card threeOfHearts(HEARTS, THREE);
   Card kingOfClubs(CLUBS, KING);
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
 
   for (int i = 0; i < 4; i++)
   {
-    Player newPlayer(i, TCPConnection::create(service));
+    std::shared_ptr<Player> newPlayer =
+      std::make_shared<Player>(i, TCPConnection::create(service));
     players.push_back(newPlayer);
   }
   std::vector<Card> v;
@@ -169,10 +172,11 @@ BOOST_AUTO_TEST_CASE(heartsGameSetPassCards)
 BOOST_AUTO_TEST_CASE(heartsGamePlayCard)
 {
   boost::asio::io_service service;
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
   for (int i = 0; i < 4; i++)
   {
-    Player newPlayer(i, TCPConnection::create(service));
+    std::shared_ptr<Player> newPlayer =
+      std::make_shared<Player>(i, TCPConnection::create(service));
     players.push_back(newPlayer);
   }
   HeartsGame game(players);

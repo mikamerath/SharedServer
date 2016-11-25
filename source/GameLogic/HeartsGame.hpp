@@ -8,7 +8,7 @@
 class HeartsGame
 {
 public://10 functions
-  HeartsGame(std::vector<Player>& players);
+  HeartsGame(std::vector<std::shared_ptr<Player>>& players);
   ~HeartsGame();
   void play_Hearts();
   // looks through each hand to find the 2 of clubs
@@ -19,7 +19,7 @@ public://10 functions
   void endRound();
   bool setPassCards(std::vector<Card> cards, std::string name);
   int playCard(Card card, std::string name);
-  std::vector<Player> getPlayers() { return players; }
+  std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
   std::vector<Card> getCenterPile() { return centerPile; }
 private: //6 functions
   std::vector<Card> initializeDeck();
@@ -30,7 +30,7 @@ private: //6 functions
   // compares hand against the lead suit
   bool noLeadSuit(Suit s, std::vector<Card> h);
   bool validateMove(int index, Card move, int t, int i);
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
   std::vector<Card> centerPile;
 
   bool brokenHearts = false;

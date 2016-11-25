@@ -79,7 +79,7 @@ void printBoard(std::vector<Card> trick, std::vector<Card> hand, int turn)
 		<< "...................................................\n";
 }
 
-Spades::Spades(std::vector<Player> p)
+Spades::Spades(std::vector<std::shared_ptr<Player>> p)
 {
 	players = p;
 	start();
@@ -89,7 +89,7 @@ void Spades::getBids()
 {
 	for (auto&& p : players)
 	{
-		p.requestBid();
+		p->requestBid();
 	}
 }
 
@@ -137,7 +137,7 @@ int Spades::getTrickWinner(std::vector<Card> trick, int tw)
 
 bool Spades::validMove(std::vector<Card> tr, int pl, Suit& leadSuit, int currentTurn)
 {
-	auto h = players.at(pl).getHand();
+	auto h = players.at(pl)->getHand();
 	if (tr.at(0).getSuit() == tr.back().getSuit() &&
 		tr.at(0).getValue() == tr.back().getValue())
 	{
@@ -187,12 +187,12 @@ void Spades::score()
 {
 	for (auto p : players)
 	{
-		auto bid = p.getBid();
-		auto tricks = p.getTricksWon();
-		auto bag = p.getBags();
+		auto bid = p->getBid();
+		auto tricks = p->getTricksWon();
+		auto bag = p->getBags();
 		if (bid == tricks)
 		{
-			p.setRoundScore(bid * 10);
+			p->setRoundScore(bid * 10);
 		}
 		else if (bid < tricks)
 		{
@@ -201,14 +201,14 @@ void Spades::score()
 			{
 				sc++;
 			}
-			p.setRoundScore(sc);
+			p->setRoundScore(sc);
 		}
 		else if (bid > tricks)
 		{
-			p.setRoundScore(0);
+			p->setRoundScore(0);
 		}
-		std::cout << "p.getId() + p.getRoundScore() " << p.getId() << ":"
-			<< p.getRoundScore() << std::endl;
+		std::cout << "p.getId() + p.getRoundScore() " << p->getId() << ":"
+			<< p->getRoundScore() << std::endl;
 	}
 }
 
@@ -246,7 +246,7 @@ void Spades::beginRound(int starter)
 					// for(auto c : trick){
 					//	c.print();
 					//}
-					players.at(turn).insertCardToHand(sendBack);
+					players.at(turn)->insertCardToHand(sendBack);
 					//trick.push_back(players.at(turn).requestMove());
 					vm = validMove(trick, turn, ledSuit, i);
 					if (vm && i == 0)
@@ -259,7 +259,7 @@ void Spades::beginRound(int starter)
 				// anyway).
 			}
 			turn = getNextPlayer(turn);
-			if (players.at(turn).getHand().empty())
+			if (players.at(turn)->getHand().empty())
 			{
 				s = ROUND_OVER;
 			}
@@ -272,9 +272,9 @@ void Spades::beginRound(int starter)
 		}
 		trickWinner = getTrickWinner(trick, trickWinner);
 		std::cout << "Player " << trickWinner << " won the trick." << std::endl;
-		players.at(trickWinner).incrementTricksWon();
-		std::cout << players.at(trickWinner).getId() << " has won "
-			<< players.at(trickWinner).getTricksWon() << " tricks."
+		players.at(trickWinner)->incrementTricksWon();
+		std::cout << players.at(trickWinner)->getId() << " has won "
+			<< players.at(trickWinner)->getTricksWon() << " tricks."
 			<< std::endl;
 		trick.clear();
 		turn = trickWinner;
@@ -291,10 +291,10 @@ void Spades::beginRound(int starter)
 void Spades::start()
 {
 	setDeck();
-	players.at(0).initializeHand(deck, 13);
-	players.at(1).initializeHand(deck, 13);
-	players.at(2).initializeHand(deck, 13);
-	players.at(3).initializeHand(deck, 13);
+	players.at(0)->initializeHand(deck, 13);
+	players.at(1)->initializeHand(deck, 13);
+	players.at(2)->initializeHand(deck, 13);
+	players.at(3)->initializeHand(deck, 13);
 	starter = 0;
 	s = BIDDING;
 	getBids();
