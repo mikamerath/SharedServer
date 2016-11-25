@@ -10,6 +10,7 @@
 
 #include "Player.hpp"
 #include <algorithm>
+#include <iostream>
 
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int idNumber, std::string ipAddress)
@@ -28,6 +29,12 @@ void Player::setName(std::string n)
 std::string Player::getName() const
 {
   return name;
+}
+
+// Returns the id of the player.
+int Player::getId()
+{
+  return id;
 }
 
 // Function called at the start of a round. Updates the overallScore vector with
@@ -70,12 +77,8 @@ void Player::initializeHand(std::vector<Card>& deck, unsigned int numCards)
 // Inserts card into the hand in order.
 void Player::insertCardToHand(const Card& c)
 {
-  auto iterator = hand.begin();
-  while (c < *iterator && iterator < hand.end())
-  {
-    iterator++;
-  }
-  hand.emplace(iterator, c);
+  hand.push_back(c);
+  std::sort(hand.begin(), hand.end());
 }
 
 // Attempts to remove card from hand. If card is in hand, it will be removed
@@ -148,6 +151,11 @@ int Player::getBid() const
   return bid;
 }
 
+void Player::setBid(int b)
+{
+  bid = b;
+}
+
 // Gets the number of bags a player had (Spades).
 int Player::getBags() const
 {
@@ -177,4 +185,36 @@ void Player::setTricksWon(int t)
 void Player::incrementTricksWon()
 {
   tricksWon++;
+}
+
+void Player::setValidateSuit(std::function<void(Suit)> func)
+{
+  validateSuit = func;
+}
+
+void Player::setValidateMove(std::function<void(Card)> func)
+{
+  validateMove = func;
+}
+
+void Player::setValidateBid(std::function<void(int)> func)
+{
+  validateBid = func;
+}
+
+bool operator==(const Player& p1, const Player& p2)
+{
+  if (p1.hand.size() != p2.hand.size()) return false;
+  for (auto i = 0u; i < p1.hand.size(); i++)
+  {
+    if (!(p1.hand[i] == p2.hand[i])) return false;
+  }
+  return (p1.id == p2.id && p1.ip.compare(p2.ip) == 0 &&
+          p1.name.compare(p2.name) == 0);
+}
+
+std::ostream& operator<<(std::ostream& out, const Player& p)
+{
+  out << p.id << ", " << p.ip << ", " << p.name;
+  return out;
 }

@@ -1,4 +1,4 @@
-#include "Player.hpp"
+#include "source/PlayerAPI/Player.hpp"
 /*
 * The functions in this file deal with the networking for the player.
 * All of these functions are defined within the Player.hpp file.
@@ -13,11 +13,6 @@ void Player::requestMove()
 
 // Constructs and sends a message to ask for a bid from the client. (Spades)
 void Player::requestBid()
-{
-}
-
-// Constructs and sends a message to ask for a suit from the client. (Eights)
-void Player::requestSuit()
 {
 }
 
@@ -39,13 +34,21 @@ std::vector<Card> Player::receivedMove()
 // This is the callback function for requestBid.
 int Player::receivedBid()
 {
+  // CALL validateBid();
   int b = 0;
   return b;
+}
+
+// Constructs and sends a message to ask for a suit from the client. (Eights)
+void Player::requestSuit()
+{
+  // CALL validateSuit();
 }
 
 // This is the callback function for requestSuit.
 Suit Player::receivedSuit()
 {
+  // CALL validateSuit();
   Suit s = HEARTS;
   return s;
 }

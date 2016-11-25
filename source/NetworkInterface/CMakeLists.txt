@@ -1,22 +1,16 @@
-xpGetExtern(externIncs externLibs PUBLIC boost wxWidgets)
+xpGetExtern(externIncs externLibs PUBLIC boost)
 include_directories(${externIncs} ${CMAKE_SOURCE_DIR})
 add_library(NetworkInterface
-NetworkInterface.hpp
-<<<<<<< HEAD
-ServerNetworkInterface.hpp
-ClientNetworkInterface.hpp
-GeneralMessage.hpp
-TCPConnection.hpp
-ServerNetworkInterface.cpp
 ClientNetworkInterface.cpp
-NetworkInterface.cpp
+ClientNetworkInterface.hpp
 GeneralMessage.cpp
-TCPConnection.cpp
-)
-
-
-=======
 GeneralMessage.hpp
+NetworkInterface.cpp
+NetworkInterface.hpp
+PlayerNetworking.cpp
+ServerNetworkInterface.cpp
+ServerNetworkInterface.hpp
+TCPConnection.cpp
 TCPConnection.hpp
 )
->>>>>>> refs/remotes/michaelkamerath/master
+link_libraries(NetworkInterface ${externLibs})
