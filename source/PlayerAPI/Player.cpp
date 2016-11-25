@@ -244,7 +244,8 @@ void Player::requestSuit()
 
 void Player::updateGameStatus()
 {
-  connection->write("Coded Message");
+  connection->write("Status Update");
+  connection->write(""/*List of cards and players*/)
 }
 
 void Player::readMessage()
