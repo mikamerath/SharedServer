@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
   Card deserializeCard;
   std::stringstream deserialize(serialize.str());
-  boost::archive::text_iarchive iArchive(serialize);
+  boost::archive::text_iarchive iArchive(deserialize);
   iArchive >> deserializeCard;
 
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
