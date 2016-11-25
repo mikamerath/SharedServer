@@ -12,7 +12,7 @@ public:
   ClientNetworkInterface(int port, io_service& service, std::ostream& outStream);
 
   void connect(std::string ip, int port);
-//  std::string tryRecieve();
+  std::string recieve();
   void send(std::string msg);
 //
 //private: 

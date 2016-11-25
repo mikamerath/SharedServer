@@ -20,6 +20,10 @@ void ClientNetworkInterface::connect(std::string ip, int port)
   }
   out << "Connected...";
 }
+std::string ClientNetworkInterface::recieve()
+{
+  return conn->read();
+}
 //
 //std::string ClientNetworkInterface::tryRecieve()
 //{
