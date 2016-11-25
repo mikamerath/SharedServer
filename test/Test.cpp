@@ -9,7 +9,6 @@
 #include "../source/PlayerAPI/Player.hpp"
 #include "source\GameLogic\HeartsGame.hpp"
 
-
 // Standard Includes
 #include <sstream>
 
@@ -185,5 +184,3 @@ BOOST_AUTO_TEST_CASE(heartsGamePlayCard)
 
   BOOST_CHECK(game.playCard(twoOfClubs, "0") == 0);
 }
-
-// EOF

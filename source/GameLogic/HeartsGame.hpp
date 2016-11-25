@@ -21,7 +21,7 @@ public://10 functions
   int playCard(Card card, std::string name);
   std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
   std::vector<Card> getCenterPile() { return centerPile; }
-private: //6 functions
+private:
   std::vector<Card> initializeDeck();
   void dealCards(std::vector<Card>& Deck);
 
