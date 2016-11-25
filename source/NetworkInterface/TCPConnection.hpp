@@ -32,15 +32,13 @@ public:
   // Factory createor method.
   static pointer create(boost::asio::io_service& ioService, int port = 0);
 
+
   // Attempts to connect to the given host and port
   void connect(const char* host, const char* port);
   // Waits for a connection to be requested, fills that request and then returns
   void accept();
   // closes the exsisting connection
   void close();
-
-  //void aSyncRead(void*f(std::string));
-
   // Read from the connection until a '/n' is found
   std::string read();
   // Write to the connection. Automatically appends a '/n' to the end of the message.

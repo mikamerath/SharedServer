@@ -4,6 +4,7 @@
 #include <boost\asio.hpp>
 #include "TCPConnection.hpp"
 #include <iostream>
+#include <thread>
 #include "GeneralMessage.hpp"
 #include "source/PlayerAPI/Player.hpp"
 
@@ -21,14 +22,20 @@ public:
 protected:
   io_service& ioService;
   int activePort;
+  bool active;
   std::ostream& out;
+  std::thread ioThread;
 
 
   NetworkInterface(int port, io_service& service, std::ostream& outStream);
 
   ~NetworkInterface()
   {
+    active = false;
+    ioThread.join();
   }
+
+  void ioLoop();
 
   /*
   Sends a message to the given player and then calls the callback function when the 

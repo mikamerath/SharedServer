@@ -13,9 +13,13 @@
 #include <iostream>
 
 // Constructor for the Player class. Takes in the IP address of the client.
-Player::Player(int idNumber, std::string ipAddress)
-  : id(idNumber), ip(ipAddress), roundScore(0), bid(0), bags(0), tricksWon(0)
+Player::Player(int id, TCPConnection::pointer connection)
+  : id(id), connection(connection), 
+  roundScore(0), bid(0), bags(0), tricksWon(0)
 {
+  std::stringstream ss;
+  ss << connection->getSocket().remote_endpoint();
+  ip = ss.str();
 }
 
 // Sets the name of the Player. In the future, this function will query the

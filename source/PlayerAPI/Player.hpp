@@ -12,6 +12,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "source\NetworkInterface\TCPConnection.hpp"
 #include "Card.hpp"
 #include <functional>
 #include <string>
@@ -22,6 +23,7 @@ class Player
 private:
   int id;
   std::string ip;
+  TCPConnection::pointer connection;
   std::string name;
 
   std::vector<Card> hand;
@@ -35,7 +37,7 @@ private:
   std::function<void(int)> validateBid;
 
 public:
-  Player(int idNumber, std::string ipAddress);
+  Player(int id, TCPConnection::pointer connection);
 
   void setName(std::string);
   std::string getName() const;
