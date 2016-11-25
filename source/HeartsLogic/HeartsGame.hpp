@@ -7,7 +7,7 @@
 
 class HeartsGame
 {
-public://10 functions
+public:
   HeartsGame(std::vector<Player>& players);
   ~HeartsGame();
   void play_Hearts();
@@ -21,7 +21,7 @@ public://10 functions
   int playCard(Card card, std::string name);
   std::vector<Player> getPlayers() { return players; }
   std::vector<Card> getCenterPile() { return centerPile; }
-private: //6 functions
+private:
   std::vector<Card> initializeDeck();
   void dealCards(std::vector<Card>& Deck);
 
