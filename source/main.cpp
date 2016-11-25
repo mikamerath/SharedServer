@@ -6,8 +6,6 @@
 #include<iostream>
 #include<vector>
 #include"source\PlayerAPI\Player.hpp"
-#include"source\NetworkInterface\TCPConnection.hpp"
-#include"source\NetworkInterface\NetworkInterface.hpp"
 #include"source\NetworkInterface\ServerNetworkInterface.hpp"
 
 std::vector<std::shared_ptr<Player>> players = std::vector<std::shared_ptr<Player>>();
