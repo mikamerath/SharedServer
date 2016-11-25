@@ -4,6 +4,7 @@
 #include <iostream>
 #include <exception>
 #include <boost\asio.hpp>
+#include <boost\bind.hpp>
 #include <boost\enable_shared_from_this.hpp>
 
 /* KNOWN ISSUES
@@ -43,6 +44,9 @@ public:
   // Write to the connection. Automatically appends a '/n' to the end of the message.
   void write(std::string msg);
 
+  // performs an async read and calls the callback when the read succeds
+  void aSyncRead(std::function<void(std::string)> callback);
+
   // returns the current active port
   const char* getPort();
   // returns the socket in use
@@ -51,6 +55,8 @@ public:
   bool isConnected();
 
 private:
+  void handleAsyncRead(const boost::system::error_code& e);
+
   // Constructor used by the create method
   TCPConnection(boost::asio::io_service& ioService, int port);
   // flag indicating if a conneciton is active
@@ -63,6 +69,8 @@ private:
   boost::asio::ip::tcp::resolver resolver;
   // The acceptor to be used to wait for a connection
   boost::asio::ip::tcp::acceptor acceptor;
+  std::function<void(std::string)> nextCallback;
+  boost::asio::streambuf asycBuffer;
 };
 
 

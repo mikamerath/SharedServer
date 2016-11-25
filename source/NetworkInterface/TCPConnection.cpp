@@ -40,20 +40,6 @@ void TCPConnection::close()
   socket.close();
 }
 
-//void TCPConnection::aSyncRead(void*f(std::string))
-//{
-//  boost::system::error_code error;
-//  boost::asio::streambuf buffer;
-//  try
-//  {
-//    boost::asio::async_read_until(socket, buffer, "\n", f);
-//  }
-//  catch (std::exception& e)
-//  {
-//    std::cerr << "Exception: " << e.what() << std::endl;
-//  }
-//}
-
 std::string TCPConnection::read()
 {
   boost::system::error_code error;
@@ -73,6 +59,13 @@ std::string TCPConnection::read()
   return s;
 }
 
+void TCPConnection::aSyncRead(std::function<void(std::string)> callback)
+{
+  nextCallback = callback;
+  boost::asio::async_read_until(socket, asycBuffer, "\n",
+    boost::bind(&TCPConnection::handleAsyncRead,this,boost::asio::placeholders::error));
+}
+
 void TCPConnection::write(std::string msg)
 {
   try
@@ -84,6 +77,7 @@ void TCPConnection::write(std::string msg)
     std::cerr << "Exception: " << e.what() << std::endl;
   }
 }
+
 
 const char * TCPConnection::getPort()
 {
@@ -99,5 +93,15 @@ boost::asio::ip::tcp::socket& TCPConnection::getSocket()
 bool TCPConnection::isConnected()
 {
   return connected;
+}
+
+void TCPConnection::handleAsyncRead(const boost::system::error_code & e)
+{
+  if (!e) {
+    std::istream is(&asycBuffer);
+    std::string line;
+    std::getline(is, line);
+    nextCallback(line);
+  }
 }
 

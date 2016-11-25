@@ -23,7 +23,6 @@ class Player
 private:
   int id;
   std::string ip;
-  TCPConnection::pointer connection;
   std::string name;
 
   std::vector<Card> hand;
@@ -37,6 +36,8 @@ private:
   std::function<void(int)> validateBid;
 
 public:
+  TCPConnection::pointer connection;
+
   Player(int id, TCPConnection::pointer connection);
 
   void setName(std::string);
