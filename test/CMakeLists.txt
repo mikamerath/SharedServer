@@ -8,5 +8,7 @@ target_link_libraries(
 Test
 Game
 NetworkInterface
+GameLogic
 ${externLibs}
 )
+

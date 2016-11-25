@@ -245,7 +245,7 @@ void Player::requestSuit()
 void Player::updateGameStatus()
 {
   connection->write("Status Update");
-  connection->write(""/*List of cards and players*/)
+  connection->write(""/*List of cards and players*/);
 }
 
 void Player::readMessage()
@@ -255,21 +255,23 @@ void Player::readMessage()
 
 // hellper to decode the suit from a char.
 Suit decodeSuit(char s) {
+  Suit suit;
   if (s == 'H') {
-    s = HEARTS;
+    suit = HEARTS;
   }
   else if (s == 'C') {
-    s = CLUBS;
+    suit = CLUBS;
   }
   else if (s == 'D') {
-    s = DIAMONDS;
+    suit = DIAMONDS;
   }
   else if (s == 'S') {
-    s = SPADES;
+    suit = SPADES;
   }
   else {
-    s = UNDEFINED;
+    suit = UNDEFINED;
   }
+  return suit;
 }
 
 void Player::receivedMove(std::string msg)
