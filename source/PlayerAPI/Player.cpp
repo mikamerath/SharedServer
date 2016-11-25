@@ -252,33 +252,51 @@ void Player::readMessage()
   connection->aSyncRead(boost::bind(&Player::recivedMessage,this,_1));
 }
 
-std::vector<Card> Player::receivedMove(std::string)
-{
-  // see Player::receivedSuit
-  return std::vector<Card>();
+// hellper to decode the suit from a char.
+Suit decodeSuit(char s) {
+  if (s == 'H') {
+    s = HEARTS;
+  }
+  else if (s == 'C') {
+    s = CLUBS;
+  }
+  else if (s == 'D') {
+    s = DIAMONDS;
+  }
+  else if (s == 'S') {
+    s = SPADES;
+  }
+  else {
+    s = UNDEFINED;
+  }
 }
 
-int Player::receivedBid(std::string)
+void Player::receivedMove(std::string msg)
 {
-  // see Player::receivedSuit
-  return 0;
+  // we assume the message format is <char suit>{<char><optional char>number} ex H2 = 2 of hearts.
+  Suit suitCode = decodeSuit(msg.at(0));
+  Value cardNumber = Value(std::stoi(msg.substr(1)));
+
+  Card c = Card(suitCode, cardNumber);
+  validateMove(c);
 }
 
-Suit Player::receivedSuit(std::string)
+void Player::receivedBid(std::string msg)
 {
-  // not sure how to make this work with the async design... there is no
-  // in game methods to update the game states, and none of the game logic
-  // seems to play well with an async network connection...
-  // possible sync operation is below. The problem with this though is that
-  // it will block untill a message is recieved. That might be a good thing
-  // but that means each game will need to run on its own thread. and will be
-  // unable to handle disconnects or even update the game state on clients
-  // until this operation completes.
+  // We assume that no other information other than the bid as parsable number from a 
+  // string is given.
+  int bid = std::stoi(msg);
+    
+  validateBid(bid);
+}
 
-  std::string msg = connection->read();
-  // decode the message
-  // ex if(msg == "h") suit is hearts
-  return Suit();
+void Player::receivedSuit(std::string msg)
+{
+  // so we assume the first char of the recieved message will be the suit, either
+  // H, S, C, D, all other input will be interpreted as undefined suit.
+  Suit s = decodeSuit(msg[0]);
+  
+  validateSuit(s);
 }
 
 void Player::recivedMessage(std::string msg)

@@ -61,9 +61,9 @@ public:
   void readMessage(); // debugging and demo
 
   // The functions below are callback functions for server/client communication.
-  std::vector<Card> receivedMove(std::string);
-  int receivedBid(std::string);
-  Suit receivedSuit(std::string);
+  void receivedMove(std::string);
+  void receivedBid(std::string);
+  void receivedSuit(std::string);
   void recivedMessage(std::string); // debugging and demo
 
   // The functions below allow for the management of a player's hand.
