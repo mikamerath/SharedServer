@@ -15,16 +15,10 @@ TCPConnection::pointer TCPConnection::create(boost::asio::io_service & io_servic
 
 void TCPConnection::connect(const char * host, const char * port)
 {
-  try {
-    boost::asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(
-      boost::asio::ip::tcp::resolver::query(host, port));
-    boost::asio::connect(socket, endpoint);
-    connected = true;
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-  }
+  boost::asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(
+    boost::asio::ip::tcp::resolver::query(host, port));
+  boost::asio::connect(socket, endpoint);
+  connected = true;
 }
 
 void TCPConnection::accept()
