@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <exception>
-#include <array>
 #include <boost\asio.hpp>
 #include <boost\enable_shared_from_this.hpp>
 
@@ -54,7 +53,6 @@ public:
 private:
   // Constructor used by the create method
   TCPConnection(boost::asio::io_service& ioService, int port);
-
   // flag indicating if a conneciton is active
   bool connected;
   // flag indicating if the object is waiting for a connection request

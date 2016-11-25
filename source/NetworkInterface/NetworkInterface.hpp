@@ -26,37 +26,16 @@ protected:
   std::ostream& out;
   std::thread ioThread;
 
-
+  // default constructor
   NetworkInterface(int port, io_service& service, std::ostream& outStream);
 
+  // deconstructor to clean up threads
   ~NetworkInterface()
   {
     active = false;
     ioThread.join();
   }
-
-  void ioLoop();
-
-  /*
-  Sends a message to the given player and then calls the callback function when the 
-  server recieves a response from the player.
-  */
-  void sendMessage(Player*p_player, GeneralMessage msg, void(*callBack)(GeneralMessage))
-  {
-  }
-  /*
-  Begins looping logic to recieve and route any messages from any connected clients.
-  */
-  void beginRecieve()
-  {
-  }
-  /*
-  Closes all connections in preperation for server shutdown.
-  */
-  void closeConnection()
-  {
-  }
-
-  
+  // A loop called to continuously proccess the io service
+  void ioLoop();  
 };
 #endif // !NETWORK_INTERFACE
