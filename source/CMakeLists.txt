@@ -5,8 +5,6 @@ add_subdirectory(NetworkInterface)
 add_subdirectory(GameLogic)
 add_executable(Server
 main.cpp
-Server.hpp
-Server.cpp
 Lobby.cpp
 Lobby.hpp
 )
