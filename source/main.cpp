@@ -10,11 +10,12 @@
 #include"source\NetworkInterface\NetworkInterface.hpp"
 #include"source\NetworkInterface\ServerNetworkInterface.hpp"
 
-std::vector<Player> players = std::vector<Player>();
+std::vector<std::shared_ptr<Player>> players = std::vector<std::shared_ptr<Player>>();
 
-void addPlayer(Player p) {
-  std::cout << "Player Added... " << p << std::endl;
+void addPlayer(std::shared_ptr<Player> p) {
+  std::cout << "Player Added... " << *p << std::endl;
   players.emplace_back(p);
+  p->readMessage();
 }
 
 int main() {

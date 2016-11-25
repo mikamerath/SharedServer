@@ -1,7 +1,7 @@
 #include "ServerNetworkInterface.hpp"
 
 ServerNetworkInterface::ServerNetworkInterface(int port, io_service & service, 
-  std::ostream& outStream, std::function<void(Player)> addP)
+  std::ostream& outStream, std::function<void(std::shared_ptr<Player>)> addP)
   : NetworkInterface(port, service, outStream),
   acceptor(service, tcp::endpoint(tcp::v4(), port)), accepting(false), addPlayer(addP),
   playerCounter(0)
@@ -56,7 +56,8 @@ void ServerNetworkInterface::handleAccept(const boost::system::error_code & erro
       << waitingConn->getSocket().remote_endpoint() << ". At :" << asctime(timeinfo);
   if (!error)
   {
-    addPlayer(Player(playerCounter,waitingConn));
+    std::shared_ptr<Player> newPlayer = std::make_shared<Player>(playerCounter, waitingConn);
+    addPlayer(newPlayer);
     playerCounter++;
   }
   else {
