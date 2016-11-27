@@ -7,9 +7,7 @@
 // Project Includes
 #include "../source/PlayerAPI/Card.hpp"
 #include "../source/PlayerAPI/Player.hpp"
-#include "../source/PlayerAPI/Game.hpp"
 #include "../source/SpadesLogic/SpadesLogic.hpp"
-#include "../source/SpadesLogic/SpadesLogic.cpp"
 
 // Standard Includes
 #include <sstream>
