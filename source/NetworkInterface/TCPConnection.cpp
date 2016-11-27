@@ -15,15 +15,9 @@ TCPConnection::pointer TCPConnection::create(boost::asio::io_service & io_servic
 
 void TCPConnection::connect(const char * host, const char * port)
 {
-  try {
-    boost::asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(
-      boost::asio::ip::tcp::resolver::query(host, port));
-    boost::asio::connect(socket, endpoint);
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-  }
+  boost::asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(
+    boost::asio::ip::tcp::resolver::query(host, port));
+  boost::asio::connect(socket, endpoint);
   connected = true;
 }
 
@@ -46,20 +40,6 @@ void TCPConnection::close()
   socket.close();
 }
 
-//void TCPConnection::aSyncRead(void*f(std::string))
-//{
-//  boost::system::error_code error;
-//  boost::asio::streambuf buffer;
-//  try
-//  {
-//    boost::asio::async_read_until(socket, buffer, "\n", f);
-//  }
-//  catch (std::exception& e)
-//  {
-//    std::cerr << "Exception: " << e.what() << std::endl;
-//  }
-//}
-
 std::string TCPConnection::read()
 {
   boost::system::error_code error;
@@ -79,6 +59,13 @@ std::string TCPConnection::read()
   return s;
 }
 
+void TCPConnection::aSyncRead(std::function<void(std::string)> callback)
+{
+  nextCallback = callback;
+  boost::asio::async_read_until(socket, asycBuffer, "\n",
+    boost::bind(&TCPConnection::handleAsyncRead,this,boost::asio::placeholders::error));
+}
+
 void TCPConnection::write(std::string msg)
 {
   try
@@ -91,9 +78,38 @@ void TCPConnection::write(std::string msg)
   }
 }
 
+
 const char * TCPConnection::getPort()
 {
   std::string port = std::to_string(socket.local_endpoint().port());
   return (port.c_str());
+}
+
+boost::asio::ip::tcp::socket& TCPConnection::getSocket()
+{
+  return socket;
+}
+
+bool TCPConnection::isConnected()
+{
+  return connected;
+}
+
+void TCPConnection::handleAsyncRead(const boost::system::error_code & e)
+{
+  if (!e) {
+    std::istream is(&asycBuffer);
+    std::string line;
+    std::getline(is, line);
+    nextCallback(line);
+  }
+  else {
+    // something bad happened, no easy way to handle it... best way may be to 
+    // send the error up to the callback, but not sure... This block means most
+    // likely the client disconnected. Exception does not work since it will be 
+    // delt with in the io_service internally and cause a crash.
+    //throw new std::exception();
+    connected = false;
+  }
 }
 
