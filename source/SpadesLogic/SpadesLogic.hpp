@@ -13,13 +13,14 @@ public:
 	void start();
 	void getBids();
 	void beginRound(int);
-	void startTrick();
+	//void startTrick();
 	bool validMove(std::vector<Card>, int, Suit&, int);
 	int getTrickWinner(std::vector<Card>, int);
 	int getNextPlayer(int);
 	void score();
 	void recordMove(std::vector<Card>);
 	Spades(std::vector<Player>);
+	Spades() {}
 	~Spades() {}
 private:
 	int starter;
