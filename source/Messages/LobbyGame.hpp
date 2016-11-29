@@ -21,7 +21,7 @@ enum GameType
 struct LobbyGame {
   std::string name;
   GameType type;
-  std::vector<std::shared_ptr<Player>> joinedPlayers;
+  std::vector<int> joinedPlayers;
   int numberJoined;
 
   friend class boost::serialization::access;
