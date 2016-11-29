@@ -7,6 +7,7 @@
 // Project Includes
 #include "../source/PlayerAPI/Card.hpp"
 #include "../source/PlayerAPI/Player.hpp"
+#include "../source/GameLogic/CrazyEightsLogic.hpp"
 
 // Standard Includes
 #include <sstream>
