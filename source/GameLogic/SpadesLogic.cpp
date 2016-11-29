@@ -43,16 +43,29 @@ int next(int plId)
 	}
 }
 
+void Spades::receiveValidMove(Card c) {
+	//the return card is coming here!!
+}
+
+void Spades::receiveBid(int b) {
+	//How do I figure which player gave it to me?
+}
+
 Spades::Spades(std::vector<std::shared_ptr<Player>> p)
 {
 	players = p;
-	start();
+	for (auto&& player : players) {
+		player->setValidateMove([this](Card c) {receiveValidMove(c); });
+	}
 }
+
+
 
 void Spades::getBids()
 {
 	for (auto&& p : players)
 	{
+		p->setValidateBid([this](int b) {receiveBid(b); })
 		p->requestBid();
 	}
 }
@@ -189,7 +202,7 @@ void Spades::validMoveFailLoop(bool vm, std::vector<Card> &trick, Suit ledSuit, 
 void Spades::beginTrick(std::vector<Card> trick, Suit ledSuit, int trickWinner) {
 	for (int i = 0; i < 4; i++)
 	{
-		//trick.push_back(players.at(turn).requestMove());
+		players.at(turn)->requestMove();
 		if (validMove(trick, turn, ledSuit, i))
 		{
 			std::vector<Card> m;
