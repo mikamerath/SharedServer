@@ -10,12 +10,21 @@
 #include "source\Messages\LobbyGame.hpp"
 
 
+void procJoinGame(std::string response) {
+  if (boost::algorithm::starts_with(response, "FAILURE")) {
+    std::cout << "FAILED TO JOIN GAME, " << response << std::endl;
+  }
+  else {
+    std::cout << "Joined Game..." << std::endl;
+  }
+}
+
 void procGameMade(std::string response) {
   if (boost::algorithm::starts_with(response, "FAILURE")) {
     std::cout << "FAILED TO MAKE GAME, " << response << std::endl;
   }
   else {
-    std::cout << "Joined Game..." << std::endl;
+    std::cout << "Created and joined Game..." << std::endl;
   }
 }
 
@@ -70,6 +79,10 @@ int main() {
       if (boost::algorithm::starts_with(msg, "MAKE")) {
         msg = NI.recieve();
         procGameMade(msg);
+      }
+      if (boost::algorithm::starts_with(msg, "JOIN")) {
+        msg = NI.recieve();
+        procJoinGame(msg);
       }
       else {
         msg = NI.recieve();
