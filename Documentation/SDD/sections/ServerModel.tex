@@ -1,0 +1,14 @@
+\section{Server Architecture}
+\subsection{Class Diagram}
+Coming soon
+\subsection{Message Passing}
+\begin{center}
+\begin{tabular}{|m{8em}|m{7em}|m{12em}|m{6em}|}
+\hline
+Function & Direction & Message & Options/Contents \\
+\hline\hline
+Request games & Client $\rightarrow$ Server & "GET GAMES $<$TYPE$>$" & TYPE: (HEARTS, SPADES, EIGHTS, default: ALL)\\
+\hline
+Games list & Server $\rightarrow$ Client & archive & 
+\end{tabular}
+\end{center}
