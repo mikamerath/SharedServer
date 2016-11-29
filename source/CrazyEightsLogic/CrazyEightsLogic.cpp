@@ -13,7 +13,6 @@ CrazyEightsLogic::CrazyEightsLogic(std::vector<Player>& netPlayers)
   deal(5);
   turn = 0;
   cardsDrawnCounter = 0;
-  playGame();
 }
 
 void CrazyEightsLogic::playGame()
