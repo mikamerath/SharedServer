@@ -61,11 +61,15 @@ int HeartsGame::findTwoOfClubs()
 // takes the round number
 void HeartsGame::passCards(int round)
 {
+  int pass = 0;
+  if ((round + 1) % 4 == 1) pass = 1;
+  if ((round + 1) % 4 == 2) pass = 3;
+  if ((round + 1) % 4 == 3) pass = 2;
   for (size_t i = 0; i < players.size(); i++)
   {
-    Card card1 = cardsToPass[(i + round + 1) % players.size()][0];
-    Card card2 = cardsToPass[(i + round + 1) % players.size()][1];
-    Card card3 = cardsToPass[(i + round + 1) % players.size()][2];
+    Card card1 = cardsToPass[(i + pass) % players.size()][0];
+    Card card2 = cardsToPass[(i + pass) % players.size()][1];
+    Card card3 = cardsToPass[(i + pass) % players.size()][2];
     players[i]->insertCardToHand(card1);
     players[i]->insertCardToHand(card2);
     players[i]->insertCardToHand(card3);
@@ -220,24 +224,27 @@ void HeartsGame::play_Hearts()
       }
       std::cout << player->getTotalScore() << std::endl;
     }
-    for (auto player : players)
+    if ((round + 1) % 4 != 0)
     {
-      // player.requestPass
-      std::vector<Card> passingCards;
-      do
+      for (auto player : players)
       {
-        std::cout << player->getName() << ": Request 3 cards to pass\n";
-        passingCards.clear();
-        for (int i = 0; i < 3; i++)
+        // player.requestPass
+        std::vector<Card> passingCards;
+        do
         {
-          int suit, value;
-          std::cin >> suit;
-          std::cin >> value;
-          passingCards.push_back(Card((Suit)suit, (Value)value));
-        }
-      } while (!setPassCards(passingCards, player->getId()));
+          std::cout << player->getName() << ": Request 3 cards to pass\n";
+          passingCards.clear();
+          for (int i = 0; i < 3; i++)
+          {
+            int suit, value;
+            std::cin >> suit;
+            std::cin >> value;
+            passingCards.push_back(Card((Suit)suit, (Value)value));
+          }
+        } while (!setPassCards(passingCards, player->getId()));
+      }
+      passCards(round);
     }
-    passCards(round);
     int currentPlayer = findTwoOfClubs();
     int nextPlayer = -1;
     roundOver = false;
