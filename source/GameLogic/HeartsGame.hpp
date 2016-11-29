@@ -17,8 +17,8 @@ public: // 10 functions
   void passCards(int round);
   int endTurn(int currentPlayer);
   void endRound();
-  bool setPassCards(std::vector<Card> cards, std::string name);
-  int playCard(Card card, std::string name);
+  bool setPassCards(std::vector<Card> cards, int id);
+  int playCard(Card card, int id);
   std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
   std::vector<Card> getCenterPile() { return centerPile; }
 private: // 6 functions
@@ -33,7 +33,7 @@ private: // 6 functions
   std::vector<Card> centerPile;
 
   bool brokenHearts = false;
-  bool validatePass(std::vector<Card> cards, std::string name);
+  bool validatePass(std::vector<Card> cards, int id);
   int turn = 0;
   int numTrick = 0;
   std::vector<std::vector<Card>> cardsToPass;

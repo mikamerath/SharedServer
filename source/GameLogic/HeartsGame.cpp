@@ -162,7 +162,7 @@ bool HeartsGame::validateMove(int index, Card move)
       {
         if (move.getSuit() == HEARTS)
         {
-          brokenHearts == true;
+          brokenHearts = true;
           return true;
         }
         else
@@ -235,7 +235,7 @@ void HeartsGame::play_Hearts()
           std::cin >> value;
           passingCards.push_back(Card((Suit)suit, (Value)value));
         }
-      } while (!setPassCards(passingCards, player->getName()));
+      } while (!setPassCards(passingCards, player->getId()));
     }
     passCards(round);
     int currentPlayer = findTwoOfClubs();
@@ -275,7 +275,7 @@ void HeartsGame::play_Hearts()
           std::cin >> suit;
           std::cin >> value;
           nextPlayer = playCard(Card((Suit)suit, (Value)value),
-                                players[(i + currentPlayer) % 4]->getName());
+                                players[(i + currentPlayer) % 4]->getId());
           if (nextPlayer != -1)
           {
             validPlay = true;
@@ -309,12 +309,12 @@ void HeartsGame::play_Hearts()
   }
 }
 
-bool HeartsGame::validatePass(std::vector<Card> cards, std::string name)
+bool HeartsGame::validatePass(std::vector<Card> cards, int id)
 {
   int currentPlayerIndex = -1;
   for (int i = 0; i < players.size(); i++)
   {
-    if (players[i]->getName() == name) currentPlayerIndex = i;
+    if (players[i]->getId() == id) currentPlayerIndex = i;
   }
   if (currentPlayerIndex == -1) return false;
   for (auto c : cards)
@@ -330,12 +330,12 @@ bool HeartsGame::validatePass(std::vector<Card> cards, std::string name)
 
 // preps the passing cards
 // takes the vector of card indexes and the name of the player
-bool HeartsGame::setPassCards(std::vector<Card> cards, std::string name)
+bool HeartsGame::setPassCards(std::vector<Card> cards, int id)
 {
-  if (!validatePass(cards, name)) return false;
+  if (!validatePass(cards, id)) return false;
   for (int i = 0; i < players.size(); i++)
   {
-    if (players[i]->getName() == name)
+    if (players[i]->getId() == id)
     {
       for (int j = cards.size() - 1; j >= 0; j--)
       {
@@ -351,12 +351,12 @@ bool HeartsGame::setPassCards(std::vector<Card> cards, std::string name)
 // takes the card index value in hand and player's name
 // returns -1 if card was invalid else returns the player
 // that made the move
-int HeartsGame::playCard(Card card, std::string name)
+int HeartsGame::playCard(Card card, int id)
 {
   int j = 0;
   for (int i = 0; i < players.size(); i++)
   {
-    if (players[i]->getName() == name)
+    if (players[i]->getId() == id)
     {
       if (!validateMove(i, card))
       {
