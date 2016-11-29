@@ -7,6 +7,7 @@
 // Project Includes
 #include "source/PlayerAPI/Card.hpp"
 #include "source/PlayerAPI/Player.hpp"
+#include "source/PlayerAPI/Game.hpp"
 
 // Standard Includes
 #include <sstream>
@@ -81,4 +82,30 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
+}
+
+BOOST_AUTO_TEST_CASE(SerializeMessage)
+{
+  std::stringsteam serialize;
+  std::vector<CARD> cards;
+  cards.push(Card(CLUBS, ACE));
+  cards.push(Card(HEARTS, ACE));
+  std::vector<int> hands;
+  hands.push(0);
+  hands.push(2);
+  Message serializeMessage(PASSING, FALSE, cards, hands, cards, TRUE);
+  boost::archive::text_oarchive oArchive(serialize);
+  oArchive << serializeMessage;
+  
+  Message deserializeMessage;
+  std::stringstream deserialize(serialize.str());
+  boost::archive::text_iarchive iArchive(deserialize);
+  iArchive >> deserializeMessage;
+  
+  BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING);
+  BOOST_CHECK_EQUAL(deserializeMessage.turn, FALSE);
+  BOOST_CHECK_EQUAL(deserializeMessage.field, cards);
+  BOOST_CHECK_EQUAL(deserializeMessage.handSizes, hands);
+  BOOST_CHECK_EQUAL(deserializeMessage.playerHand, cards);
+  BOOST_CHECK_EQUAL(deserializeMessage.deckEmpty, TRUE);
 }
