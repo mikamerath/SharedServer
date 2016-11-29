@@ -4,15 +4,16 @@
 CrazyEightsLogic::CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers)
 {
   players = netPlayers;
-  //    for (auto && player: players){
-  //        player.setValidateMove([this](Card c){isValidCard(c);});
-  //        player.setValidateSuit([this](Suit s){validateSuit(s);}); //
-  //        create validateSuit
-  //    }
+  for (auto && player: players){
+     player.setValidateMove([this](Card c){isValidCard(c);});
+     player.setValidateSuit([this](Suit s){validateSuit(s);}); //
+     create validateSuit
+  }
   deck = initializeDeck();
   deal(5);
   turn = 0;
   cardsDrawnCounter = 0;
+  // playGame();
 }
 
 void CrazyEightsLogic::playGame()

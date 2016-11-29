@@ -10,6 +10,7 @@
 
 // Standard Includes
 #include <sstream>
+#include <vector>
 
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
@@ -81,4 +82,47 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
+}
+
+BOOST_AUTO_TEST_CASE(initializeCrazyEights)
+{
+  Player player1(1, "144.39.162.001");
+  Player player2(2, "144.39.162.003");
+  Player player3(3, "144.39.162.005");
+  Player player4(4, "144.39.162.007");
+  std::vector<Player> players;
+
+  players.push_back(player1);
+  players.push_back(player2);
+  players.push_back(player3);
+  players.push_back(player4);
+
+  CrazyEightsLogic crazyEights(players);
+
+  int count = 4;
+  for (int i = 0; i < count; i++) {
+    BOOST_CHECK_EQUAL(players[i].getId(), crazyEights.getPlayers().at(i).getId());
+    BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i).getHand().size(), 5);
+  }
+
+  BOOST_CHECK_EQUAL(crazyEights.getTurn(), 0);
+  BOOST_CHECK_EQUAL(crazyEights.getCardsDrawnCounter(), 0);
+
+}
+
+BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
+{
+  Player player1(1, "144.39.162.001");
+  std::vector<Player> players;
+
+  CrazyEightsLogic crazyEights(players);
+
+  int numCards = 5;
+  for (int i = 0; i < numCards; i++)
+  {
+    crazyEights.getPlayers().at(0).playCard();
+  }
+
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).isGameOver(), 1);
+
 }
