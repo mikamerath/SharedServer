@@ -12,6 +12,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "source\NetworkInterface\TCPConnection.hpp"
 #include "Card.hpp"
 #include <functional>
 #include <string>
@@ -35,7 +36,9 @@ private:
   std::function<void(int)> validateBid;
 
 public:
-  Player(int idNumber, std::string ipAddress);
+  TCPConnection::pointer connection;
+
+  Player(int id, TCPConnection::pointer connection);
 
   void setName(std::string);
   std::string getName() const;
@@ -55,11 +58,13 @@ public:
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
   void updateGameStatus(/*coded message of state*/);
+  void readMessage(); // debugging and demo
 
   // The functions below are callback functions for server/client communication.
-  std::vector<Card> receivedMove();
-  int receivedBid();
-  Suit receivedSuit();
+  void receivedMove(std::string);
+  void receivedBid(std::string);
+  void receivedSuit(std::string);
+  void recivedMessage(std::string); // debugging and demo
 
   // The functions below allow for the management of a player's hand.
   void initializeHand(std::vector<Card>& deck, unsigned int numCards);

@@ -19,7 +19,7 @@ public:
 	int getNextPlayer(int);
 	void score();
 	void recordMove(std::vector<Card>);
-	Spades(std::vector<Player>);
+	Spades(std::vector<std::shared_ptr<Player>>);
 	~Spades() {}
 private:
 	int starter;

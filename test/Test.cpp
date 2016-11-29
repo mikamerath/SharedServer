@@ -16,10 +16,12 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/test/unit_test.hpp>
+#include <boost\asio\io_service.hpp>
 
 BOOST_AUTO_TEST_CASE(startNewRound)
 {
-  Player player(1, "100");
+  boost::asio::io_service service;
+  Player player(1, TCPConnection::create(service));
   player.setRoundScore(10);
   player.setBid(5);
   player.setTricksWon(1);
@@ -32,7 +34,8 @@ BOOST_AUTO_TEST_CASE(startNewRound)
 
 BOOST_AUTO_TEST_CASE(startNewGame)
 {
-  Player player(1, "100");
+  boost::asio::io_service service;
+  Player player(1, TCPConnection::create(service));
   player.setRoundScore(10);
   player.setBid(5);
   player.setBags(2);
@@ -47,7 +50,8 @@ BOOST_AUTO_TEST_CASE(startNewGame)
 
 BOOST_AUTO_TEST_CASE(insertCardToHand)
 {
-  Player player(1, "100");
+  boost::asio::io_service service;
+  Player player(1, TCPConnection::create(service));
   Card card(HEARTS, TWO);
   player.insertCardToHand(card);
   BOOST_CHECK_EQUAL(player.getHand().size(), 1);
@@ -55,7 +59,8 @@ BOOST_AUTO_TEST_CASE(insertCardToHand)
 
 BOOST_AUTO_TEST_CASE(removeCardFromHand)
 {
-  Player player(1, "100");
+  boost::asio::io_service service;
+  Player player(1, TCPConnection::create(service));
   Card card(HEARTS, TWO);
   player.insertCardToHand(card);
   BOOST_CHECK_EQUAL(player.removeCardFromHand(card), 1);
@@ -77,5 +82,3 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
 }
-
-// EOF
