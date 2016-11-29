@@ -14,14 +14,15 @@ public:
   CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers);
   void deal(int numCards);
   bool isGameOver();
-  bool isValidCard(Card card);
+  bool isValidCard(std::vector<Card> c);
   std::string convertSuitToString(Suit suit);
   std::string convertRankToString(Value value);
   void displayHand(std::vector<Card> hand);
   void drawCard();
   void setCardsDrawnCounter(int numDrawn);
-  int getNumCardsDrawnCounter();
+  int getCardsDrawnCounter();
   void playCard(Card&);
+  bool validateSuit();
   int calculateScore(std::vector<std::shared_ptr<Player>> players);
   int getCardScoreValue(Card card);
   void nextTurn();

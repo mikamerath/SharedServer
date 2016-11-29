@@ -4,17 +4,15 @@
 CrazyEightsLogic::CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers)
 {
   players = netPlayers;
-  //    for (auto && player: players){
-  //        player.setValidateMove([this](Card c){validateMove(c);}); //create
-  //        validateMove
-  //        player.setValidateSuit([this](Suit s){validateSuit(s);}); //
-  //        create validateSuit
-  //    }
+  for (auto && player: players){
+      player.setValidateMove([this](Card c){isValidCard(c);});
+      player.setValidateSuit([this](Suit s){validateSuit(s);});
+  }
   deck = initializeDeck();
   deal(5);
   turn = 0;
   cardsDrawnCounter = 0;
-  playGame();
+  // playGame();
 }
 
 void CrazyEightsLogic::playGame()
@@ -22,7 +20,7 @@ void CrazyEightsLogic::playGame()
   players = getPlayers();
 
   bool done = false;
-  auto cardIndex = 0;
+  // auto cardIndex = 0;
 
   while (!done)
   {
@@ -36,47 +34,45 @@ void CrazyEightsLogic::playGame()
               << " of "
               << convertSuitToString(getDiscardPile().back().getSuit())
               << std::endl;
-    std::cout << "Pick a card to play or enter negative number to draw: ";
-    std::cin >> cardIndex;
-    std::cout << std::endl;
-    // request move function instead of stuff above
+    // std::cout << "Pick a card to play or enter negative number to draw: ";
+    // std::cin >> cardIndex;
+    // std::cout << std::endl;
+    players[turn].requestMove();  // request move function instead of stuff above
 
     bool isPlayerTurn = true;
 
     while (isPlayerTurn)
     {
-      if (cardIndex < 0)
+      if (getCardsDrawnCounter() > 2)
       {
-        if (getNumCardsDrawnCounter() > 2)
-        {
-          std::cout
-            << "You have drawn the max number of cards! Your turn is over!"
-            << std::endl;
-          isPlayerTurn = false;
-          setCardsDrawnCounter(0);
-          nextTurn();
-          players = getPlayers();
-        }
-        else
-        {
-          std::cout << "You drew a card from the deck!" << std::endl;
-          drawCard();
-          std::cout << "Here is your hand: " << std::endl;
-          players = getPlayers();
-          playerCards = players[getTurn()]->getHand();
-          displayHand(playerCards);
-          setCardsDrawnCounter(getNumCardsDrawnCounter() + 1);
-          std::cout << "Discard pile has "
-                    << convertRankToString(getDiscardPile().back().getValue())
-                    << " of "
-                    << convertSuitToString(getDiscardPile().back().getSuit())
-                    << std::endl;
-          std::cout
-            << "Pick a card to play or enter a negative number to draw: ";
-          std::cin >> cardIndex;
-        }
+        std::cout
+          << "You have drawn the max number of cards! Your turn is over!"
+          << std::endl;
+        isPlayerTurn = false;
+        setCardsDrawnCounter(0);
+        nextTurn();
+        players = getPlayers();
       }
-      else if (cardIndex >= 0 && isValidCard(playerCards[cardIndex]))
+      else
+      {
+        std::cout << "You drew a card from the deck!" << std::endl;
+        drawCard();
+        std::cout << "Here is your hand: " << std::endl;
+        players = getPlayers();
+        playerCards = players[getTurn()].getHand();
+        displayHand(playerCards);
+        setCardsDrawnCounter(getCardsDrawnCounter() + 1);
+        std::cout << "Discard pile has "
+                  << convertRankToString(getDiscardPile().back().getValue())
+                  << " of "
+                  << convertSuitToString(getDiscardPile().back().getSuit())
+                  << std::endl;
+        // std::cout << "Pick a card to play or enter a negative number to draw: ";
+        // std::cin >> cardIndex;
+        players[turn].requestMove();  // request move function instead of stuff above
+      }
+
+      if (cardIndex >= 0 && isValidCard(playerCards[cardIndex]))
       {
         std::cout << "Player " << getTurn() + 1 << " played "
                   << convertRankToString(playerCards[cardIndex].getValue())
@@ -109,13 +105,12 @@ void CrazyEightsLogic::playGame()
                   << " Card: " << playerCards[cardIndex].getSuit() << ", "
                   << playerCards[cardIndex].getValue() << std::endl;
         std::cout << "Invalid card!" << std::endl;
-        std::cout << "Pick a card to play or enter negative number to draw: ";
-        std::cin >> cardIndex;
+        // std::cout << "Pick a card to play or enter negative number to draw: ";
+        // std::cin >> cardIndex;
         players = getPlayers();
+        players[turn].requestMove();  // request move function instead of stuff above
       }
     }
-
-    std::cout << std::endl;
   }
 }
 
@@ -208,6 +203,44 @@ int CrazyEightsLogic::getTurn()
 {
   return turn;
 }
+/**
+*
+* validateSuit is used for Networking
+*
+**/
+
+bool CrazyEightsLogic::validateSuit()
+{
+  int turn = getTurn();
+  std::vector<Player> players = getPlayers();
+  Suit selection = players[turn].receivedSuit();
+
+  if (selection < 1 || selection > 4)
+  {
+    std::cout << "Invalid selection.  Select a suit: " << std::endl;
+    std::cout << "1 - Hearts" << std::endl;
+    std::cout << "2 - Spades" << std::endl;
+    std::cout << "3 - Clubs" << std::endl;
+    std::cout << "4 - Diamonds" << std::endl;
+    players[turn].requestSuit();
+  }
+ else {
+    UpdateGameStateMessage();
+    nextTurn();
+    players[turn].requestMove();
+  }
+}
+
+/**
+*
+*  playCard is used for networking
+*
+*/
+void CrazyEightsLogic::playCard(Card& card)
+{
+  discardPile.push_back(card);
+  players[turn].removeCardFromHand(card);
+}
 
 void CrazyEightsLogic::playCard(Card& card)
 {
@@ -222,8 +255,8 @@ void CrazyEightsLogic::playCard(Card& card)
     std::cout << "3 - Clubs" << std::endl;
     std::cout << "4 - Diamonds" << std::endl;
     std::cin >> selection;
-    // player[turn].requestSuit
-
+    // players[turn].requestSuit
+//////////////////////////////////////////////////////////////////
     // receivedSuit will return a suit
     // this part below should be separate function if request suit working
     while (selection < 1 || selection > 4)
@@ -275,7 +308,7 @@ void CrazyEightsLogic::setCardsDrawnCounter(int numDrawn)
   cardsDrawnCounter = numDrawn;
 }
 
-int CrazyEightsLogic::getNumCardsDrawnCounter()
+int CrazyEightsLogic::getCardsDrawnCounter()
 {
   return cardsDrawnCounter;
 }

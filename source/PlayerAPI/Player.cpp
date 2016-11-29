@@ -14,7 +14,7 @@
 
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int id, TCPConnection::pointer connection)
-  : id(id), connection(connection), 
+  : id(id), connection(connection),
   roundScore(0), bid(0), bags(0), tricksWon(0)
 {
   std::stringstream ss;
@@ -207,6 +207,11 @@ void Player::setValidateBid(std::function<void(int)> func)
   validateBid = func;
 }
 
+int Player::getId()
+{
+  return id;
+}
+
 void Player::setValidateMove(std::function<void(Card)> func)
 {
   validateMove = func;
@@ -296,10 +301,10 @@ void Player::receivedMove(std::string msg)
 
 void Player::receivedBid(std::string msg)
 {
-  // We assume that no other information other than the bid as parsable number from a 
+  // We assume that no other information other than the bid as parsable number from a
   // string is given.
   int bid = std::stoi(msg);
-    
+
   validateBid(bid);
 }
 
@@ -308,7 +313,7 @@ void Player::receivedSuit(std::string msg)
   // so we assume the first char of the recieved message will be the suit, either
   // H, S, C, D, all other input will be interpreted as undefined suit.
   Suit s = decodeSuit(msg[0]);
-  
+
   validateSuit(s);
 }
 
@@ -320,3 +325,4 @@ void Player::recivedMessage(std::string msg)
   readMessage();
 }
 
+>>>>>>> upstream/master
