@@ -35,9 +35,9 @@ struct LobbyGame {
     ar & name;
     ar & type;
     ar & numberJoined;
-    for (auto name : playerNames) {
-      ar & name;
-    }
+    /*for (auto pName : playerNames) {
+      ar & pName;
+    }*/
   }
 
   LobbyGame() {}
