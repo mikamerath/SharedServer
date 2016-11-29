@@ -65,7 +65,7 @@ void Spades::getBids()
 {
 	for (auto&& p : players)
 	{
-		p->setValidateBid([this](int b) {receiveBid(b); })
+		p->setValidateBid([this](int b) {receiveBid(b); });
 		p->requestBid();
 	}
 }
