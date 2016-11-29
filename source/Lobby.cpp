@@ -82,7 +82,7 @@ void Lobby::procMakeGame(std::shared_ptr<Player> p, std::string msg)
   }
 
   LobbyGame game(name, gameType);
-  game.joinedPlayers.emplace_back(p);
+  game.joinedPlayers.emplace_back(p->getId());
   game.numberJoined = 1;
 
   // TODO: implement catching of duplicate names
@@ -110,7 +110,7 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
     return;
   }
 
-  game.joinedPlayers.emplace_back(p);
+  game.joinedPlayers.emplace_back(p->getId());
   game.numberJoined++;
 
   if (game.numberJoined == 4) {

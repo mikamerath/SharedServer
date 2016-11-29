@@ -38,12 +38,17 @@ class Lobby
 public:
     Lobby();
 
+    // Method called externally when a player connects to the server
     void addPlayer(std::shared_ptr<Player> newPlayer);
+    // Method used to attempt to proccess a message recieved from the client
+    // while the player is considered to be in the lobby.
     void proccessPlayerMessage(std::string msg, int id);
 
+    // Method to send back a list of availible games at the request of the client
     void procGetGames(std::shared_ptr<Player> p, std::string msg);
     void procMakeGame(std::shared_ptr<Player> p, std::string msg);
     void procJoinGame(std::shared_ptr<Player> p, std::string msg);
+    void procLeaveGame(std::shared_ptr<Player> p);
 
     /*
     void CreateGame(Player& player);
