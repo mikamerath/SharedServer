@@ -14,7 +14,7 @@ public:
   CrazyEightsLogic(std::vector<Player>& netPlayers);
   void deal(int numCards);
   bool isGameOver();
-  bool isValidCard(Card card);
+  bool isValidCard(std::vector<Card> c);
   std::string convertSuitToString(Suit suit);
   std::string convertRankToString(Value value);
   void displayHand(std::vector<Card> hand);
