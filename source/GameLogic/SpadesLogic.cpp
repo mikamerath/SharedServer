@@ -1,26 +1,5 @@
 #include "source\GameLogic\SpadesLogic.hpp"
-/*
-class Spades : public Game
-{
-public:
-	void setDeck();
-	void printPlayerHands();
-	void start();
-	void getBids();
-	void beginRound(int);
-	void startTrick();
-	bool validMove(std::vector<Card>, int, Suit&, int);
-	int getTrickWinner(std::vector<Card>, int);
-	int getNextPlayer(int);
-	void score();
-	void recordMove(std::vector<Card>);
-	Spades(std::vector<Player>);
-	~Spades() {}
-private:
-	int starter;
-	bool spadesBroken;
-};
-*/
+
 int Spades::getNextPlayer(int plId)
 {
 	if (plId == 3)
@@ -45,40 +24,6 @@ int next(int plId)
 	}
 }
 
-void printBoard(std::vector<Card> trick, std::vector<Card> hand, int turn)
-{
-	int posZero = turn;
-	int posOne = next(turn);
-	int posTwo = next(posOne);
-	int posThree = next(posTwo);
-	std::cout << "..........................................Player " << posTwo
-		<< "...........................\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout
-		<< ".Player " << posOne
-		<< "....................................................................\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	for (auto c : trick)
-	{
-		//c.tablePrint();
-	}
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..............................................................."
-		".....player "
-		<< posThree << ".\n";
-	std::cout << "..............................................................."
-		"..............\n";
-	std::cout << "..................Player " << turn
-		<< "...................................................\n";
-}
-
 Spades::Spades(std::vector<std::shared_ptr<Player>> p)
 {
 	players = p;
@@ -91,12 +36,6 @@ void Spades::getBids()
 	{
 		p->requestBid();
 	}
-}
-
-void Spades::recordMove(std::vector<Card> m)
-{
-	// essentially update field, then setup and send message to clients.
-	//m.at(0).print();
 }
 
 int Spades::getTrickWinner(std::vector<Card> trick, int tw)
@@ -213,20 +152,15 @@ void Spades::score()
 }
 
 void Spades::beginRound(int starter)
-{ // a more accurate title might be "playRound()" the round logic is this
-  // function
+{ 
 	Suit ledSuit = HEARTS;
-	// player 0 starts the round
 	std::vector<Card> trick;
 	int trickWinner = 0;
 	int turn = 0;
 	while (s == PLAYING)
 	{
-		// s = ROUND_OVER;
-
 		for (int i = 0; i < 4; i++)
 		{
-
 			//trick.push_back(players.at(turn).requestMove());
 			if (validMove(trick, turn, ledSuit, i))
 			{
@@ -240,35 +174,22 @@ void Spades::beginRound(int starter)
 				{
 					std::cout << "Invalid Move!!!" << std::endl;
 					std::cout << std::endl;
-					// std::cout << "Trick: " << std::endl;
 					auto sendBack = trick.back();
 					trick.pop_back();
-					// for(auto c : trick){
-					//	c.print();
-					//}
 					players.at(turn)->insertCardToHand(sendBack);
-					//trick.push_back(players.at(turn).requestMove());
 					vm = validMove(trick, turn, ledSuit, i);
 					if (vm && i == 0)
 					{
 						ledSuit = (Suit)trick.at(0).getSuit();
 					}
 				}
-
-				// severe connection to client (you don't want to play with them
-				// anyway).
 			}
 			turn = getNextPlayer(turn);
 			if (players.at(turn)->getHand().empty())
 			{
 				s = ROUND_OVER;
 			}
-			//printBoard(trick, players.at(turn).getHand(), turn); <- These are the three pieces of information that need to be sent to the player.
 			std::cout << "Updating Connected Games..." << std::endl;
-			/*std::cout << "Trick: " << std::endl;
-			for(auto c : trick){
-			c.print();
-			}*/
 		}
 		trickWinner = getTrickWinner(trick, trickWinner);
 		std::cout << "Player " << trickWinner << " won the trick." << std::endl;
@@ -308,21 +229,3 @@ void Spades::setDeck()
 	initializeDeck();
 }
 
-void Spades::printPlayerHands()
-{
-}
-
-/*int main()
-{
-Player one(0, "192.168.0.1");
-Player two(1, "192.168.0.2");
-Player three(2, "192.168.0.3");
-Player four(3, "192.168.0.4");
-std::vector<Player> p;
-p.push_back(one);
-p.push_back(two);
-p.push_back(three);
-p.push_back(four);
-Spades mySpades(p);
-return 0;
-} //Working test.*/
