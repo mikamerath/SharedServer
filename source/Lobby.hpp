@@ -43,6 +43,7 @@ public:
   // Method to handle a login by the player, which changes the player name from
   // guest to the name supplied
   void procLogin(std::shared_ptr<Player> p, std::string msg);
+  void procRegister(std::shared_ptr<Player> p, std::string msg);
   // Method to send back a list of availible games at the request of the client
   void procGetGames(std::shared_ptr<Player> p, std::string msg);
   // Method to make a game at the request of the client

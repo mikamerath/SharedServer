@@ -31,6 +31,10 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
     {
       procLogin(p, msg);
     }
+    else if (boost::algorithm::starts_with(msg, "REGISTER"))
+    {
+      procRegister(p, msg);
+    }
     else if (boost::algorithm::starts_with(msg, "MAKE")) 
     {
       //willRemain = false;
@@ -57,6 +61,11 @@ void Lobby::procLogin(std::shared_ptr<Player> p, std::string msg)
 
   p->setName(name);
   p->connection->write("SUCCESS");
+}
+
+void Lobby::procRegister(std::shared_ptr<Player> p, std::string msg)
+{
+  // TODO FIll in
 }
 
 void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
