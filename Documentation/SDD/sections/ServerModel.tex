@@ -15,5 +15,9 @@ Create game & Client $\rightarrow$ Server & "MAKE $<$TYPE$>$ $<$NAME$>$" & TYPE:
 \hline
 Game created & Server $\rightarrow$ Client & "SUCCESS", "FAILURE: $<$REASON$>$" & REASON: (UNKNOWN GAME TYPE, ALREADY EXISTS)\\
 \hline
+Join game & Client $\rightarrow$ Server & "JOIN $<$NAME$>$" & NAME: string from list\\
+\hline
+Game joined & Server $\rightarrow$ Client & "SUCCESS", "FAILURE: $<$REASON$>$" & REASON: (GAME NOT FOUND, GAME FULL)\\
+\hline
 \end{tabular}
 \end{center}
