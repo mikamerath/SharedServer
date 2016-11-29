@@ -43,7 +43,7 @@ public:
 
     void procGetGames(std::shared_ptr<Player> p, std::string msg);
     void procMakeGame(std::shared_ptr<Player> p, std::string msg);
-    void procJoinGame(std::shared_ptr<Player> p, std::string game);
+    void procJoinGame(std::shared_ptr<Player> p, std::string msg);
 
     /*
     void CreateGame(Player& player);
@@ -65,6 +65,7 @@ private:
   std::shared_ptr<Player> whoIs(int id);
   GameType getGameType(std::string msg);
   GameType translateType(std::string type);
+  LobbyGame& findGame(std::string name);
 
   std::map<std::string, LobbyGame> currentAvailableGames;
   std::map<int , std::shared_ptr<Player>> knownPlayers;

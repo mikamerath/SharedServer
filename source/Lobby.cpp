@@ -39,6 +39,7 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
   if (p != NULL) {
     if (boost::algorithm::starts_with(msg,"GET GAMES")) procGetGames(p,msg);
     else if (boost::algorithm::starts_with(msg, "MAKE")) procMakeGame(p,msg);
+    else if (boost::algorithm::starts_with(msg, "JOIN")) procJoinGame(p, msg);
     else p->connection->write("No Such Command");
     p->readLobbyMessage();
   }
@@ -84,7 +85,38 @@ void Lobby::procMakeGame(std::shared_ptr<Player> p, std::string msg)
   game.joinedPlayers.emplace_back(p);
   game.numberJoined = 1;
 
+  // TODO: implement catching of duplicate names
+
   currentAvailableGames.emplace(name, game);
+  p->connection->write("SUCCESS");
+}
+
+void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
+{
+  std::stringstream ss;
+  ss << msg;
+  std::string command, name;
+  ss >> command;
+  std::getline(ss, name);
+
+  LobbyGame& game = findGame(name);
+  if (game.type == GameType::UNKNOWN) {
+    p->connection->write("FAILURE : GAME NOT FOUND");
+    return;
+  }
+
+  if (game.numberJoined == 4) {
+    p->connection->write("FAILURE : GAME FULL");
+    return;
+  }
+
+  game.joinedPlayers.emplace_back(p);
+  game.numberJoined++;
+
+  if (game.numberJoined == 4) {
+    // TODO: start the game and remove it from the joinable list
+  }
+
   p->connection->write("SUCCESS");
 }
 
@@ -110,6 +142,13 @@ GameType Lobby::translateType(std::string type)
   else if (type == "SPADES") return GameType::SPADEGAME;
   else if (type == "EIGHTS") return GameType::EIGHTSGAME;
   else return GameType::UNKNOWN;
+}
+
+LobbyGame & Lobby::findGame(std::string name)
+{
+  auto it = currentAvailableGames.find(name);
+  if (it != currentAvailableGames.end()) return it->second;
+  else return LobbyGame("",GameType::UNKNOWN);
 }
 
 
