@@ -5,8 +5,8 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
-#include "../source/PlayerAPI/Card.hpp"
-#include "../source/PlayerAPI/Player.hpp"
+#include "source/PlayerAPI/Card.hpp"
+#include "source/PlayerAPI/Player.hpp"
 
 // Standard Includes
 #include <sstream>
@@ -16,7 +16,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost\asio\io_service.hpp>
+#include <boost/asio/io_service.hpp>
 
 BOOST_AUTO_TEST_CASE(startNewRound)
 {

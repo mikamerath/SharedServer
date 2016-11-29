@@ -7,7 +7,6 @@ GeneralMessage.cpp
 GeneralMessage.hpp
 NetworkInterface.cpp
 NetworkInterface.hpp
-PlayerNetworking.cpp
 ServerNetworkInterface.cpp
 ServerNetworkInterface.hpp
 TCPConnection.cpp
