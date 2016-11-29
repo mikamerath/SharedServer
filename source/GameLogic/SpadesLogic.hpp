@@ -18,6 +18,7 @@ public:
 	int getTrickWinner(std::vector<Card>, int);
 	int getNextPlayer(int);
 	void score();
+	Spades() {};
 	Spades(std::vector<std::shared_ptr<Player>>);
 	~Spades() {}
 private:
