@@ -18,15 +18,24 @@
 
 #include "source\PlayerAPI\Player.hpp";
 #include "source\PlayerAPI\Game.hpp";
-//#include "SpadesLogic.hpp"
-#include "CrazyEightsLogic.hpp"
-#include "HeartsGame.hpp"
 
+
+/* NEEDED FEATURES
+add player to lobby
+add function for player to callback when a message is recieved and proccess it
+add functions for player to call to join game, create game, request list of games, leave game
+notify waiting game players of other player join/leave
+*/
 
 class Lobby
 {
 public:
     Lobby();
+
+    void addPlayer(std::shared_ptr<Player> newPlayer);
+    void proccessPlayerMessage(std::string msg, int id);
+
+    /*
     void CreateGame(Player& player);
     void joinGame(Player& player2);
     void display();
@@ -39,15 +48,20 @@ public:
     void CreateSpadesLogic(std::vector<std::shared_ptr<Player>>& players);
     void CreateHeartLogic(std::vector<std::shared_ptr<Player>>& players);
     std::string NameOfGame();
+    */
     
 private:
+  // Hellper to identify the sender of a message from known players
+  std::shared_ptr<Player> whoIs(int id);
+
     enum Game
     {
         HEART = 1,
         SPADE = 2,
         CRAZY_EIGHTS = 3
     };
-    std::map<std::string, std::vector<Player> > currentAvailableGames;
+    std::map<std::string, std::vector<std::shared_ptr<Player>>> currentAvailableGames;
+    std::map<int , std::shared_ptr<Player>> knownPlayers;
     //std::map<std::string, std::vector<std::string>> unjoinableGames;
 };
 

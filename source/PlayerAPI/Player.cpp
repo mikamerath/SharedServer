@@ -207,6 +207,12 @@ void Player::setValidateBid(std::function<void(int)> func)
   validateBid = func;
 }
 
+void Player::setProcLobbyCommand(
+  std::function<void(std::string,int)> func)
+{
+  procLobbyCommand = func;
+}
+
 bool operator==(const Player& p1, const Player& p2)
 {
   if (p1.hand.size() != p2.hand.size()) return false;
@@ -246,6 +252,11 @@ void Player::updateGameStatus()
 {
   connection->write("Status Update");
   connection->write(""/*List of cards and players*/);
+}
+
+void Player::readLobbyMessage()
+{
+  connection->aSyncRead(boost::bind(&Player::recievedLobbyMessage, this, _1));
 }
 
 void Player::readMessage()
@@ -300,6 +311,11 @@ void Player::receivedSuit(std::string msg)
   Suit s = decodeSuit(msg[0]);
   
   validateSuit(s);
+}
+
+void Player::recievedLobbyMessage(std::string msg)
+{
+  procLobbyCommand(msg,id);
 }
 
 void Player::recivedMessage(std::string msg)
