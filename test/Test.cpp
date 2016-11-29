@@ -7,7 +7,7 @@
 // Project Includes
 #include "../source/PlayerAPI/Card.hpp"
 #include "../source/PlayerAPI/Player.hpp"
-#include "../source/GameLogic/CrazyEightsLogic.hpp"
+#include "/source/GameLogic/CrazyEightsLogic.hpp"
 
 // Standard Includes
 #include <sstream>
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
   Player player2(2, "144.39.162.003");
   Player player3(3, "144.39.162.005");
   Player player4(4, "144.39.162.007");
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
 
   players.push_back(player1);
   players.push_back(player2);
@@ -111,10 +111,22 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 
 }
 
+BOOST_CHECK_EQUAL(crazyEightsDrawCard)
+{
+  Player player1(1, "144.39.162.201");
+  std::vector<std::shared_ptr<Player>> players;
+
+  CrazyEightsLogic crazyEights(players);
+
+  crazyEights.getPlayers().at(0).drawCard();
+
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).getHand().size(), 6);
+}
+
 BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
 {
   Player player1(1, "144.39.162.001");
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
 
   CrazyEightsLogic crazyEights(players);
 
@@ -126,4 +138,21 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
 
   BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).isGameOver(), 1);
 
+}
+
+BOOST_AUTO_TEST_CASE(checkCardScoreVals)
+{
+  Card card1(HEARTS, EIGHT);
+  Card card2(CLUBS, ACE);
+  Card card3(SPADES, KING);
+
+  Player player(1, "144.56.289.001");
+  std::vector<std::shared_ptr<Player>> players;
+  players.push_back(player);
+
+  CrazyEightsLogic crazyEights(players);
+
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card1), 50);
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(crad3), 10);
 }

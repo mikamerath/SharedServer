@@ -238,8 +238,6 @@ bool CrazyEightsLogic::validateSuit()
 */
 void CrazyEightsLogic::playCard(Card& card)
 {
-
-
   discardPile.push_back(card);
   players[turn].removeCardFromHand(card);
 }
