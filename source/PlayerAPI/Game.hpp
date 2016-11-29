@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <random>
 
+#include <boost/serialization/access.hpp>
+
 enum State
 {
   PASSING,
@@ -29,7 +31,7 @@ protected:
   State s;
   std::vector<Card> deck;
   std::vector<Card> discardPile;
-  std::vector<std::shared_ptr<Player>> players;
+  std::vector<Player> players;
   std::vector<Card> field;
   int turn; // index in player vector
 public:
@@ -55,11 +57,11 @@ public:
   {
     for (auto&& player : players)
     {
-      player->updateGameStatus(/*coded message*/);
+      player.updateGameStatus(/*coded message*/);
     }
   }
   void deal(int numCards);
-  std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
+  std::vector<Player> getPlayers() { return players; }
   std::vector<Card> getDiscardPile() { return discardPile; }
   std::vector<Card> getDeck() { return deck; }
 };
@@ -69,6 +71,30 @@ class Message
   State s;
   bool turn;
   std::vector<Card> field;
+  std::vector<int> handSizes;
+  std::vector<Card> playerHand;
+  bool deckEmpty;
+  
+  Message(State state, bool t, std::vector<Card> f, std::vector<int> h, std::vector<Card> p, bool d)
+  {
+    s = state;
+    turn = t;
+    field = f;
+    handSizes = h;
+    playerHand = p;
+    deckEmpty = d;
+  }
+  
+  template <class Archive>
+  void serialize(Archive& ar, const unsigned int version)
+  {
+    ar& s;
+    ar& t;
+    ar& field;
+    ar& handSizes;
+    ar& playerHand;
+    ar& deckEmpty;
+  }
 };
 
 #endif
