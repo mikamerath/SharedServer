@@ -12,6 +12,9 @@
 #include <algorithm>
 #include <iostream>
 
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int id, TCPConnection::pointer connection)
   : id(id), connection(connection),
@@ -268,53 +271,39 @@ void Player::readMessage()
   connection->aSyncRead(boost::bind(&Player::recivedMessage,this,_1));
 }
 
-// hellper to decode the suit from a char.
-Suit decodeSuit(char s) {
-  Suit suit;
-  if (s == 'H') {
-    suit = HEARTS;
-  }
-  else if (s == 'C') {
-    suit = CLUBS;
-  }
-  else if (s == 'D') {
-    suit = DIAMONDS;
-  }
-  else if (s == 'S') {
-    suit = SPADES;
-  }
-  else {
-    suit = UNDEFINED;
-  }
-  return suit;
-}
-
 void Player::receivedMove(std::string msg)
 {
-  // we assume the message format is <char suit>{<char><optional char>number} ex H2 = 2 of hearts.
-  Suit suitCode = decodeSuit(msg.at(0));
-  Value cardNumber = Value(std::stoi(msg.substr(1)));
+  std::stringstream message(msg);
+  boost::archive::text_iarchive coded(message);
+  Card decoded;
+  coded >> decoded;
 
-  Card c = Card(suitCode, cardNumber);
-  validateMove(c);
+  validateMove(decoded);
 }
 
 void Player::receivedBid(std::string msg)
 {
   // We assume that no other information other than the bid as parsable number from a
   // string is given.
-  int bid = std::stoi(msg);
-
-  validateBid(bid);
+  try
+  {
+    int userBid = std::stoi(msg);
+    validateBid(userBid);
+  }
+  catch (...)
+  {
+    connection->write("The bid received was invalid");
+  }
 }
 
 void Player::receivedSuit(std::string msg)
 {
-  // so we assume the first char of the recieved message will be the suit, either
-  // H, S, C, D, all other input will be interpreted as undefined suit.
-  Suit s = decodeSuit(msg[0]);
+  std::stringstream message(msg);
+  boost::archive::text_iarchive coded(message);
+  Card decoded;
+  coded >> decoded;
 
-  validateSuit(s);
+  validateSuit(decoded.getSuit());
 }
 
 void Player::recivedMessage(std::string msg)
@@ -324,5 +313,3 @@ void Player::recivedMessage(std::string msg)
   connection->write("Got Messaage : " + msg);
   readMessage();
 }
-
->>>>>>> upstream/master
