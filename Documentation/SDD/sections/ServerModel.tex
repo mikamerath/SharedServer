@@ -5,10 +5,15 @@ Coming soon
 \begin{center}
 \begin{tabular}{|m{8em}|m{7em}|m{12em}|m{6em}|}
 \hline
-Function & Direction & Message & Options/Contents \\
+Function & Direction & Message & Options/ Contents \\
 \hline\hline
 Request games & Client $\rightarrow$ Server & "GET GAMES $<$TYPE$>$" & TYPE: (HEARTS, SPADES, EIGHTS, default: ALL)\\
 \hline
-Games list & Server $\rightarrow$ Client & archive & 
+Games list & Server $\rightarrow$ Client & archive & LobbyGame instances\\
+\hline
+Create game & Client $\rightarrow$ Server & "MAKE $<$TYPE$>$ $<$NAME$>$" & TYPE: (HEARTS, SPADES, EIGHTS) NAME: custom string\\
+\hline
+Game created & Server $\rightarrow$ Client & "SUCCESS", "FAILURE: $<$REASON$>$" & REASON: (UNKNOWN GAME TYPE, ALREADY EXISTS)\\
+\hline
 \end{tabular}
 \end{center}
