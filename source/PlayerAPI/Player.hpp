@@ -12,7 +12,9 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "source\NetworkInterface\TCPConnection.hpp"
 #include "Card.hpp"
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -29,15 +31,25 @@ private:
   int bid;                       // Spades
   int bags;                      // Spades
   int tricksWon;                 // Spades
+  std::function<void(Suit)> validateSuit;
+  std::function<void(Card)> validateMove;
+  std::function<void(int)> validateBid;
 
 public:
-  Player(int idNumber, std::string ipAddress);
+  TCPConnection::pointer connection;
+
+  Player(int id, TCPConnection::pointer connection);
 
   void setName(std::string);
   std::string getName() const;
   int getId();
 
-  // The functions below reset the necessary variables at the start of round/game.
+  void setValidateSuit(std::function<void(Suit)>);
+  void setValidateMove(std::function<void(Card)>);
+  void setValidateBid(std::function<void(int)>);
+
+  // The functions below reset the necessary variables at the start of
+  // round/game.
   void startNewRound();
   void startNewGame();
 
@@ -46,11 +58,13 @@ public:
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
   void updateGameStatus(/*coded message of state*/);
+  void readMessage(); // debugging and demo
 
   // The functions below are callback functions for server/client communication.
-  std::vector<Card> receivedMove();
-  int receivedBid();
-  Suit receivedSuit();
+  void receivedMove(std::string);
+  void receivedBid(std::string);
+  void receivedSuit(std::string);
+  void recivedMessage(std::string); // debugging and demo
 
   // The functions below allow for the management of a player's hand.
   void initializeHand(std::vector<Card>& deck, unsigned int numCards);
@@ -67,11 +81,16 @@ public:
 
   // The functions below are for use in the game Spades.
   int getBid() const;
+  void setBid(int);
   int getBags() const;
   void setBags(int);
   int getTricksWon() const;
   void setTricksWon(int);
   void incrementTricksWon();
+
+  // Make player comparable for BOOST_CHECK_EQUAL
+  friend bool operator==(const Player& p1, const Player& p2);
+  friend std::ostream& operator<<(std::ostream& out, const Player& p);
 };
 
 #endif
