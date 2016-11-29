@@ -64,6 +64,7 @@ private:
   // Hellper to identify the sender of a message from known players
   std::shared_ptr<Player> whoIs(int id);
   GameType getGameType(std::string msg);
+  GameType translateType(std::string type);
 
   std::map<std::string, LobbyGame> currentAvailableGames;
   std::map<int , std::shared_ptr<Player>> knownPlayers;

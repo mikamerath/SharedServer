@@ -10,6 +10,15 @@
 #include "source\PlayerAPI\LobbyGame.hpp"
 
 
+void procGameMade(std::string response) {
+  if (boost::algorithm::starts_with(response, "FAILURE")) {
+    std::cout << "FAILED TO MAKE GAME, " << response << std::endl;
+  }
+  else {
+    std::cout << "Joined Game..." << std::endl;
+  }
+}
+
 std::string printGameType(GameType t) {
   switch (t)
   {
@@ -57,6 +66,10 @@ int main() {
       if (boost::algorithm::starts_with(msg, "GET GAMES")) {
         msg = NI.recieve();
         procGamesGot(msg);
+      }
+      if (boost::algorithm::starts_with(msg, "MAKE")) {
+        msg = NI.recieve();
+        procGameMade(msg);
       }
       else {
         msg = NI.recieve();
