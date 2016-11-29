@@ -88,6 +88,6 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer) {
 	Spades s;
 	for (int i = 0; i < 8; i++) {
-		BOOST_CHECK_EQUAL(s.getNextPlayer(i), s.getNextPlayer(i + 1));
+		BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i+1)%4));
 	}
 }
