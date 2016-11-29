@@ -81,7 +81,7 @@ void Lobby::joinGame(std::string& player2)
 
 int Lobby::CountPlayers(std::vector<std::string> game)
 {
-    int numberofPlayers;
+    int numberofPlayers = 0;
     for(int i = 0; i < game.size(); i++)
     {
         game[i];

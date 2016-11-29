@@ -2,6 +2,7 @@
 #define HEARTS_GAME_HPP
 
 #include "source/PlayerAPI/Game.hpp"
+#include "source/PlayerAPI/Player.hpp"
 #include <boost/asio.hpp>
 #include <random>
 
