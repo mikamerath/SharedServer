@@ -13,7 +13,9 @@ enum GameType
 {
   HEARTGAME = 1,
   SPADEGAME = 2,
-  EIGHTSGAME = 3
+  EIGHTSGAME = 3,
+  ALL = 4, // used only in filtering when sending list to and from client
+  UNKNOWN = 99 // used only in filtering when sending list to and from client
 };
 
 struct LobbyGame {

@@ -22,6 +22,10 @@ Lobby::Lobby()
   currentAvailableGames.emplace("GAME2", LobbyGame("GAME2", GameType::HEARTGAME));
   currentAvailableGames.emplace("GAME3", LobbyGame("GAME3", GameType::HEARTGAME));
   currentAvailableGames.emplace("GAME4", LobbyGame("GAME4", GameType::HEARTGAME));
+  currentAvailableGames.emplace("GAME5", LobbyGame("GAME5", GameType::SPADEGAME));
+  currentAvailableGames.emplace("GAME6", LobbyGame("GAME6", GameType::SPADEGAME));
+  currentAvailableGames.emplace("GAME7", LobbyGame("GAME7", GameType::EIGHTSGAME));
+  currentAvailableGames.emplace("GAME8", LobbyGame("GAME8", GameType::EIGHTSGAME));
 }
 void Lobby::addPlayer(std::shared_ptr<Player> newPlayer)
 {
@@ -35,19 +39,30 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
   std::shared_ptr<Player> p = whoIs(id);
   std::cout << "Got : " << msg << " from : " << *p << std::endl;
   if (p != NULL) {
-    if (msg == "GET GAMES") procGetGames(p);
+    if (boost::algorithm::starts_with(msg,"GET GAMES")) procGetGames(p,msg);
+    //else if (boost::algorithm::starts_with(msg, "MAKE")) procMakeGame(p,msg);
     else p->connection->write("No Such Command");
     p->readLobbyMessage();
   }
 }
 
-void Lobby::procGetGames(std::shared_ptr<Player> p)
+void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
 {
+  GameType t = getGameType(msg);
   std::stringstream ss;
   boost::archive::text_oarchive oa(ss);
-  for(auto game : currentAvailableGames)
-  {
-    oa << game.second;
+  if (t == GameType::ALL) {
+    for (auto game : currentAvailableGames)
+    {
+      oa << game.second;
+    }
+  }
+  else {
+    for (auto game : currentAvailableGames)
+    {
+      if(game.second.type == t)
+        oa << game.second;
+    }
   }
   p->connection->write(ss.str());
   /*boost::archive::text_iarchive ia(ss);
@@ -67,6 +82,15 @@ std::shared_ptr<Player> Lobby::whoIs(int id)
   auto it = knownPlayers.find(id);
   if (it != knownPlayers.end()) return it->second;
   else return NULL;
+}
+
+GameType Lobby::getGameType(std::string msg)
+{
+  if (boost::algorithm::ends_with(msg, "HEARTS")) return GameType::HEARTGAME;
+  if (boost::algorithm::ends_with(msg, "SPADES")) return GameType::SPADEGAME;
+  if (boost::algorithm::ends_with(msg, "EIGHTS")) return GameType::EIGHTSGAME;
+  if (boost::algorithm::ends_with(msg, "ALL")) return GameType::ALL;
+  return GameType::ALL;
 }
 
 

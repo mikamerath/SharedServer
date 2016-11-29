@@ -19,6 +19,7 @@
 #include <boost\serialization\access.hpp>
 #include <boost\archive\text_oarchive.hpp>
 #include <boost\archive\text_iarchive.hpp>
+#include <boost\algorithm\string.hpp>
 
 #include "source\PlayerAPI\LobbyGame.hpp"
 #include "source\PlayerAPI\Player.hpp"
@@ -40,7 +41,7 @@ public:
     void addPlayer(std::shared_ptr<Player> newPlayer);
     void proccessPlayerMessage(std::string msg, int id);
 
-    void procGetGames(std::shared_ptr<Player> p);
+    void procGetGames(std::shared_ptr<Player> p, std::string msg);
     void procMakeGame(std::shared_ptr<Player> p, std::string msg);
     void procJoinGame(std::shared_ptr<Player> p, std::string game);
 
@@ -62,6 +63,8 @@ public:
 private:
   // Hellper to identify the sender of a message from known players
   std::shared_ptr<Player> whoIs(int id);
+  GameType getGameType(std::string msg);
+
   std::map<std::string, LobbyGame> currentAvailableGames;
   std::map<int , std::shared_ptr<Player>> knownPlayers;
   //std::map<std::string, std::vector<std::string>> unjoinableGames;

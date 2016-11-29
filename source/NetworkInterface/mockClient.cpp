@@ -4,6 +4,7 @@
 #include <boost\serialization\access.hpp>
 #include <boost\archive\text_oarchive.hpp>
 #include <boost\archive\text_iarchive.hpp>
+#include <boost\algorithm\string.hpp>
 
 #include "ClientNetworkInterface.hpp"
 #include "source\PlayerAPI\LobbyGame.hpp"
@@ -53,7 +54,7 @@ int main() {
     std::getline(std::cin, msg);
     while (msg != "EXIT") {
       NI.send(msg);
-      if (msg == "GET GAMES") {
+      if (boost::algorithm::starts_with(msg, "GET GAMES")) {
         msg = NI.recieve();
         procGamesGot(msg);
       }
