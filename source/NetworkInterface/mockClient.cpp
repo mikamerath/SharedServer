@@ -108,6 +108,10 @@ int main() {
         std::cout << "Server Responds : " << msg << std::endl;
       }
      
+      if (!NI.isConnected()) {
+        std::cout << "Connection to server lost..." << std::endl;
+        break;
+      }
       std::cout << "Enter message to send : " << std::endl;
       std::getline(std::cin, msg);
     }
@@ -116,5 +120,6 @@ int main() {
     std::cout << "Could not connect... press enter to quit";
     std::cin.get();
   }
-  
+  std::cout << "...press enter to quit...";
+  std::cin.get();
 }
