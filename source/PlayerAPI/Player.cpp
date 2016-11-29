@@ -272,14 +272,13 @@ void Player::receivedBid(std::string msg)
   // string is given.
   try
   {
-    int bid = std::stoi(msg);
+    int userBid = std::stoi(msg);
+    validateBid(userBid);
   }
   catch (...)
   {
     connection->write("The bid received was invalid");
   }
-    
-  validateBid(bid);
 }
 
 void Player::receivedSuit(std::string msg)
