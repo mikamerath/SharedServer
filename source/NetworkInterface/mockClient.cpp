@@ -48,9 +48,11 @@ void procGamesGot(std::string msg) {
   std::cout << "\nGot Games : \n";
   boost::archive::text_iarchive ia(ss);
   LobbyGame g;
+  bool gotSome = false;
   while (true) {
     try {
       ia >> g;
+      gotSome = true;
       std::cout << "\t" << g.name << " | " << printGameType(g.type) 
         << " | " << g.numberJoined << "/4\n";
     }
@@ -58,6 +60,10 @@ void procGamesGot(std::string msg) {
       break;
     }
   }
+  if (!gotSome) {
+    std::cout << "<NONE FOUND>" << std::endl;
+  }
+  std::cout << std::endl;
 }
 
 int main() {
