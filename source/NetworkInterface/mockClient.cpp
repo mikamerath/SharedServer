@@ -82,19 +82,24 @@ int main() {
     std::getline(std::cin, msg);
     while (msg != "EXIT") {
       NI.send(msg);
-      if (boost::algorithm::starts_with(msg, "GET GAMES")) {
+      
+      if (boost::algorithm::starts_with(msg, "GET GAMES")) 
+      {
         msg = NI.recieve();
         procGamesGot(msg);
       }
-      if (boost::algorithm::starts_with(msg, "MAKE")) {
+      else if (boost::algorithm::starts_with(msg, "MAKE")) 
+      {
         msg = NI.recieve();
         procGameMade(msg);
       }
-      if (boost::algorithm::starts_with(msg, "LOGIN")) {
+      else if (boost::algorithm::starts_with(msg, "LOGIN")) 
+      {
         msg = NI.recieve();
         std::cout << "Now logged in." << std::endl;
       }
-      if (boost::algorithm::starts_with(msg, "JOIN")) {
+      else if (boost::algorithm::starts_with(msg, "JOIN")) 
+      {
         msg = NI.recieve();
         procJoinGame(msg);
       }
@@ -102,6 +107,7 @@ int main() {
         msg = NI.recieve();
         std::cout << "Server Responds : " << msg << std::endl;
       }
+     
       std::cout << "Enter message to send : " << std::endl;
       std::getline(std::cin, msg);
     }
