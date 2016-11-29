@@ -59,6 +59,7 @@ void Lobby::procMakeGame(std::shared_ptr<Player> p, std::string msg)
   ss >> command;
   ss >> type;
   std::getline(ss, name);
+  name.erase(0, 1);
 
   GameType gameType = translateType(type);
   if (gameType == GameType::UNKNOWN) {
@@ -83,6 +84,7 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
   std::string command, name;
   ss >> command;
   std::getline(ss, name);
+  name.erase(0, 1);
 
   LobbyGame& game = findGame(name);
   if (game.type == GameType::UNKNOWN) {
