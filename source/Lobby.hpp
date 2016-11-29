@@ -16,6 +16,9 @@
 #include "source\Messages\LobbyGame.hpp"
 #include "source\PlayerAPI\Player.hpp"
 #include "source\PlayerAPI\Game.hpp"
+#include "source\GameLogic\CrazyEightsLogic.hpp"
+#include "source\GameLogic\HeartsGame.hpp"
+#include "source\GameLogic\SpadesLogic.hpp"
 
 
 /* NEEDED FEATURES
@@ -48,10 +51,14 @@ public:
   void procJoinGame(std::shared_ptr<Player> p, std::string msg);
   // method to leave a game at the request of the client
   void procLeaveGame(std::shared_ptr<Player> p);
+  // mehtod to start the game once it is full;
+  void procStartGame(LobbyGame& game);
     
 private:
   // Helper to identify the sender of a message from known players
   std::shared_ptr<Player> whoIs(int id);
+  // Helper to get a list of players from a list of IDs
+  std::vector<std::shared_ptr<Player>> whoIs(std::vector<int> ids);
   // Helper to get the game type from a create game message
   GameType getGameType(std::string msg);
   // Helper to translate a single word into a game type
@@ -62,6 +69,8 @@ private:
 
   // A map of all games that are joinable where the key is the game name
   std::map<std::string, LobbyGame> currentAvailableGames;
+  // A list of games that are currently being played
+  std::vector<std::shared_ptr<Game>> inProggressGames;
   // A map of all known players that ignores connection status where the
   // key is the player ID
   std::map<int , std::shared_ptr<Player>> knownPlayers;

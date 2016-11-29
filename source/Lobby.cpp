@@ -49,11 +49,11 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
 void Lobby::procLogin(std::shared_ptr<Player> p, std::string msg)
 {
   std::stringstream ss;
-  std::string command, name;
+  std::string command, name, pass;
   ss << msg;
   ss >> command;
-  std::getline(ss, name);
-  name.erase(0, 1);
+  ss >> name;
+  ss >> pass;
 
   p->setName(name);
   p->connection->write("SUCCESS");
@@ -136,11 +136,31 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
   game.playerNames.emplace_back(p->getName());
   game.numberJoined++;
 
+  p->connection->write("SUCCESS");
+
   if (game.numberJoined == 4) {
-    // TODO: start the game and remove it from the joinable list
+    procStartGame(game);
+  }
+}
+
+void Lobby::procStartGame(LobbyGame & game)
+{
+  std::shared_ptr<Game> newGame;
+  switch (game.type)
+  {
+  case GameType::EIGHTSGAME:
+    //newGame = std::make_shared<CrazyEightsLogic>(whoIs(game.joinedPlayers));
+  case GameType::HEARTGAME:
+    //newGame = std::make_shared<HeartsGame>(whoIs(game.joinedPlayers));
+  case GameType::SPADEGAME:
+    newGame = std::make_shared<Spades>(whoIs(game.joinedPlayers));
+  default:
+    break;
   }
 
-  p->connection->write("SUCCESS");
+  inProggressGames.emplace_back(newGame);
+  currentAvailableGames.erase(game.name);
+  //newGame->start();
 }
 
 std::shared_ptr<Player> Lobby::whoIs(int id)
@@ -148,6 +168,15 @@ std::shared_ptr<Player> Lobby::whoIs(int id)
   auto it = knownPlayers.find(id);
   if (it != knownPlayers.end()) return it->second;
   else return NULL;
+}
+
+std::vector<std::shared_ptr<Player>> Lobby::whoIs(std::vector<int> ids)
+{
+  std::vector<std::shared_ptr<Player>> players;
+  for (auto id : ids) {
+    players.emplace_back(whoIs(id));
+  }
+  return players;
 }
 
 GameType Lobby::getGameType(std::string msg)

@@ -35,8 +35,11 @@ struct LobbyGame {
     ar & name;
     ar & type;
     ar & numberJoined;
-    /*for (auto pName : playerNames) {
-      ar & pName;
+    /*auto tempCount = playerNames.size();
+    ar & tempCount;
+    for (size_t i = 0; i < tempCount; i++)
+    {
+      ar & playerNames[i];
     }*/
   }
 
