@@ -22,6 +22,7 @@ struct LobbyGame {
   std::string name;
   GameType type;
   std::vector<int> joinedPlayers;
+  std::vector<std::string> playerNames;
   int numberJoined;
 
   friend class boost::serialization::access;
@@ -34,6 +35,7 @@ struct LobbyGame {
     ar & name;
     ar & type;
     ar & numberJoined;
+    ar & playerNames;
   }
 
   LobbyGame() {}

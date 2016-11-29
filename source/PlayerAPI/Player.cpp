@@ -14,8 +14,8 @@
 
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int id, TCPConnection::pointer connection)
-  : id(id), connection(connection), 
-  roundScore(0), bid(0), bags(0), tricksWon(0)
+  : id(id), connection(connection),
+  roundScore(0), bid(0), bags(0), tricksWon(0), name("Guest")
 {
   std::stringstream ss;
   ss << connection->getSocket().remote_endpoint();

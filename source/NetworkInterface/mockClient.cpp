@@ -54,7 +54,11 @@ void procGamesGot(std::string msg) {
       ia >> g;
       gotSome = true;
       std::cout << "\t" << g.name << " | " << printGameType(g.type) 
-        << " | " << g.numberJoined << "/4\n";
+        << " | " << g.numberJoined << "/4 | ";
+      for (auto name : g.playerNames) {
+        std::cout << "(" << name << ")";
+      }
+      std::cout << "\n";
     }
     catch(...){
       break;
@@ -85,6 +89,10 @@ int main() {
       if (boost::algorithm::starts_with(msg, "MAKE")) {
         msg = NI.recieve();
         procGameMade(msg);
+      }
+      if (boost::algorithm::starts_with(msg, "LOGIN")) {
+        msg = NI.recieve();
+        std::cout << "Now logged in." << std::endl;
       }
       if (boost::algorithm::starts_with(msg, "JOIN")) {
         msg = NI.recieve();

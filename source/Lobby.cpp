@@ -27,6 +27,10 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
     {
       procGetGames(p, msg);
     }
+    else if (boost::algorithm::starts_with(msg, "LOGIN"))
+    {
+      procLogin(p, msg);
+    }
     else if (boost::algorithm::starts_with(msg, "MAKE")) 
     {
       //willRemain = false;
@@ -40,6 +44,18 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
     else p->connection->write("No Such Command");
     p->readLobbyMessage();
   }
+}
+
+void Lobby::procLogin(std::shared_ptr<Player> p, std::string msg)
+{
+  std::stringstream ss;
+  std::string command, name;
+  ss >> command;
+  std::getline(ss, name);
+  name.erase(0, 1);
+
+  p->setName(name);
+  p->connection->write("SUCCESS");
 }
 
 void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
@@ -86,6 +102,7 @@ void Lobby::procMakeGame(std::shared_ptr<Player> p, std::string msg)
 
   LobbyGame game(name, gameType);
   game.joinedPlayers.emplace_back(p->getId());
+  game.playerNames.emplace_back(p->getName());
   game.numberJoined = 1;
 
   // TODO: implement catching of duplicate names
@@ -115,6 +132,7 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
   }
 
   game.joinedPlayers.emplace_back(p->getId());
+  game.playerNames.emplace_back(p->getName());
   game.numberJoined++;
 
   if (game.numberJoined == 4) {
