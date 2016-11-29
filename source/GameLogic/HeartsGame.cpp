@@ -3,13 +3,12 @@
 
 // constructor
 // takes in a vector of players
-
-HeartsGame::HeartsGame(std::vector<std::shared_ptr<Player>>& players)
+HeartsGame::HeartsGame(std::vector<Player>& netPlayers)
 {
-  this->players = players;
+  players = netPlayers;
   /*for (int i = 0; i < players.size(); i++)
   {
-	  players[i].setValidateMove([this,i](Card c) {validateMove(i,c); });
+          players[i].setValidateMove([this,i](Card c) {validateMove(i,c); });
   }*/
   std::vector<Card> tmp;
   for (int i = 0; i < 4; i++)
@@ -46,8 +45,8 @@ int HeartsGame::findTwoOfClubs()
 {
   for (size_t i = 0; i < players.size(); ++i)
   {
-    std::vector<Card> temp = players[i]->getHand();
-    for (auto j = 0; j < players[i]->getHand().size(); ++j)
+    std::vector<Card> temp = players[i].getHand();
+    for (auto j = 0; j < players[i].getHand().size(); ++j)
     {
       if (temp[j].getSuit() == Suit::CLUBS && temp[j].getValue() == 2)
       {
@@ -67,16 +66,16 @@ void HeartsGame::passCards(int round)
     Card card1 = cardsToPass[(i + round + 1) % players.size()][0];
     Card card2 = cardsToPass[(i + round + 1) % players.size()][1];
     Card card3 = cardsToPass[(i + round + 1) % players.size()][2];
-    players[i]->insertCardToHand(card1);
-    players[i]->insertCardToHand(card2);
-    players[i]->insertCardToHand(card3);
+    players[i].insertCardToHand(card1);
+    players[i].insertCardToHand(card2);
+    players[i].insertCardToHand(card3);
   }
 
   cardsToPass.clear();
   std::vector<Card> tmp;
   for (int i = 0; i < 4; i++)
   {
-	  cardsToPass.push_back(tmp);
+    cardsToPass.push_back(tmp);
   }
 }
 
@@ -118,72 +117,64 @@ bool HeartsGame::noLeadSuit(Suit s, std::vector<Card> h)
 // returns a bool of whether the card is a valid move
 bool HeartsGame::validateMove(int index, Card move)
 {
-	Suit lead;
-	if (centerPile.size() > 0) lead = centerPile[0].getSuit();
-	if (turn == 0)
-	{
-		if (centerPile.size() == 0)
-		{
-			if (move.getSuit() != CLUBS && move.getValue() != TWO) return false;
-			else return true;
-		}
-		else
-		{
-			if (move.getSuit() != lead && noLeadSuit(lead, players[index]->getHand()))
-			{
-				if (move.getSuit() == HEARTS && brokenHearts) return true;
-				else if (move.getSuit() == HEARTS && allhearts(players[index]->getHand()))
-				{
-					brokenHearts = true;
-					return true;
-				}
-				else if (move.getSuit() == HEARTS) return false;
-				else return true;
-			}
-			else if (move.getSuit() != lead) return false;
-			else return true;
-		}
-	}
-	else
-	{
-		if (centerPile.size() == 0)
-		{
-			if (move.getSuit() == HEARTS && allhearts(players[index]->getHand()))
-			{
-				brokenHearts = true;
-				return true;
-			}
-			else if (move.getSuit() == HEARTS && brokenHearts)
-				return true;
-			else if (move.getSuit() == HEARTS)
-			{
-				brokenHearts = true;
-				return true;
-			}
-			return true;
-		}
-		else
-		{
-			if (move.getSuit() != lead && noLeadSuit(lead, players[index]->getHand()))
-			{
-				if (move.getSuit() == HEARTS && brokenHearts) return true;
-				else if (move.getSuit() == HEARTS && allhearts(players[index]->getHand()))
-				{
-					brokenHearts = true;
-					return true;
-				}
-				else if (move.getSuit() == HEARTS)
-				{
-					brokenHearts == true;
-					return true;
-				}
-				else return true;
-			}
-			else if (move.getSuit() != lead) return false;
-			else return true;
-		}
-	}
-	return false;
+  Suit lead;
+  if (centerPile.size() > 0) lead = centerPile[0].getSuit();
+  if (numTrick == 0)
+  {
+    if (centerPile.size() == 0)
+    {
+      if (move.getSuit() != CLUBS && move.getValue() != TWO)
+        return false;
+      else
+        return true;
+    }
+    else
+    {
+      if (move.getSuit() != lead && noLeadSuit(lead, players[index].getHand()))
+      {
+        if (move.getSuit() == HEARTS)
+          return false;
+        else if (move.getSuit() == SPADES && move.getValue == QUEEN)
+          return false;
+        else
+          return true;
+      }
+      else if (move.getSuit() != lead)
+        return false;
+      else
+        return true;
+    }
+  }
+  else
+  {
+    if (centerPile.size() == 0)
+    {
+      if (move.getSuit() == HEARTS)
+      {
+        brokenHearts = true;
+        return true;
+      }
+      return true;
+    }
+    else
+    {
+      if (move.getSuit() != lead && noLeadSuit(lead, players[index].getHand()))
+      {
+        if (move.getSuit() == HEARTS)
+        {
+          brokenHearts == true;
+          return true;
+        }
+        else
+          return true;
+      }
+      else if (move.getSuit() != lead)
+        return false;
+      else
+        return true;
+    }
+  }
+  return false;
 }
 
 // shuffle and deals the cards to the players
@@ -198,7 +189,7 @@ void HeartsGame::dealCards(std::vector<Card>& Deck)
   {
     for (auto j = 0; j < 13; j++)
     {
-      players[i]->insertCardToHand(Deck[(j) + (13 * i)]);
+      players[i].insertCardToHand(Deck[(j) + (13 * i)]);
     }
   }
 }
@@ -208,144 +199,148 @@ void HeartsGame::dealCards(std::vector<Card>& Deck)
 // play again
 void HeartsGame::play_Hearts()
 {
-  
+
   int round = 0;
   gameOver = false;
   while (!gameOver)
   {
-	  turn = 0;
-	  // creates deck of cards
-	  auto deck = initializeDeck();
+    numTrick = 0;
+    // creates deck of cards
+    auto deck = initializeDeck();
 
-	  // deals cards and resets round scores to 0
-	  dealCards(deck);
-	  //UpdateGameStateMessage();
-	  for (auto player : players)
-	  {
-		  std::cout << player->getName() << ": ";
-		  for (auto c : player->getHand())
-		  {
-			  std::cout << c.getSuit() << ' ' << c.getValue() << ' ';
-		  }
-		  std::cout << player->getTotalScore() << std::endl;
-	  }
-	  for (auto player : players)
-	  {
-		  //player.requestPass
-		  std::vector<Card> passingCards;
-		  do
-		  {
-			  std::cout << player->getName() << ": Request 3 cards to pass\n";
-			  passingCards.clear();
-			  for (int i = 0; i < 3; i++)
-			  {
-				  int suit, value;
-				  std::cin >> suit;
-				  std::cin >> value;
-				  passingCards.push_back(Card((Suit)suit, (Value)value));
-			  }
-		  } while(!setPassCards(passingCards, player->getName()));
-	  }
-	  passCards(round);
-	  int currentPlayer = findTwoOfClubs();
-	  int nextPlayer = -1;
-	  roundOver = false;
-	  while (!roundOver)
-	  {
-		  //UpdateGameStateMessage();
-		  for (auto player : players)
-		  {
-			  std::cout << player->getName() << ": ";
-			  for (auto c : player->getHand())
-			  {
-				  std::cout << c.getSuit() << ' ' << c.getValue() << ' ';
-			  }
-			  std::cout << player->getTotalScore() << std::endl;
-		  }
-		  //player.requestmove();
-		  bool validPlay = false;
-		  if (nextPlayer != -1) currentPlayer = nextPlayer;
-		  for (int i = 0; i < players.size(); i++)
-		  {
-			  do
-			  {
-				  validPlay = false;
-				  std::cout << "CENTER: ";
-				  for (int j = 0; j < centerPile.size(); j++)
-				  {
-					  std::cout << centerPile[j].getSuit() << ' ' << centerPile[j].getValue() << ' ';
-				  }
-				  std::cout << std::endl;
-				  std::cout << players[(i+currentPlayer)%4]->getName() << ": Play a card\n";
-				  int suit, value;
-				  std::cin >> suit;
-				  std::cin >> value;
-				  nextPlayer = playCard(Card((Suit)suit, (Value)value), players[(i + currentPlayer) % 4]->getName());
-				  if(nextPlayer!=-1)
-				  {
-					  validPlay = true;
-				  }
+    // deals cards and resets round scores to 0
+    dealCards(deck);
+    // UpdateGameStateMessage();
+    for (auto player : players)
+    {
+      std::cout << player.getName() << ": ";
+      for (auto c : player.getHand())
+      {
+        std::cout << c.getSuit() << ' ' << c.getValue() << ' ';
+      }
+      std::cout << player.getTotalScore() << std::endl;
+    }
+    for (auto player : players)
+    {
+      // player.requestPass
+      std::vector<Card> passingCards;
+      do
+      {
+        std::cout << player.getName() << ": Request 3 cards to pass\n";
+        passingCards.clear();
+        for (int i = 0; i < 3; i++)
+        {
+          int suit, value;
+          std::cin >> suit;
+          std::cin >> value;
+          passingCards.push_back(Card((Suit)suit, (Value)value));
+        }
+      } while (!setPassCards(passingCards, player.getName()));
+    }
+    passCards(round);
+    int currentPlayer = findTwoOfClubs();
+    int nextPlayer = -1;
+    roundOver = false;
+    while (!roundOver)
+    {
+      // UpdateGameStateMessage();
+      for (auto player : players)
+      {
+        std::cout << player.getName() << ": ";
+        for (auto c : player.getHand())
+        {
+          std::cout << c.getSuit() << ' ' << c.getValue() << ' ';
+        }
+        std::cout << player.getTotalScore() << std::endl;
+      }
 
-			  } while (!validPlay);
-		  }
-		  nextPlayer = endTurn(currentPlayer);
-		  turn++;
-		  bool done = true;
-		  for (auto player : players)
-		  {
-			  if (player->getHand().size() != 0) done = false;
-		  }
-		  if (done) roundOver = true;
-	  }
+      bool validPlay = false;
+      if (nextPlayer != -1) currentPlayer = nextPlayer;
+      for (int i = 0; i < players.size(); i++)
+      {
+        do
+        {
+          validPlay = false;
+          // players[i].requestmove();
+          std::cout << "CENTER: ";
+          for (int j = 0; j < centerPile.size(); j++)
+          {
+            std::cout << centerPile[j].getSuit() << ' '
+                      << centerPile[j].getValue() << ' ';
+          }
+          std::cout << std::endl;
+          std::cout << players[(i + currentPlayer) % 4].getName()
+                    << ": Play a card\n";
+          int suit, value;
+          std::cin >> suit;
+          std::cin >> value;
+          nextPlayer = playCard(Card((Suit)suit, (Value)value),
+                                players[(i + currentPlayer) % 4].getName());
+          if (nextPlayer != -1)
+          {
+            validPlay = true;
+          }
 
-	  round++;
-	  bool done = false;
-	  for (auto player : players)
-	  {
-		  if (player->getTotalScore() >= 100) done = true;
-	  }
-	  if (done) gameOver = true;
+        } while (!validPlay);
+      }
+      nextPlayer = endTurn(currentPlayer);
+      numTrick++;
+      bool done = true;
+      for (auto player : players)
+      {
+        if (player.getHand().size() != 0) done = false;
+      }
+      if (done) roundOver = true;
+    }
+
+    round++;
+    bool done = false;
+    for (auto player : players)
+    {
+      if (player.getTotalScore() >= 100) done = true;
+    }
+    if (done) gameOver = true;
   }
   std::cout << std::endl << std::endl << std::endl;
   for (auto player : players)
   {
-	  std::cout << "Final Score for " << player->getName() << ": " << player->getTotalScore() << std::endl;
+    std::cout << "Final Score for " << player.getName() << ": "
+              << player.getTotalScore() << std::endl;
   }
 }
 
 bool HeartsGame::validatePass(std::vector<Card> cards, std::string name)
 {
-	std::shared_ptr<Player> currentPlayer;
-	for (auto player : players)
-	{
-		if (player->getName() == name) currentPlayer = player;
-	}
-	if (currentPlayer->getId() == -1) return false;
-	std::vector<bool> valid;
-	for (auto c : cards)
-	{
-		for (auto c1 : currentPlayer->getHand())
-		{
-			if (c.getSuit() == c1.getSuit() && c.getValue() == c1.getValue()) valid.push_back(true);
-		}
-	}
-	if (valid.size() == 3) return true;
-	return false;
+  int currentPlayerIndex = -1;
+  for (int i = 0; i < players.size(); i++)
+  {
+    if (players[i].getName() == name) currentPlayerIndex = i;
+  }
+  if (currentPlayerIndex == -1) return false;
+  for (auto c : cards)
+  {
+    for (auto c1 : players[currentPlayerIndex].getHand())
+    {
+      if (c.getSuit() != c1.getSuit() || c.getValue() != c1.getValue())
+        return false;
+    }
+  }
+  return true;
 }
 
 // preps the passing cards
 // takes the vector of card indexes and the name of the player
 bool HeartsGame::setPassCards(std::vector<Card> cards, std::string name)
 {
-	if (!validatePass(cards, name)) return false;
+  if (!validatePass(cards, name)) return false;
   for (int i = 0; i < players.size(); i++)
   {
-    if (players[i]->getName() == name)
+    if (players[i].getName() == name)
     {
       for (int j = cards.size() - 1; j >= 0; j--)
       {
         passCard(cards[j], i);
-        if (!players[i]->removeCardFromHand(cards[j])) return false;
+        if (!players[i].removeCardFromHand(cards[j])) return false;
       }
     }
   }
@@ -361,16 +356,16 @@ int HeartsGame::playCard(Card card, std::string name)
   int j = 0;
   for (int i = 0; i < players.size(); i++)
   {
-    if (players[i]->getName() == name)
+    if (players[i].getName() == name)
     {
       if (!validateMove(i, card))
       {
         return -1;
       }
 
-      if(!players[i]->removeCardFromHand(card)) return -1;
+      if (!players[i].removeCardFromHand(card)) return -1;
       centerPile.push_back(card);
-      j = (i + 1)%4;
+      j = (i + 1) % 4;
     }
   }
   turn = (turn + 1) % 4;
@@ -397,7 +392,7 @@ int HeartsGame::endTurn(int currentPlayer)
     if (tmp.getSuit() == SPADES && tmp.getValue() == 12) score += 13;
     if (tmp.getSuit() == HEARTS) score++;
   }
-  players[(maxIndex + currentPlayer) % players.size()]->incrementRoundScore(
+  players[(maxIndex + currentPlayer) % players.size()].incrementRoundScore(
     score);
   centerPile.clear();
   return (maxIndex + currentPlayer) % players.size();
@@ -408,17 +403,17 @@ void HeartsGame::endRound()
 {
   for (int i = 0; i < players.size(); i++)
   {
-    if (players[i]->getRoundScore() == 26)
+    if (players[i].getRoundScore() == 26)
     {
-      players[(i + 1) % 4]->setRoundScore(26);
-      players[(i + 2) % 4]->setRoundScore(26);
-      players[(i + 3) % 4]->setRoundScore(26);
+      players[(i + 1) % 4].setRoundScore(26);
+      players[(i + 2) % 4].setRoundScore(26);
+      players[(i + 3) % 4].setRoundScore(26);
       break;
     }
   }
   for (int i = 0; i < players.size(); i++)
   {
-    players[i]->startNewRound();
+    players[i].startNewRound();
   }
 }
 

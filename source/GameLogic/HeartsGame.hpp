@@ -1,14 +1,15 @@
 #ifndef HEARTS_GAME_HPP
 #define HEARTS_GAME_HPP
 
-#include "source/PlayerAPI/Game.hpp"
+#include "Player.hpp"
+#include "Game.hpp"
 #include <boost/asio.hpp>
 #include <random>
 
 class HeartsGame : public Game
 {
-public://10 functions
-  HeartsGame(std::vector<std::shared_ptr<Player>>& players);
+public: // 10 functions
+  HeartsGame(std::vector<Player>& netPlayers);
   ~HeartsGame();
   void play_Hearts();
   // looks through each hand to find the 2 of clubs
@@ -19,9 +20,9 @@ public://10 functions
   void endRound();
   bool setPassCards(std::vector<Card> cards, std::string name);
   int playCard(Card card, std::string name);
-  std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
+  std::vector<Player> getPlayers() { return players; }
   std::vector<Card> getCenterPile() { return centerPile; }
-private:
+private: // 6 functions
   std::vector<Card> initializeDeck();
   void dealCards(std::vector<Card>& Deck);
 
@@ -30,7 +31,6 @@ private:
   // compares hand against the lead suit
   bool noLeadSuit(Suit s, std::vector<Card> h);
   bool validateMove(int index, Card move);
-  std::vector<std::shared_ptr<Player>> players;
   std::vector<Card> centerPile;
 
   bool brokenHearts = false;
