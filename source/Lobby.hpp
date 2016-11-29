@@ -1,78 +1,66 @@
-//
-//  LobbyLogic.hpp
-//  LobbyFinal
-//
-//  Created by Alex Collantes on 11/17/16.
-//  Copyright © 2016 Alex Collantes. All rights reserved.
-//
-
 #ifndef LobbyLogic_hpp
 #define LobbyLogic_hpp
 
-
+/// Standard Includes
 #include <stdio.h>
 #include <vector>
 #include <map>
 #include <string>
 #include <iostream>
-
+/// Boost Includes
 #include <boost\serialization\access.hpp>
 #include <boost\archive\text_oarchive.hpp>
 #include <boost\archive\text_iarchive.hpp>
 #include <boost\algorithm\string.hpp>
-
+/// Application Includes
 #include "source\Messages\LobbyGame.hpp"
 #include "source\PlayerAPI\Player.hpp"
 #include "source\PlayerAPI\Game.hpp"
 
 
 /* NEEDED FEATURES
-add player to lobby
-add function for player to callback when a message is recieved and proccess it
-add functions for player to call to join game, create game, request list of games, leave game
+add functions for player to call leave game
 notify waiting game players of other player join/leave
 */
 
+// Class used to create games, allow players to interact with games, and start games 
+// when ready
 class Lobby
 {
 public:
-    Lobby();
+  // constructor
+  Lobby();
 
-    // Method called externally when a player connects to the server
-    void addPlayer(std::shared_ptr<Player> newPlayer);
-    // Method used to attempt to proccess a message recieved from the client
-    // while the player is considered to be in the lobby.
-    void proccessPlayerMessage(std::string msg, int id);
-
-    // Method to send back a list of availible games at the request of the client
-    void procGetGames(std::shared_ptr<Player> p, std::string msg);
-    void procMakeGame(std::shared_ptr<Player> p, std::string msg);
-    void procJoinGame(std::shared_ptr<Player> p, std::string msg);
-    void procLeaveGame(std::shared_ptr<Player> p);
-
-    /*
-    void CreateGame(Player& player);
-    void joinGame(Player& player2);
-    void display();
-    void remove();
-    void RequestGameDetails(std::vector<std::shared_ptr<Player>>& players);
-    int CountPlayers(std::vector<std::shared_ptr<Player>> game);
-    bool isEmpty();
-    void CreateTestGame(std::vector<std::shared_ptr<Player>>& players);
-    void CreateCrazyEightsLogic(std::vector<std::shared_ptr<Player>>& players);
-    void CreateSpadesLogic(std::vector<std::shared_ptr<Player>>& players);
-    void CreateHeartLogic(std::vector<std::shared_ptr<Player>>& players);
-    std::string NameOfGame();
-    */
+  // Method called externally when a player connects to the server
+  void addPlayer(std::shared_ptr<Player> newPlayer);
+  // Method used to attempt to proccess a message recieved from the client
+  // while the player is considered to be in the lobby.
+  void proccessPlayerMessage(std::string msg, int id);
+  
+  // Method to send back a list of availible games at the request of the client
+  void procGetGames(std::shared_ptr<Player> p, std::string msg);
+  // Method to make a game at the request of the client
+  void procMakeGame(std::shared_ptr<Player> p, std::string msg);
+  // method to join a game at the request of the client
+  void procJoinGame(std::shared_ptr<Player> p, std::string msg);
+  // method to leave a game at the request of the client
+  void procLeaveGame(std::shared_ptr<Player> p);
     
 private:
-  // Hellper to identify the sender of a message from known players
+  // Helper to identify the sender of a message from known players
   std::shared_ptr<Player> whoIs(int id);
+  // Helper to get the game type from a create game message
   GameType getGameType(std::string msg);
+  // Helper to translate a single word into a game type
   GameType translateType(std::string type);
+  // Helper to find a game by name, returns a LobbyGame with GameType::UNKNOWN
+  // if the game is not found
   LobbyGame& findGame(std::string name);
 
+  // A map of all games that are joinable where the key is the game name
   std::map<std::string, LobbyGame> currentAvailableGames;
+  // A map of all known players that ignores connection status where the
+  // key is the player ID
   std::map<int , std::shared_ptr<Player>> knownPlayers;
   //std::map<std::string, std::vector<std::string>> unjoinableGames;
 };
