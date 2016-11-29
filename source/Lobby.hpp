@@ -18,7 +18,6 @@
 
 #include "source\PlayerAPI\Player.hpp";
 #include "source\PlayerAPI\Game.hpp";
-#include "Player.hpp"
 //#include "SpadesLogic.hpp"
 #include "CrazyEightsLogic.hpp"
 #include "HeartsGame.hpp"
@@ -32,13 +31,13 @@ public:
     void joinGame(Player& player2);
     void display();
     void remove();
-    void RequestGameDetails(std::vector<Player>& players);
-    int CountPlayers(std::vector<Player> game);
+    void RequestGameDetails(std::vector<std::shared_ptr<Player>>& players);
+    int CountPlayers(std::vector<std::shared_ptr<Player>> game);
     bool isEmpty();
-    void CreateTestGame(std::vector<Player>& players);
-    void CreateCrazyEightsLogic(std::vector<Player>& players);
-    void CreateSpadesLogic(std::vector<Player>& players);
-    void CreateHeartLogic(std::vector<Player>& players);
+    void CreateTestGame(std::vector<std::shared_ptr<Player>>& players);
+    void CreateCrazyEightsLogic(std::vector<std::shared_ptr<Player>>& players);
+    void CreateSpadesLogic(std::vector<std::shared_ptr<Player>>& players);
+    void CreateHeartLogic(std::vector<std::shared_ptr<Player>>& players);
     std::string NameOfGame();
     
 private:
