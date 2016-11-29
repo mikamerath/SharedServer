@@ -50,6 +50,7 @@ void Lobby::procLogin(std::shared_ptr<Player> p, std::string msg)
 {
   std::stringstream ss;
   std::string command, name;
+  ss << msg;
   ss >> command;
   std::getline(ss, name);
   name.erase(0, 1);
