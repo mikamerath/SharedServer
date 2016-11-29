@@ -12,7 +12,9 @@ public:
 	void start();
 	void getBids();
 	void beginRound(int);
+	void beginTrick(std::vector<Card>, Suit, int);
 	bool validMove(std::vector<Card>, int, Suit&, int);
+	void validMoveFailLoop(bool, std::vector<Card>&, Suit, int&);
 	int getTrickWinner(std::vector<Card>, int);
 	int getNextPlayer(int);
 	void score();

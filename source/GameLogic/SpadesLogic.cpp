@@ -1,5 +1,24 @@
 #include "source\GameLogic\SpadesLogic.hpp"
 
+void SpadesLog(int turn, int i, std::vector<Card> hand, std::vector<Card> trick,int id) {
+	std::cout << "Turn: " << turn << std::endl;
+	std::cout << "TrickWinner: " << i << std::endl;
+	std::cout << "Hand:" << std::endl;
+	for (auto&& c : trick) {
+		if (c.getSuit() == (Suit)SPADES) { std::cout << "\tSpades:" << c.getValue() << std::endl; }
+		else if (c.getSuit() == (Suit)HEARTS) { std::cout << "\tHearts:" << c.getValue() << std::endl; }
+		else if (c.getSuit() == (Suit)CLUBS) { std::cout << "\tClubs:" << c.getValue() << std::endl; }
+		else if (c.getSuit() == (Suit)DIAMONDS) { std::cout << "\tDiamonds:" << c.getValue() << std::endl; }
+	}
+	std::cout << "Trick: " << std::endl;
+	for (auto&& c : trick) {
+		if (c.getSuit() == (Suit)SPADES) { std::cout << "\tSpades:" << c.getValue() << std::endl; }
+		else if (c.getSuit() == (Suit)HEARTS) { std::cout << "\tHearts:" << c.getValue() << std::endl; }
+		else if (c.getSuit() == (Suit)CLUBS) { std::cout << "\tClubs:" << c.getValue() << std::endl; }
+		else if (c.getSuit() == (Suit)DIAMONDS) { std::cout << "\tDiamonds:" << c.getValue() << std::endl; }
+	}
+}
+
 int Spades::getNextPlayer(int plId)
 {
 	if (plId == 3)
@@ -151,6 +170,50 @@ void Spades::score()
 	}
 }
 
+void Spades::validMoveFailLoop(bool vm, std::vector<Card> &trick, Suit ledSuit, int &i) {
+	while (vm == false)
+	{
+		std::cout << "Invalid Move!!!" << std::endl;
+		std::cout << std::endl;
+		auto sendBack = trick.back();
+		trick.pop_back();
+		players.at(turn)->insertCardToHand(sendBack);
+		vm = validMove(trick, turn, ledSuit, i);
+		if (vm && i == 0)
+		{
+			ledSuit = (Suit)trick.at(0).getSuit();
+		}
+	}
+}
+
+void Spades::beginTrick(std::vector<Card> trick, Suit ledSuit, int trickWinner) {
+	for (int i = 0; i < 4; i++)
+	{
+		//trick.push_back(players.at(turn).requestMove());
+		if (validMove(trick, turn, ledSuit, i))
+		{
+			std::vector<Card> m;
+			m.push_back(trick.at(i));
+		}
+		else
+		{
+			bool vm = false;
+			validMoveFailLoop(vm, trick, ledSuit, i);
+		}
+		turn = getNextPlayer(turn);
+		if (players.at(turn)->getHand().empty())
+		{
+			s = ROUND_OVER;
+		}
+		std::cout << "Updating Connected Games..." << std::endl;
+	}
+	trickWinner = getTrickWinner(trick, trickWinner);
+	players.at(trickWinner)->incrementTricksWon();
+	SpadesLog(turn, trickWinner, trick, players.at(turn)->getHand(), players.at(turn)->getId());
+	trick.clear();
+	turn = trickWinner;
+}
+
 void Spades::beginRound(int starter)
 { 
 	Suit ledSuit = HEARTS;
@@ -159,46 +222,7 @@ void Spades::beginRound(int starter)
 	int turn = 0;
 	while (s == PLAYING)
 	{
-		for (int i = 0; i < 4; i++)
-		{
-			//trick.push_back(players.at(turn).requestMove());
-			if (validMove(trick, turn, ledSuit, i))
-			{
-				std::vector<Card> m;
-				m.push_back(trick.at(i));
-			}
-			else
-			{
-				bool vm = false;
-				while (vm == false)
-				{
-					std::cout << "Invalid Move!!!" << std::endl;
-					std::cout << std::endl;
-					auto sendBack = trick.back();
-					trick.pop_back();
-					players.at(turn)->insertCardToHand(sendBack);
-					vm = validMove(trick, turn, ledSuit, i);
-					if (vm && i == 0)
-					{
-						ledSuit = (Suit)trick.at(0).getSuit();
-					}
-				}
-			}
-			turn = getNextPlayer(turn);
-			if (players.at(turn)->getHand().empty())
-			{
-				s = ROUND_OVER;
-			}
-			std::cout << "Updating Connected Games..." << std::endl;
-		}
-		trickWinner = getTrickWinner(trick, trickWinner);
-		std::cout << "Player " << trickWinner << " won the trick." << std::endl;
-		players.at(trickWinner)->incrementTricksWon();
-		std::cout << players.at(trickWinner)->getId() << " has won "
-			<< players.at(trickWinner)->getTricksWon() << " tricks."
-			<< std::endl;
-		trick.clear();
-		turn = trickWinner;
+		beginTrick(trick, ledSuit, trickWinner);
 	}
 	score();
 	initializeDeck();
