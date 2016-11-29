@@ -13,6 +13,7 @@ ServerNetworkInterface.hpp
 TCPConnection.cpp
 TCPConnection.hpp
 )
-link_libraries(NetworkInterface ${externLibs})
+link_libraries(Game NetworkInterface ${externLibs})
 add_executable(mockClient
 mockClient.cpp)
+target_link_libraries(mockClient NetworkInterface Game GameLogic)

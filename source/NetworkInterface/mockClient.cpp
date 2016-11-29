@@ -1,6 +1,45 @@
 #include<iostream>
-#include"ClientNetworkInterface.hpp"
+#include<string>
 
+#include <boost\serialization\access.hpp>
+#include <boost\archive\text_oarchive.hpp>
+#include <boost\archive\text_iarchive.hpp>
+
+#include "ClientNetworkInterface.hpp"
+#include "source\PlayerAPI\LobbyGame.hpp"
+
+
+std::string printGameType(GameType t) {
+  switch (t)
+  {
+  case HEARTGAME:
+    return "Type : Hearts";
+  case SPADEGAME:
+    return "Type : Spades";
+  case EIGHTSGAME:
+    return "Type : Eights";
+  default:
+    return "Type : Unknown";
+  }
+}
+
+void procGamesGot(std::string msg) {
+  std::stringstream ss;
+  ss << msg;
+  std::cout << "\nGot Games : \n";
+  boost::archive::text_iarchive ia(ss);
+  LobbyGame g;
+  while (true) {
+    try {
+      ia >> g;
+      std::cout << "\t" << g.name << " | " << printGameType(g.type) 
+        << " | " << g.numberJoined << "/4\n";
+    }
+    catch(...){
+      break;
+    }
+  }
+}
 
 int main() {
   io_service service;
@@ -14,8 +53,14 @@ int main() {
     std::getline(std::cin, msg);
     while (msg != "EXIT") {
       NI.send(msg);
-      msg = NI.recieve();
-      std::cout << "Server Responds : " << msg << std::endl;
+      if (msg == "GET GAMES") {
+        msg = NI.recieve();
+        procGamesGot(msg);
+      }
+      else {
+        msg = NI.recieve();
+        std::cout << "Server Responds : " << msg << std::endl;
+      }
       std::cout << "Enter message to send : " << std::endl;
       std::getline(std::cin, msg);
     }

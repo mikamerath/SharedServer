@@ -6,5 +6,6 @@ Card.cpp
 Game.hpp
 Player.hpp
 Player.cpp
+LobbyGame.hpp
 )
 link_libraries(Game ${externLibs})

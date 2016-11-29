@@ -16,8 +16,13 @@
 #include <string>
 #include <iostream>
 
-#include "source\PlayerAPI\Player.hpp";
-#include "source\PlayerAPI\Game.hpp";
+#include <boost\serialization\access.hpp>
+#include <boost\archive\text_oarchive.hpp>
+#include <boost\archive\text_iarchive.hpp>
+
+#include "source\PlayerAPI\LobbyGame.hpp"
+#include "source\PlayerAPI\Player.hpp"
+#include "source\PlayerAPI\Game.hpp"
 
 
 /* NEEDED FEATURES
@@ -34,6 +39,10 @@ public:
 
     void addPlayer(std::shared_ptr<Player> newPlayer);
     void proccessPlayerMessage(std::string msg, int id);
+
+    void procGetGames(std::shared_ptr<Player> p);
+    void procMakeGame(std::shared_ptr<Player> p, std::string msg);
+    void procJoinGame(std::shared_ptr<Player> p, std::string game);
 
     /*
     void CreateGame(Player& player);
@@ -53,16 +62,9 @@ public:
 private:
   // Hellper to identify the sender of a message from known players
   std::shared_ptr<Player> whoIs(int id);
-
-    enum Game
-    {
-        HEART = 1,
-        SPADE = 2,
-        CRAZY_EIGHTS = 3
-    };
-    std::map<std::string, std::vector<std::shared_ptr<Player>>> currentAvailableGames;
-    std::map<int , std::shared_ptr<Player>> knownPlayers;
-    //std::map<std::string, std::vector<std::string>> unjoinableGames;
+  std::map<std::string, LobbyGame> currentAvailableGames;
+  std::map<int , std::shared_ptr<Player>> knownPlayers;
+  //std::map<std::string, std::vector<std::string>> unjoinableGames;
 };
 
 

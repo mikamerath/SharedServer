@@ -18,7 +18,10 @@ notify waiting game players of other player join/leave
 
 Lobby::Lobby()
 {
-    
+  currentAvailableGames.emplace("GAME1", LobbyGame("GAME1", GameType::HEARTGAME));
+  currentAvailableGames.emplace("GAME2", LobbyGame("GAME2", GameType::HEARTGAME));
+  currentAvailableGames.emplace("GAME3", LobbyGame("GAME3", GameType::HEARTGAME));
+  currentAvailableGames.emplace("GAME4", LobbyGame("GAME4", GameType::HEARTGAME));
 }
 void Lobby::addPlayer(std::shared_ptr<Player> newPlayer)
 {
@@ -32,10 +35,31 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
   std::shared_ptr<Player> p = whoIs(id);
   std::cout << "Got : " << msg << " from : " << *p << std::endl;
   if (p != NULL) {
-    p->connection->write("Acknowledged");
+    if (msg == "GET GAMES") procGetGames(p);
+    else p->connection->write("No Such Command");
     p->readLobbyMessage();
   }
-  
+}
+
+void Lobby::procGetGames(std::shared_ptr<Player> p)
+{
+  std::stringstream ss;
+  boost::archive::text_oarchive oa(ss);
+  for(auto game : currentAvailableGames)
+  {
+    oa << game.second;
+  }
+  p->connection->write(ss.str());
+  /*boost::archive::text_iarchive ia(ss);
+  LobbyGame g;
+  while (true) {
+    try {
+      ia >> g;
+    }
+    catch(...){
+      break;
+    }
+  }*/
 }
 
 std::shared_ptr<Player> Lobby::whoIs(int id)
