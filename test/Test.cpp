@@ -5,8 +5,8 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
-#include "../source/PlayerAPI/Card.hpp"
-#include "../source/PlayerAPI/Player.hpp"
+#include "source/PlayerAPI/Card.hpp"
+#include "source/PlayerAPI/Player.hpp"
 
 // Standard Includes
 #include <sstream>
