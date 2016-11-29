@@ -7,7 +7,7 @@
 #include <boost\algorithm\string.hpp>
 
 #include "ClientNetworkInterface.hpp"
-#include "source\PlayerAPI\LobbyGame.hpp"
+#include "source\Messages\LobbyGame.hpp"
 
 
 void procGameMade(std::string response) {

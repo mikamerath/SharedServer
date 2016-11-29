@@ -7,7 +7,7 @@
 
 #include <boost\serialization\access.hpp>
 
-#include "Player.hpp"
+#include "source\PlayerAPI\Player.hpp"
 
 enum GameType
 {

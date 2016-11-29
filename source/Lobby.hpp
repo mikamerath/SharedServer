@@ -21,7 +21,7 @@
 #include <boost\archive\text_iarchive.hpp>
 #include <boost\algorithm\string.hpp>
 
-#include "source\PlayerAPI\LobbyGame.hpp"
+#include "source\Messages\LobbyGame.hpp"
 #include "source\PlayerAPI\Player.hpp"
 #include "source\PlayerAPI\Game.hpp"
 
