@@ -21,10 +21,22 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
 {
   std::shared_ptr<Player> p = whoIs(id);
   std::cout << "Got : " << msg << " from : " << *p << std::endl;
+  bool willRemain = true;
   if (p != NULL) {
-    if (boost::algorithm::starts_with(msg, "GET GAMES")) procGetGames(p, msg);
-    else if (boost::algorithm::starts_with(msg, "MAKE")) procMakeGame(p, msg);
-    else if (boost::algorithm::starts_with(msg, "JOIN")) procJoinGame(p, msg);
+    if (boost::algorithm::starts_with(msg, "GET GAMES")) 
+    {
+      procGetGames(p, msg);
+    }
+    else if (boost::algorithm::starts_with(msg, "MAKE")) 
+    {
+      //willRemain = false;
+      procMakeGame(p, msg);
+    }
+    else if (boost::algorithm::starts_with(msg, "JOIN"))
+    {
+      //willRemain = false;
+      procJoinGame(p, msg);
+    }
     else p->connection->write("No Such Command");
     p->readLobbyMessage();
   }
@@ -64,6 +76,11 @@ void Lobby::procMakeGame(std::shared_ptr<Player> p, std::string msg)
   GameType gameType = translateType(type);
   if (gameType == GameType::UNKNOWN) {
     p->connection->write("FAILURE : UNKNOWN GAME TYPE");
+    return;
+  }
+
+  if (currentAvailableGames.find(name) != currentAvailableGames.end()) {
+    p->connection->write("FAILURE : ALREADY EXSISTS");
     return;
   }
 
