@@ -14,3 +14,5 @@ TCPConnection.cpp
 TCPConnection.hpp
 )
 link_libraries(NetworkInterface ${externLibs})
+add_executable(mockClient
+mockClient.cpp)

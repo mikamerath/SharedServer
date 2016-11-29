@@ -29,7 +29,7 @@ protected:
   State s;
   std::vector<Card> deck;
   std::vector<Card> discardPile;
-  std::vector<Player> players;
+  std::vector<std::shared_ptr<Player>> players;
   std::vector<Card> field;
   int turn; // index in player vector
 public:
@@ -55,11 +55,11 @@ public:
   {
     for (auto&& player : players)
     {
-      player.updateGameStatus(/*coded message*/);
+      player->updateGameStatus(/*coded message*/);
     }
   }
   void deal(int numCards);
-  std::vector<Player> getPlayers() { return players; }
+  std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
   std::vector<Card> getDiscardPile() { return discardPile; }
   std::vector<Card> getDeck() { return deck; }
 };

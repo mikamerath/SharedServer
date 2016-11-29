@@ -1,7 +1,7 @@
 #include "CrazyEightsLogic.hpp"
 #include <iostream>
 
-CrazyEightsLogic::CrazyEightsLogic(std::vector<Player>& netPlayers)
+CrazyEightsLogic::CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers)
 {
   players = netPlayers;
   //    for (auto && player: players){
@@ -25,9 +25,9 @@ void CrazyEightsLogic::playGame()
   while (!done)
   {
     std::cout << "Player " << getTurn() + 1 << " your turn!" << std::endl;
-    std::vector<Card> playerCards = players[getTurn()].getHand();
+    std::vector<Card> playerCards = players[getTurn()]->getHand();
 
-    displayHand(players[getTurn()].getHand());
+    displayHand(players[getTurn()]->getHand());
 
     std::cout << "Discard pile has "
               << convertRankToString(getDiscardPile().back().getValue())
@@ -61,7 +61,7 @@ void CrazyEightsLogic::playGame()
           drawCard();
           std::cout << "Here is your hand: " << std::endl;
           players = getPlayers();
-          playerCards = players[getTurn()].getHand();
+          playerCards = players[getTurn()]->getHand();
           displayHand(playerCards);
           setCardsDrawnCounter(getCardsDrawnCounter() + 1);
           std::cout << "Discard pile has "
@@ -97,7 +97,7 @@ void CrazyEightsLogic::playGame()
         {
           nextTurn();
           players = getPlayers();
-          playerCards = players[getTurn()].getHand();
+          playerCards = players[getTurn()]->getHand();
           isPlayerTurn = false;
         }
       }
@@ -121,7 +121,7 @@ void CrazyEightsLogic::deal(int numCards)
 {
   for (int i = 0; i < players.size(); i++)
   {
-    players[i].initializeHand(deck, numCards);
+    players[i]->initializeHand(deck, numCards);
   }
   discardPile.push_back(deck.back());
   deck.pop_back();
@@ -129,7 +129,7 @@ void CrazyEightsLogic::deal(int numCards)
 
 bool CrazyEightsLogic::isGameOver()
 {
-  if (players[turn].getHand().size() == 0)
+  if (players[turn]->getHand().size() == 0)
   {
     return true;
   }
@@ -144,8 +144,8 @@ bool CrazyEightsLogic::isValidCard(Card card)
   Card topDiscard = discardPile.back();
   bool isInHand = false;
   bool isValidPlay = false;
-  Player currentPlayer = players[turn];
-  std::vector<Card> playerHand = currentPlayer.getHand();
+  std::shared_ptr<Player> currentPlayer = players[turn];
+  std::vector<Card> playerHand = currentPlayer->getHand();
 
   // Check to see if card is in hand
   for (int i = 0; i < playerHand.size(); i++)
@@ -294,12 +294,12 @@ void CrazyEightsLogic::playCard(Card& card)
     }
   }
   discardPile.push_back(card);
-  players[turn].removeCardFromHand(card);
+  players[turn]->removeCardFromHand(card);
 }
 
 void CrazyEightsLogic::drawCard()
 {
-  players[turn].insertCardToHand(deck.back());
+  players[turn]->insertCardToHand(deck.back());
   deck.pop_back();
 }
 
@@ -318,14 +318,14 @@ int CrazyEightsLogic::getCardsDrawnCounter()
   return cardsDrawnCounter;
 }
 
-int CrazyEightsLogic::calculateScore(std::vector<Player> players)
+int CrazyEightsLogic::calculateScore(std::vector<std::shared_ptr<Player>> players)
 {
   int totalScore = 0;
   std::vector<Card> playerHand;
 
   for (int i = 0; i < players.size(); i++)
   {
-    playerHand = players[i].getHand();
+    playerHand = players[i]->getHand();
 
     for (int j = 0; j < playerHand.size(); j++)
     {

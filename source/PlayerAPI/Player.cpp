@@ -13,9 +13,13 @@
 #include <iostream>
 
 // Constructor for the Player class. Takes in the IP address of the client.
-Player::Player(int idNumber, std::string ipAddress)
-  : id(idNumber), ip(ipAddress), roundScore(0), bid(0), bags(0), tricksWon(0)
+Player::Player(int id, TCPConnection::pointer connection)
+  : id(id), connection(connection),
+  roundScore(0), bid(0), bags(0), tricksWon(0)
 {
+  std::stringstream ss;
+  ss << connection->getSocket().remote_endpoint();
+  ip = ss.str();
 }
 
 // Sets the name of the Player. In the future, this function will query the
@@ -29,6 +33,12 @@ void Player::setName(std::string n)
 std::string Player::getName() const
 {
   return name;
+}
+
+// Returns the id of the player.
+int Player::getId()
+{
+  return id;
 }
 
 // Function called at the start of a round. Updates the overallScore vector with
@@ -53,6 +63,7 @@ void Player::startNewGame()
   bags = 0;
   tricksWon = 0;
 }
+
 
 // Initializes a players hand with the 'numCards' specified.
 // The deck must be passed in so that the cards can be removed from the deck
@@ -200,3 +211,118 @@ int Player::getId()
 {
   return id;
 }
+
+void Player::setValidateMove(std::function<void(Card)> func)
+{
+  validateMove = func;
+}
+
+void Player::setValidateBid(std::function<void(int)> func)
+{
+  validateBid = func;
+}
+
+bool operator==(const Player& p1, const Player& p2)
+{
+  if (p1.hand.size() != p2.hand.size()) return false;
+  for (auto i = 0u; i < p1.hand.size(); i++)
+  {
+    if (!(p1.hand[i] == p2.hand[i])) return false;
+  }
+  return (p1.id == p2.id && p1.ip.compare(p2.ip) == 0 &&
+          p1.name.compare(p2.name) == 0);
+}
+
+std::ostream& operator<<(std::ostream& out, const Player& p)
+{
+  out << p.id << ", " << p.ip << ", " << p.name;
+  return out;
+}
+
+void Player::requestMove()
+{
+  connection->write("Give Move");
+  connection->aSyncRead(boost::bind(&Player::receivedMove, this, _1));
+}
+
+void Player::requestBid()
+{
+  connection->write("Give Bid");
+  connection->aSyncRead(boost::bind(&Player::receivedBid, this, _1));
+}
+
+void Player::requestSuit()
+{
+  connection->write("Give Suit");
+  connection->aSyncRead(boost::bind(&Player::receivedSuit, this, _1));
+}
+
+void Player::updateGameStatus()
+{
+  connection->write("Status Update");
+  connection->write(""/*List of cards and players*/);
+}
+
+void Player::readMessage()
+{
+  connection->aSyncRead(boost::bind(&Player::recivedMessage,this,_1));
+}
+
+// hellper to decode the suit from a char.
+Suit decodeSuit(char s) {
+  Suit suit;
+  if (s == 'H') {
+    suit = HEARTS;
+  }
+  else if (s == 'C') {
+    suit = CLUBS;
+  }
+  else if (s == 'D') {
+    suit = DIAMONDS;
+  }
+  else if (s == 'S') {
+    suit = SPADES;
+  }
+  else {
+    suit = UNDEFINED;
+  }
+  return suit;
+}
+
+void Player::receivedMove(std::string msg)
+{
+  // we assume the message format is <char suit>{<char><optional char>number} ex H2 = 2 of hearts.
+  Suit suitCode = decodeSuit(msg.at(0));
+  Value cardNumber = Value(std::stoi(msg.substr(1)));
+
+  Card c = Card(suitCode, cardNumber);
+  validateMove(c);
+}
+
+void Player::receivedBid(std::string msg)
+{
+  // We assume that no other information other than the bid as parsable number from a
+  // string is given.
+  int bid = std::stoi(msg);
+
+  validateBid(bid);
+}
+
+void Player::receivedSuit(std::string msg)
+{
+  // so we assume the first char of the recieved message will be the suit, either
+  // H, S, C, D, all other input will be interpreted as undefined suit.
+  Suit s = decodeSuit(msg[0]);
+
+  validateSuit(s);
+}
+
+void Player::recivedMessage(std::string msg)
+{
+  std::cout << "Message from : " << *this << std::endl;
+  std::cout << msg << std::endl;
+  connection->write("Got Messaage : " + msg);
+  readMessage();
+}
+
+>>>>>>> upstream/master
