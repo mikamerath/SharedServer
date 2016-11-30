@@ -58,7 +58,7 @@ public:
   {
     for (auto&& player : players)
     {
-		player->updateGameStatus(/*coded message*/);
+	player->updateGameStatus(/*coded message*/);
     }
   }
   void deal(int numCards);
