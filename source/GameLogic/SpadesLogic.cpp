@@ -1,4 +1,4 @@
-#include "source\GameLogic\SpadesLogic.hpp"
+#include "source/GameLogic/SpadesLogic.hpp"
 
 void SpadesLog(int turn, int i, std::vector<Card> hand, std::vector<Card> trick,int id) {
 	std::cout << "Turn: " << turn << std::endl;
