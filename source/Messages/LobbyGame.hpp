@@ -5,9 +5,9 @@
 #include <vector>
 #include <memory>
 
-#include <boost\serialization\access.hpp>
+#include <boost/serialization/access.hpp>
 
-#include "source\PlayerAPI\Player.hpp"
+#include "source/PlayerAPI/Player.hpp"
 
 enum GameType
 {

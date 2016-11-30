@@ -1,13 +1,13 @@
 #include<iostream>
 #include<string>
 
-#include <boost\serialization\access.hpp>
-#include <boost\archive\text_oarchive.hpp>
-#include <boost\archive\text_iarchive.hpp>
-#include <boost\algorithm\string.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "ClientNetworkInterface.hpp"
-#include "source\Messages\LobbyGame.hpp"
+#include "source/Messages/LobbyGame.hpp"
 
 
 void procJoinGame(std::string response) {

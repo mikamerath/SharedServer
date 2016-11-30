@@ -8,17 +8,17 @@
 #include <string>
 #include <iostream>
 /// Boost Includes
-#include <boost\serialization\access.hpp>
-#include <boost\archive\text_oarchive.hpp>
-#include <boost\archive\text_iarchive.hpp>
-#include <boost\algorithm\string.hpp>
+#include <boostserialization/access.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/algorithm/string.hpp>
 /// Application Includes
-#include "source\Messages\LobbyGame.hpp"
-#include "source\PlayerAPI\Player.hpp"
-#include "source\PlayerAPI\Game.hpp"
-#include "source\GameLogic\CrazyEightsLogic.hpp"
-#include "source\GameLogic\HeartsGame.hpp"
-#include "source\GameLogic\SpadesLogic.hpp"
+#include "source/Messages/LobbyGame.hpp"
+#include "source/PlayerAPI/Player.hpp"
+#include "source/PlayerAPI/Game.hpp"
+#include "source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/GameLogic/HeartsGame.hpp"
+#include "source/GameLogic/SpadesLogic.hpp"
 
 
 /* NEEDED FEATURES
