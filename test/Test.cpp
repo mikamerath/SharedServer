@@ -102,8 +102,8 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 
   int count = 4;
   for (int i = 0; i < count; i++) {
-    BOOST_CHECK_EQUAL(players.at(i).getId(), crazyEights.getPlayers().at(i).getId());
-    BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i).getHand().size(), 5);
+    BOOST_CHECK_EQUAL(players.at(i)->getId(), crazyEights.getPlayers().at(i)->getId());
+    BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i)->getHand().size(), 5);
   }
 
   BOOST_CHECK_EQUAL(crazyEights.getTurn(), 0);
@@ -118,9 +118,9 @@ BOOST_CHECK_EQUAL(crazyEightsDrawCard)
 
   CrazyEightsLogic crazyEights(players);
 
-  crazyEights.getPlayers().at(0).drawCard();
+  crazyEights.getPlayers().at(0)->drawCard();
 
-  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).getHand().size(), 6);
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->getHand().size(), 6);
 }
 
 BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
@@ -133,10 +133,10 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
   int numCards = 5;
   for (int i = 0; i < numCards; i++)
   {
-    crazyEights.getPlayers().at(0).playCard();
+    crazyEights.getPlayers().at(0)->playCard();
   }
 
-  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).isGameOver(), 1);
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->isGameOver(), 1);
 
 }
 

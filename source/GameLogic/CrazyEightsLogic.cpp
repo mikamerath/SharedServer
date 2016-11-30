@@ -212,7 +212,7 @@ int CrazyEightsLogic::getTurn()
 bool CrazyEightsLogic::validateSuit()
 {
   int turn = getTurn();
-  std::vector<Player> players = getPlayers();
+  std::vector<std::shared_ptr<Player>> players = getPlayers();
   Suit selection = players.at(turn)->receivedSuit();
 
   if (selection < 1 || selection > 4)
