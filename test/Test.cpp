@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 
   int count = 4;
   for (int i = 0; i < count; i++) {
-    BOOST_CHECK_EQUAL(players[i].getId(), crazyEights.getPlayers().at(i).getId());
+    BOOST_CHECK_EQUAL(players.at(i).getId(), crazyEights.getPlayers().at(i).getId());
     BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i).getHand().size(), 5);
   }
 
