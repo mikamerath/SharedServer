@@ -234,7 +234,6 @@ LobbyGame& Lobby::findGame(std::string name)
     return it->second;
   else
   {
-    LobbyGame undef = LobbyGame("", GameType::UNKNOWN);
     return undef;
   }
 }

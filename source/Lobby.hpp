@@ -67,6 +67,7 @@ private:
   // Helper to find a game by name, returns a LobbyGame with GameType::UNKNOWN
   // if the game is not found
   LobbyGame& findGame(std::string name);
+  LobbyGame undef = LobbyGame("", GameType::UNKNOWN);
 
   // A map of all games that are joinable where the key is the game name
   std::map<std::string, LobbyGame> currentAvailableGames;
