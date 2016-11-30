@@ -4,4 +4,4 @@ add_library(Messages
 LobbyGame.hpp
 LobbyGame.cpp
 )
-target_link_libraries(Messages ${externLibs} Game)
+target_link_libraries(Messages ${externLibs})
