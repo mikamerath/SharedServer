@@ -24,7 +24,8 @@ Lobby lobby = Lobby();
 //  p->readMessage();
 //}
 
-int main() {
+int main()
+{
   io_service service;
   ServerNetworkInterface NI(12000, service, std::cout, boost::bind(&Lobby::addPlayer,lobby,_1));
   NI.startAccepting();

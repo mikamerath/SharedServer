@@ -12,8 +12,8 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "source\NetworkInterface\TCPConnection.hpp"
 #include "Card.hpp"
+#include "source/NetworkInterface/TCPConnection.hpp"
 #include <functional>
 #include <string>
 #include <vector>

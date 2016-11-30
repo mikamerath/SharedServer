@@ -9,4 +9,9 @@ main.cpp
 Lobby.cpp
 Lobby.hpp
 )
-target_link_libraries(Server NetworkInterface Game GameLogic Messages)
+target_link_libraries(Server
+NetworkInterface
+Game
+GameLogic
+Messages
+${externLibs})

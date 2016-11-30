@@ -1,13 +1,13 @@
 #ifndef HEARTS_GAME_HPP
 #define HEARTS_GAME_HPP
 
-#include "source\PlayerAPI\Player.hpp"
+#include "source/PlayerAPI/Player.hpp"
 #include <boost/asio.hpp>
 #include <random>
 
 class HeartsGame
 {
-public://10 functions
+public: // 10 functions
   HeartsGame(std::vector<std::shared_ptr<Player>>& players);
   ~HeartsGame();
   void play_Hearts();
