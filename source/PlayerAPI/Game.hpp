@@ -15,6 +15,7 @@
 #include <random>
 
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 
 enum State
 {
@@ -68,6 +69,9 @@ public:
 
 class Message
 {
+	friend class boost::serialization::access;
+
+public:
   State s;
   bool turn;
   std::vector<Card> field;
@@ -75,6 +79,11 @@ class Message
   std::vector<Card> playerHand;
   bool deckEmpty;
   
+  Message()
+  {
+
+  }
+
   Message(State state, bool t, std::vector<Card> f, std::vector<int> h, std::vector<Card> p, bool d)
   {
     s = state;
@@ -86,10 +95,10 @@ class Message
   }
   
   template <class Archive>
-  void serialize(Archive& ar, const unsigned int version)
+  inline void serialize(Archive& ar, const unsigned int version)
   {
     ar& s;
-    ar& t;
+    ar& turn;
     ar& field;
     ar& handSizes;
     ar& playerHand;
