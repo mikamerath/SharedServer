@@ -210,6 +210,16 @@ void Player::setValidateBid(std::function<void(int)> func)
   validateBid = func;
 }
 
+void Player::setValidateMove(std::function<void(Card)> func)
+{
+  validateMove = func;
+}
+
+void Player::setValidateBid(std::function<void(int)> func)
+{
+  validateBid = func;
+}
+
 bool operator==(const Player& p1, const Player& p2)
 {
   if (p1.hand.size() != p2.hand.size()) return false;
