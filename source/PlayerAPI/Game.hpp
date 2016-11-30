@@ -33,6 +33,7 @@ protected:
   std::vector<Card> field;
   int turn; // index in player vector
 public:
+  //virtual start();
   // Function used to deal out a random deck of 52 cards
   std::vector<Card> initializeDeck()
   {

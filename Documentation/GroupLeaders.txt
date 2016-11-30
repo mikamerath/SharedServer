@@ -31,4 +31,6 @@ Assignment: Networking/Communication
 Assignment: Coordination
 	Project Manager: Chris Merrill
 	Github: C-Merrill
-	Other Members: Unknown
+	Other Members: Dustin G, Dakota R, Chase B
+
+Hello
