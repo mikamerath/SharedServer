@@ -5,8 +5,8 @@ CrazyEightsLogic::CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlay
 {
   players = netPlayers;
   for (auto && player: players){
-      player.setValidateMove([this](Card c){isValidCard(c);});
-      player.setValidateSuit([this](Suit s){validateSuit(s);});
+      player->setValidateMove([this](Card c){isValidCard(c);});
+      player->setValidateSuit([this](Suit s){validateSuit(s);});
   }
   deck = initializeDeck();
   deal(5);
@@ -37,7 +37,7 @@ void CrazyEightsLogic::playGame()
     // std::cout << "Pick a card to play or enter negative number to draw: ";
     // std::cin >> cardIndex;
     // std::cout << std::endl;
-    players.at(turn).requestMove();  // request move function instead of stuff above
+    players.at(turn)->requestMove();  // request move function instead of stuff above
 
     bool isPlayerTurn = true;
 
@@ -59,7 +59,7 @@ void CrazyEightsLogic::playGame()
         drawCard();
         std::cout << "Here is your hand: " << std::endl;
         players = getPlayers();
-        playerCards = players.at(getTurn()).getHand();
+        playerCards = players.at(getTurn())->getHand();
         displayHand(playerCards);
         setCardsDrawnCounter(getCardsDrawnCounter() + 1);
         std::cout << "Discard pile has "
@@ -69,7 +69,7 @@ void CrazyEightsLogic::playGame()
                   << std::endl;
         // std::cout << "Pick a card to play or enter a negative number to draw: ";
         // std::cin >> cardIndex;
-        players.at(turn).requestMove();  // request move function instead of stuff above
+        players.at(turn)->requestMove();  // request move function instead of stuff above
       }
 
       if (cardIndex >= 0 && isValidCard(playerCards.at(cardIndex)))
@@ -108,7 +108,7 @@ void CrazyEightsLogic::playGame()
         // std::cout << "Pick a card to play or enter negative number to draw: ";
         // std::cin >> cardIndex;
         players = getPlayers();
-        players.at(turn).requestMove();  // request move function instead of stuff above
+        players.at(turn)->requestMove();  // request move function instead of stuff above
       }
     }
   }
@@ -213,7 +213,7 @@ bool CrazyEightsLogic::validateSuit()
 {
   int turn = getTurn();
   std::vector<Player> players = getPlayers();
-  Suit selection = players.at(turn).receivedSuit();
+  Suit selection = players.at(turn)->receivedSuit();
 
   if (selection < 1 || selection > 4)
   {
@@ -222,12 +222,12 @@ bool CrazyEightsLogic::validateSuit()
     std::cout << "2 - Spades" << std::endl;
     std::cout << "3 - Clubs" << std::endl;
     std::cout << "4 - Diamonds" << std::endl;
-    players.at(turn).requestSuit();
+    players.at(turn)->requestSuit();
   }
  else {
     UpdateGameStateMessage();
     nextTurn();
-    players.at(turn).requestMove();
+    players.at(turn)->requestMove();
   }
 }
 
@@ -239,7 +239,7 @@ bool CrazyEightsLogic::validateSuit()
 void CrazyEightsLogic::playCard(Card& card)
 {
   discardPile.push_back(card);
-  players.at(turn).removeCardFromHand(card);
+  players.at(turn)->removeCardFromHand(card);
 }
 
 void CrazyEightsLogic::playCard(Card& card)
@@ -255,7 +255,7 @@ void CrazyEightsLogic::playCard(Card& card)
     std::cout << "3 - Clubs" << std::endl;
     std::cout << "4 - Diamonds" << std::endl;
     std::cin >> selection;
-    // players.at(turn).requestSuit
+    // players.at(turn)->requestSuit
 //////////////////////////////////////////////////////////////////
     // receivedSuit will return a suit
     // this part below should be separate function if request suit working
