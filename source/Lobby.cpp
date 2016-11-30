@@ -8,6 +8,7 @@ Lobby::Lobby()
   currentAvailableGames.emplace("GAME4", LobbyGame("GAME4", GameType::SPADEGAME));
   currentAvailableGames.emplace("GAME5", LobbyGame("GAME5", GameType::EIGHTSGAME));
   currentAvailableGames.emplace("GAME6", LobbyGame("GAME6", GameType::EIGHTSGAME));
+  readInDatabase();
 }
 
 void Lobby::addPlayer(std::shared_ptr<Player> newPlayer)
@@ -30,7 +31,10 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
     else if (boost::algorithm::starts_with(msg, "LOGIN"))
     {
       procLogin(p, msg);
-    }
+	}
+	else if (boost::algorithm::starts_with(msg, "REGISTER")) {
+		procRegister(p, msg);
+	}
     else if (boost::algorithm::starts_with(msg, "MAKE")) 
     {
       //willRemain = false;
@@ -49,14 +53,60 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
 void Lobby::procLogin(std::shared_ptr<Player> p, std::string msg)
 {
   std::stringstream ss;
-  std::string command, name;
+  std::string command, name, password;
   ss << msg;
   ss >> command;
-  std::getline(ss, name);
-  name.erase(0, 1);
+  ss >> name;
+  ss >> password;
+  std::cout << "Login attempted" << std::endl;
+  std::cout << "Name: " << name << std::endl;
+  std::cout << "Password: " << password << std::endl;
+  if (storedPlayerPasswords.find(name) != storedPlayerPasswords.end()) {
+	  if (storedPlayerPasswords.at(name) == password) {
+		  p->setName(name);
+		  p->connection->write("SUCCESS");
+	  }
+	  else {
+		  p->connection->write("PASSWORD INCORRECT");
+	  }
+  }
+  else {
+	  p->connection->write("USER NOT FOUND");
+  }
+}
 
-  p->setName(name);
-  p->connection->write("SUCCESS");
+void Lobby::procRegister(std::shared_ptr<Player> p, std::string msg)
+{
+	std::stringstream ss;
+	std::string command, name, password;
+	ss << msg;
+	ss >> command;
+	ss >> name;
+	ss >> password;
+	std::cout << "Register attempted" << std::endl;
+	std::cout << "Name: " << name << std::endl;
+	std::cout << "Password: " << password << std::endl;
+	if (!storedPlayerNames.empty()) {
+		if (std::find(storedPlayerNames.begin(), storedPlayerNames.end(), name) != storedPlayerNames.end()) {
+			p->connection->write("USERNAME TAKEN");
+		}
+		else {
+			storedPlayerNames.emplace_back(name);
+			storedPlayerPasswords.emplace(name, password);
+
+			p->setName(name);
+			p->connection->write("SUCCESS");
+		}
+	}
+	else {
+		storedPlayerNames.emplace_back(name);
+		storedPlayerPasswords.emplace(name, password);
+
+		p->setName(name);
+		p->connection->write("SUCCESS");
+	}
+	writeToDatabase();
+	
 }
 
 void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
@@ -141,6 +191,45 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
   }
 
   p->connection->write("SUCCESS");
+}
+
+void Lobby::readInDatabase()
+{
+	
+	std::ifstream fin;
+	fin.open("database.txt");
+	std::string name;
+	std::string password;
+	std::string header;
+	if (fin.is_open())
+	{
+		std::cout << "Database read completed" << std::endl;
+		fin >> header;
+		while (!fin.eof()) {
+			fin >> name;
+			fin >> password;
+			storedPlayerNames.emplace_back(name);
+			storedPlayerPasswords.emplace(name, password);
+		}
+		
+	}
+	else {
+		std::cout << "Database read failed" << std::endl;
+	}
+	fin.close();
+	
+}
+
+void Lobby::writeToDatabase()
+{
+	std::ofstream fout;
+	fout.open("database.txt");
+	fout << "USERS" << std::endl;
+	for (std::string i : storedPlayerNames) {
+		fout << i << std::endl;
+		fout << storedPlayerPasswords.at(i) << std::endl;
+	}
+	fout.close();
 }
 
 std::shared_ptr<Player> Lobby::whoIs(int id)

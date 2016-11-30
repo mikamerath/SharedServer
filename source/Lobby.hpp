@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <fstream>
 /// Boost Includes
 #include <boost\serialization\access.hpp>
 #include <boost\archive\text_oarchive.hpp>
@@ -40,6 +41,9 @@ public:
   // Method to handle a login by the player, which changes the player name from
   // guest to the name supplied
   void procLogin(std::shared_ptr<Player> p, std::string msg);
+  // Method to handle a register request by player, which will change player name
+  // from guest to the name supplied
+  void procRegister(std::shared_ptr<Player> p, std::string msg);
   // Method to send back a list of availible games at the request of the client
   void procGetGames(std::shared_ptr<Player> p, std::string msg);
   // Method to make a game at the request of the client
@@ -48,6 +52,10 @@ public:
   void procJoinGame(std::shared_ptr<Player> p, std::string msg);
   // method to leave a game at the request of the client
   void procLeaveGame(std::shared_ptr<Player> p);
+  // Reads in data from database file
+  void readInDatabase();
+  // Writes data to database file
+  void writeToDatabase();
     
 private:
   // Helper to identify the sender of a message from known players
@@ -65,6 +73,8 @@ private:
   // A map of all known players that ignores connection status where the
   // key is the player ID
   std::map<int , std::shared_ptr<Player>> knownPlayers;
+  std::vector<std::string> storedPlayerNames;
+  std::map<std::string, std::string> storedPlayerPasswords;
   //std::map<std::string, std::vector<std::string>> unjoinableGames;
 };
 
