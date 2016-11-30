@@ -15,9 +15,9 @@
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/asio/io_service.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/asio/io_service.hpp>
 
 BOOST_AUTO_TEST_CASE(startNewRound)
 {
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(startNewGame)
   BOOST_CHECK_EQUAL(player.getBid(), 0);
   BOOST_CHECK_EQUAL(player.getBags(), 0);
   BOOST_CHECK_EQUAL(player.getTricksWon(), 0);
-  BOOST_CHECK_EQUAL(player.getOverallScores().empty() , 1);
+  BOOST_CHECK_EQUAL(player.getOverallScores().empty(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(insertCardToHand)
