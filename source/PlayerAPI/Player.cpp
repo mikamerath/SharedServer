@@ -21,7 +21,12 @@ Player::Player(int id, TCPConnection::pointer connection)
   roundScore(0), bid(0), bags(0), tricksWon(0), name("Guest")
 {
   std::stringstream ss;
-  ss << connection->getSocket().remote_endpoint();
+  try {
+    ss << connection->getSocket().remote_endpoint();
+  }
+  catch (...) {
+    ss << "0.0.0.0:0";
+  }
   ip = ss.str();
 }
 
