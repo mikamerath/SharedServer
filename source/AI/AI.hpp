@@ -2,6 +2,7 @@
 #define AI_HPP
 
 #include "source/PlayerAPI/Player.hpp"
+#include <random>
 
 class AI : public Player
 {
