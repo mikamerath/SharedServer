@@ -215,20 +215,6 @@ void Player::setValidateBid(std::function<void(int)> func)
   validateBid = func;
 }
 
-int Player::getId()
-{
-  return id;
-}
-
-void Player::setValidateMove(std::function<void(Card)> func)
-{
-  validateMove = func;
-}
-
-void Player::setValidateBid(std::function<void(int)> func)
-{
-  validateBid = func;
-}
 void Player::setProcLobbyCommand(
   std::function<void(std::string,int)> func)
 {

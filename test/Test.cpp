@@ -88,10 +88,11 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
 BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 {
-  Player player1(1, "144.39.162.001");
-  Player player2(2, "144.39.162.003");
-  Player player3(3, "144.39.162.005");
-  Player player4(4, "144.39.162.007");
+  boost::asio::io_service service;
+  auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
+  auto player2 = std::make_shared<Player>(2, TCPConnection::create(service));
+  auto player3 = std::make_shared<Player>(3, TCPConnection::create(service));
+  auto player4 = std::make_shared<Player>(4, TCPConnection::create(service));
   std::vector<std::shared_ptr<Player>> players;
 
   players.push_back(player1);
@@ -112,32 +113,32 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 
 }
 
-BOOST_CHECK_EQUAL(crazyEightsDrawCard)
+BOOST_AUTO_TEST_CASE(crazyEightsDrawCard)
 {
-  Player player1(1, "144.39.162.201");
+  boost::asio::io_service service;
+  auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
   std::vector<std::shared_ptr<Player>> players;
+  players.push_back(player1);
 
   CrazyEightsLogic crazyEights(players);
 
-  crazyEights.getPlayers().at(0)->drawCard();
+  crazyEights.drawCard();
 
   BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->getHand().size(), 6);
 }
 
 BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
 {
-  Player player1(1, "144.39.162.001");
+  boost::asio::io_service service;
+  auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
   std::vector<std::shared_ptr<Player>> players;
+  players.push_back(player1);
 
   CrazyEightsLogic crazyEights(players);
+  // Note: Need to hard code cards and play each one
+  crazyEights.playCard();
 
-  int numCards = 5;
-  for (int i = 0; i < numCards; i++)
-  {
-    crazyEights.getPlayers().at(0)->playCard();
-  }
-
-  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->isGameOver(), 1);
+  BOOST_CHECK_EQUAL(crazyEights.isGameOver(), 1);
 
 }
 
@@ -147,7 +148,8 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
   Card card2(CLUBS, ACE);
   Card card3(SPADES, KING);
 
-  Player player(1, "144.56.289.001");
+  boost::asio::io_service service;
+  auto player = std::make_shared<Player>(1, TCPConnection::create(service));
   std::vector<std::shared_ptr<Player>> players;
   players.push_back(player);
 
@@ -155,8 +157,9 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
 
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card1), 50);
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
-  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(crad3), 10);
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card3), 10);
 }
+
 BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
 {
   Spades s;

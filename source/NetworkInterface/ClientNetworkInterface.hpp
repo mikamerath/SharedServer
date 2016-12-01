@@ -13,7 +13,7 @@ public:
   // constructor
   ClientNetworkInterface(int port, io_service& service, std::ostream& outStream);
 
-  // method to attempt to connect to the given ip and port, check isConnected to 
+  // method to attempt to connect to the given ip and port, check isConnected to
   // verify connection before proceding with send or recieve.
   void connect(std::string ip, int port);
   // method to sync recieve from the server
