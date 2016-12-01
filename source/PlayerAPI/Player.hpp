@@ -35,6 +35,7 @@ private:
   std::function<void(Card)> validateMove;
   std::function<void(int)> validateBid;
   std::function<void(std::string,int)> procLobbyCommand;
+  std::function<void(Card)> validatePass;
 
 public:
   TCPConnection::pointer connection;
@@ -48,6 +49,7 @@ public:
   void setValidateSuit(std::function<void(Suit)>);
   void setValidateMove(std::function<void(Card)>);
   void setValidateBid(std::function<void(int)>);
+  void setValidatePass(std::function<void(Card)>);
   void setProcLobbyCommand(std::function<void(std::string,int)>);
 
   // The functions below reset the necessary variables at the start of
@@ -59,6 +61,7 @@ public:
   void requestMove(); // Everyone
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
+  void requestPass(); // Hearts
   void updateGameStatus(/*coded message of state*/);
   void readLobbyMessage(); // lobby
   void readMessage(); // debugging and demo
@@ -67,6 +70,7 @@ public:
   void receivedMove(std::string);
   void receivedBid(std::string);
   void receivedSuit(std::string);
+  void receivedPass(std::string);
   void recievedLobbyMessage(std::string);
   void recivedMessage(std::string); // debugging and demo
 
