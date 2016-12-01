@@ -100,7 +100,6 @@ void Spades::getBids()
 {
   for (auto&& p : players)
   {
-    p->setValidateBid([this](int b) { receiveBid(b); });
     waitingForBid = true;
     p->requestBid();
     while (waitingForBid)
