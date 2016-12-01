@@ -40,7 +40,7 @@ void AI::makeDumbAIMove()
   Card move;
   if (numCardsTriedToPlay < hand.size())
   {
-    move = hand[numCardsTriedToPlay];
+    move = hand.at(numCardsTriedToPlay);
     ++numCardsTriedToPlay;
   }
   else
