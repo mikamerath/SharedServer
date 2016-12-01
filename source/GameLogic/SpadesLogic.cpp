@@ -73,23 +73,17 @@ int next(int plId)
 
 void Spades::receiveValidMove(Card c)
 {
-<<<<<<< HEAD
-	movePlaceHolder = c;
-	waitingForMove = false;
-=======
->>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
+ movePlaceHolder = c;
+ waitingForMove = false;
   // the return card is coming here!!
 }
 
 void Spades::receiveBid(int b)
 {
-<<<<<<< HEAD
-	//do something with bid
-	bidPlaceHolder = b;
-	waitingForBid = false;
-=======
->>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
-  // How do I figure which player gave it to me?
+ //do something with bid
+ bidPlaceHolder = b;
+ waitingForBid = false;
+ // How do I figure which player gave it to me?
 }
 
 Spades::Spades(std::vector<std::shared_ptr<Player>> p)
@@ -98,11 +92,8 @@ Spades::Spades(std::vector<std::shared_ptr<Player>> p)
   for (auto&& player : players)
   {
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
-<<<<<<< HEAD
-				player->setValidateBid([this](int bid) { receiveBid(bid); });
+    player->setValidateBid([this](int bid) { receiveBid(bid); });
 
-=======
->>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
   }
 }
 
@@ -111,15 +102,12 @@ void Spades::getBids()
 	  for (auto&& p : players)
   {
     p->setValidateBid([this](int b) { receiveBid(b); });
-<<<<<<< HEAD
-				waitingForBid = true;
-=======
->>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
+    waitingForBid = true;
     p->requestBid();
-				while (waitingForBid) {
-					std::this_thread::sleep_for(std::chrono::milliseconds(400));
-				}
-				p->setBid(bidPlaceHolder);
+    while (waitingForBid) {
+     std::this_thread::sleep_for(std::chrono::milliseconds(400));
+    }
+    p->setBid(bidPlaceHolder);
   }
 }
 
