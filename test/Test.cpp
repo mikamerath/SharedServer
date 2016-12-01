@@ -8,9 +8,13 @@
 #include "source/PlayerAPI/Card.hpp"
 #include "source/PlayerAPI/Player.hpp"
 #include "source/Lobby.hpp"
+#include "../source/GameLogic/SpadesLogic.hpp"
+#include "../source/PlayerAPI/Card.hpp"
+#include "../source/PlayerAPI/Player.hpp"
 
 // Standard Includes
 #include <sstream>
+#include <vector>
 
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
@@ -86,7 +90,7 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
 BOOST_AUTO_TEST_CASE(Login)
 {
-	
+
 	boost::asio::io_service service;
 	Lobby lobby = Lobby();
 	std::shared_ptr<Player> player(new Player(1, TCPConnection::create(service)));
@@ -95,6 +99,15 @@ BOOST_AUTO_TEST_CASE(Login)
 	std::shared_ptr<Player> player2(new Player(2, TCPConnection::create(service)));
 	lobby.procRegister(player2, "REGISTER testuser testpassword");
 	lobby.procLogin(player2, "LOGIN testuser testpassword");
-	
-	BOOST_CHECK_EQUAL(player->getName() , player2->getName());
+
+	BOOST_CHECK_EQUAL(player->getName(), player2->getName());
+}
+
+BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
+{
+  Spades s;
+  for (int i = 0; i < 4; i++)
+  {
+    BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i + 1) % 4));
+  }
 }
