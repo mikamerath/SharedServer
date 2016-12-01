@@ -139,8 +139,18 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
   players.push_back(player1);
 
   CrazyEightsLogic crazyEights(players);
-  // Note: Need to hard code cards and play each one
-  crazyEights.playCard();
+  std::vector<Card> playerHand = crazyEights.getPlayers().at(0)->getHand();
+  Card card1 = playerHand[0];
+  Card card2 = playerHand[1];
+  Card card3 = playerHand[2];
+  Card card4 = playerHand[3];
+  Card card5 = playerHand[4];
+
+  crazyEights.playCard(card1);
+  crazyEights.playCard(card2);
+  crazyEights.playCard(card3);
+  crazyEights.playCard(card4);
+  crazyEights.playCard(card5);
 
   BOOST_CHECK_EQUAL(crazyEights.isGameOver(), 1);
 
@@ -185,6 +195,29 @@ BOOST_AUTO_TEST_CASE(Login)
 	std::shared_ptr<Player> player2(new Player(2, TCPConnection::create(service)));
 	lobby.procLogin(player2, "LOGIN testuser testpassword");
 	BOOST_CHECK_EQUAL(player->getName(), player2->getName());
+}
+
+BOOST_AUTO_TEST_CASE(ValidMove)
+{
+  boost::asio::io_service service;
+  auto player = std::make_shared<Player>(1, TCPConnection::create(service));
+  std::vector<std::shared_ptr<Player>> players;
+  players.push_back(player);
+
+  CrazyEightsLogic crazyEights(players);
+
+  Card discardCard(HEARTS, SEVEN);
+  Card newCard(HEARTS, KING);
+
+  crazyEights.getDiscardPile().push_back(discardCard);
+  crazyEights.getPlayers().at(0)->getHand().push_back(newCard);
+
+  std::cout << crazyEights.getDiscardPile().at(1).getSuit() << std::endl;
+  std::cout << crazyEights.getPlayers().at(0)->getHand().at(5).getSuit() << std::endl;
+
+  crazyEights.validCard(crazyEights.getPlayers().at(0)->getHand().at(5));
+
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->getHand().size(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
