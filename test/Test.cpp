@@ -15,6 +15,7 @@
 // Standard Includes
 #include <sstream>
 #include <vector>
+#include <fstream>
 
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
@@ -90,14 +91,18 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
 BOOST_AUTO_TEST_CASE(Login)
 {
-
+	std::ofstream fout;
+	fout.open("database.txt");
+	fout << "USERS" << std::endl;
+	fout << "testuser" << std::endl;
+	fout << "testpassword" << std::endl;
+	fout.close();
 	boost::asio::io_service service;
 	Lobby lobby = Lobby();
 	std::shared_ptr<Player> player(new Player(1, TCPConnection::create(service)));
 	player->setName("testuser");
 
 	std::shared_ptr<Player> player2(new Player(2, TCPConnection::create(service)));
-	lobby.procRegister(player2, "REGISTER testuser testpassword");
 	lobby.procLogin(player2, "LOGIN testuser testpassword");
 
 	BOOST_CHECK_EQUAL(player->getName(), player2->getName());
