@@ -114,12 +114,12 @@ BOOST_AUTO_TEST_CASE(SerializeMessage)
 
 	BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING);
 	BOOST_CHECK_EQUAL(deserializeMessage.turn, false);
-	BOOST_CHECK_EQUAL(deserializeMessage.field[0].getSuit(), CLUBS);
-	BOOST_CHECK_EQUAL(deserializeMessage.field[1].getValue(), ACE);
-	BOOST_CHECK_EQUAL(deserializeMessage.handSizes[0], 5);
-	BOOST_CHECK_EQUAL(deserializeMessage.handSizes[1], 9);
-	BOOST_CHECK_EQUAL(deserializeMessage.playerHand[1].getSuit(), HEARTS);
-	BOOST_CHECK_EQUAL(deserializeMessage.playerHand[0].getValue(), TWO);
+	BOOST_CHECK_EQUAL(deserializeMessage.field.at(0).getSuit(), CLUBS);
+	BOOST_CHECK_EQUAL(deserializeMessage.field.at(1).getValue(), ACE);
+	BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(0), 5);
+	BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(1), 9);
+	BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(1).getSuit(), HEARTS);
+	BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(0).getValue(), TWO);
 	BOOST_CHECK_EQUAL(deserializeMessage.deckEmpty, true);
 }
 
