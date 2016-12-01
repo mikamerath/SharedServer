@@ -14,7 +14,8 @@ public:
   CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers);
   void deal(int numCards);
   bool isGameOver();
-  bool isValidCard(Card card);
+  void gameOver();
+  void validCard(Card card);
   void processValidMove();
   std::string convertSuitToString(Suit suit);
   std::string convertRankToString(Value value);
@@ -23,11 +24,11 @@ public:
   void setCardsDrawnCounter(int numDrawn);
   int getCardsDrawnCounter();
   void playCard(Card&);
-  bool validateSuit();
+  void validateSuit(Suit suit);
   int calculateScore(std::vector<std::shared_ptr<Player>> players);
   int getCardScoreValue(Card card);
   void nextTurn();
   int getTurn();
-  void playGame();
+  void start();
 };
 #endif
