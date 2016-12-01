@@ -24,8 +24,7 @@ public:
   // Begins accepting connections aSync
   void startAccepting();
   // debugging function to help diagnose connection status
-  std::string getMessages();
-
+  //std::string getMessages();
   // deconstructor used to clean up
   ~ServerNetworkInterface();
 
@@ -37,7 +36,7 @@ private:
   std::function<void(std::shared_ptr<Player>)> addPlayer;
   bool accepting;
   boost::asio::ip::tcp::acceptor acceptor;
-  std::vector<TCPConnection::pointer> knownConnections;
+  //std::vector<TCPConnection::pointer> knownConnections;
   TCPConnection::pointer waitingConn;
 };
 #endif // !SERVER_NETWORK_INTERFACE
