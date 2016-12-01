@@ -73,16 +73,22 @@ int next(int plId)
 
 void Spades::receiveValidMove(Card c)
 {
+<<<<<<< HEAD
 	movePlaceHolder = c;
 	waitingForMove = false;
+=======
+>>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
   // the return card is coming here!!
 }
 
 void Spades::receiveBid(int b)
 {
+<<<<<<< HEAD
 	//do something with bid
 	bidPlaceHolder = b;
 	waitingForBid = false;
+=======
+>>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
   // How do I figure which player gave it to me?
 }
 
@@ -92,8 +98,11 @@ Spades::Spades(std::vector<std::shared_ptr<Player>> p)
   for (auto&& player : players)
   {
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
+<<<<<<< HEAD
 				player->setValidateBid([this](int bid) { receiveBid(bid); });
 
+=======
+>>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
   }
 }
 
@@ -102,7 +111,10 @@ void Spades::getBids()
 	  for (auto&& p : players)
   {
     p->setValidateBid([this](int b) { receiveBid(b); });
+<<<<<<< HEAD
 				waitingForBid = true;
+=======
+>>>>>>> 0bb81dea2dd7da7a86c7a91b0fa3996d04b21db8
     p->requestBid();
 				while (waitingForBid) {
 					std::this_thread::sleep_for(std::chrono::milliseconds(400));
@@ -239,12 +251,12 @@ void Spades::validMoveFailLoop(bool vm,
     auto sendBack = trick.back();
     trick.pop_back();
     players.at(turn)->insertCardToHand(sendBack);
-				waitingForMove = true;
-				players.at(turn)->requestMove();
-				while (waitingForMove) {
-					std::this_thread::sleep_for(std::chrono::milliseconds(400));
-				}
-				trick.push_back(movePlaceHolder);
+    waitingForMove = true;
+    players.at(turn)->requestMove();
+    while (waitingForMove) {
+     std::this_thread::sleep_for(std::chrono::milliseconds(400));
+    }
+    trick.push_back(movePlaceHolder);
     vm = validMove(trick, turn, ledSuit, i);
     if (vm && i == 0)
     {
@@ -257,28 +269,28 @@ void Spades::beginTrick(std::vector<Card> trick, Suit ledSuit, int trickWinner)
 {
   for (int i = 0; i < 4; i++)
   {
-			waitingForMove = true;
-    players.at(turn)->requestMove();
-				while (waitingForMove) {
-					std::this_thread::sleep_for(std::chrono::milliseconds(400));
-				}
-				trick.push_back(movePlaceHolder);
-    if (validMove(trick, turn, ledSuit, i))
-    {
-      std::vector<Card> m;
-      m.push_back(trick.at(i));
-    }
-    else
-    {
-      bool vm = false;
-      validMoveFailLoop(vm, trick, ledSuit, i);
-    }
-    turn = getNextPlayer(turn);
-    if (players.at(turn)->getHand().empty())
-    {
-      s = ROUND_OVER;
-    }
-    std::cout << "Updating Connected Games..." << std::endl;
+   waitingForMove = true;
+   players.at(turn)->requestMove();
+   while (waitingForMove) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(400));
+   }
+   trick.push_back(movePlaceHolder);
+   if (validMove(trick, turn, ledSuit, i))
+   {
+     std::vector<Card> m;
+     m.push_back(trick.at(i));
+   }
+   else
+   {
+     bool vm = false;
+     validMoveFailLoop(vm, trick, ledSuit, i);
+   }
+   turn = getNextPlayer(turn);
+   if (players.at(turn)->getHand().empty())
+   {
+     s = ROUND_OVER;
+   }
+   std::cout << "Updating Connected Games..." << std::endl;
   }
   trickWinner = getTrickWinner(trick, trickWinner);
   players.at(trickWinner)->incrementTricksWon();

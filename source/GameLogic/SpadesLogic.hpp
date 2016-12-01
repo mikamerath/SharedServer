@@ -31,9 +31,9 @@ private:
   int starter;
   bool spadesBroken;
   Card globalCard;
-		std::atomic<int> bidPlaceHolder;
-		Card movePlaceHolder;
-		std::atomic<bool> waitingForBid;
-		std::atomic<bool> waitingForMove;
+  std::atomic<int> bidPlaceHolder;
+  Card movePlaceHolder;
+  std::atomic<bool> waitingForBid;
+  std::atomic<bool> waitingForMove;
 };
-#endif
+ #endif
