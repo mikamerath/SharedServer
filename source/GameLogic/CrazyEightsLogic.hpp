@@ -14,7 +14,7 @@ public:
   CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers);
   void deal(int numCards);
   bool isGameOver();
-  void gameOver();
+  void gameOver(std::vector<std::shared_ptr<Player>>& netPlayers);
   void validCard(Card card);
   void processValidMove();
   std::string convertSuitToString(Suit suit);
