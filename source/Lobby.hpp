@@ -9,17 +9,17 @@
 #include <iostream>
 #include <fstream>
 /// Boost Includes
-#include <boost\serialization\access.hpp>
-#include <boost\archive\text_oarchive.hpp>
-#include <boost\archive\text_iarchive.hpp>
-#include <boost\algorithm\string.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/algorithm/string.hpp>
 /// Application Includes
-#include "source\Messages\LobbyGame.hpp"
-#include "source\PlayerAPI\Player.hpp"
-#include "source\PlayerAPI\Game.hpp"
-#include "source\GameLogic\CrazyEightsLogic.hpp"
-#include "source\GameLogic\HeartsGame.hpp"
-#include "source\GameLogic\SpadesLogic.hpp"
+#include "source/Messages/LobbyGame.hpp"
+#include "source/PlayerAPI/Player.hpp"
+#include "source/PlayerAPI/Game.hpp"
+#include "source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/GameLogic/HeartsGame.hpp"
+#include "source/GameLogic/SpadesLogic.hpp"
 
 
 /* NEEDED FEATURES
@@ -74,6 +74,7 @@ private:
   // Helper to find a game by name, returns a LobbyGame with GameType::UNKNOWN
   // if the game is not found
   LobbyGame& findGame(std::string name);
+  LobbyGame undef = LobbyGame("", GameType::UNKNOWN);
 
   // A map of all games that are joinable where the key is the game name
   std::map<std::string, LobbyGame> currentAvailableGames;

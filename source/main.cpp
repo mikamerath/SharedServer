@@ -6,8 +6,8 @@
 #include<sstream>
 #include<iostream>
 #include<vector>
-#include"source\PlayerAPI\Player.hpp"
-#include"source\NetworkInterface\ServerNetworkInterface.hpp"
+#include"source/PlayerAPI/Player.hpp"
+#include"source/NetworkInterface/ServerNetworkInterface.hpp"
 #include"Lobby.hpp"
 
 Lobby lobby = Lobby();
