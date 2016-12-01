@@ -73,41 +73,76 @@ int next(int plId)
 
 void Spades::receiveValidMove(Card c)
 {
-  movePlaceHolder = c;
-  waitingForMove = false;
-  // the return card is coming here!!
+  trick.push_back(c);
+  if (validMove())
+  {
+    turn = getNextPlayer(turn);
+  }
+  else
+  {
+    auto c = trick.back();
+    players.at(turn)->insertCardToHand(c);
+    trick.pop_back();
+  }
+  if (trick.size() < 4)
+  {
+    players.at(turn)->requestMove();
+  }
+  else
+  {
+    trickWinner = getTrickWinner(trick, trickWinner);
+    if (players.at(turn)->getHand().size() < 1)
+    {
+      s = ROUND_OVER;
+      score();
+      UpdateGameStateMessage();
+      setDeck();
+      for (auto player : players)
+      {
+        player->initializeHand(deck, 13);
+      }
+      if (s != GAME_OVER)
+      {
+        players.at(turn)->requestBid();
+      }
+    }
+    else
+    {
+      turn = trickWinner;
+      players.at(turn)->incrementTricksWon();
+      players.at(turn)->requestMove();
+    }
+  }
 }
 
 void Spades::receiveBid(int b)
 {
   // do something with bid
-  bidPlaceHolder = b;
-  waitingForBid = false;
-  // How do I figure which player gave it to me?
+  players.at(turn)->setBid(b);
+  if (turn < 3)
+  {
+    turn = getNextPlayer(turn);
+    players.at(turn)->requestBid();
+  }
+  else
+  {
+    turn = getNextPlayer(turn);
+    players.at(turn)->requestMove();
+  }
 }
 
 Spades::Spades(std::vector<std::shared_ptr<Player>> p)
 {
   players = p;
+  setDeck();
   for (auto&& player : players)
   {
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
     player->setValidateBid([this](int bid) { receiveBid(bid); });
+    player->initializeHand(deck, 13);
   }
-}
-
-void Spades::getBids()
-{
-  for (auto&& p : players)
-  {
-    waitingForBid = true;
-    p->requestBid();
-    while (waitingForBid)
-    {
-      std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    }
-    p->setBid(bidPlaceHolder);
-  }
+  turn = 0;
+  players.at(turn)->requestBid();
 }
 
 int Spades::getTrickWinner(std::vector<Card> trick, int tw)
@@ -146,20 +181,17 @@ int Spades::getTrickWinner(std::vector<Card> trick, int tw)
   return tw;
 }
 
-bool Spades::validMove(std::vector<Card> tr,
-                       int pl,
-                       Suit& leadSuit,
-                       int currentTurn)
+bool Spades::validMove()
 {
-  auto h = players.at(pl)->getHand();
-  if (tr.at(0).getSuit() == tr.back().getSuit() &&
-      tr.at(0).getValue() == tr.back().getValue())
+  auto h = players.at(turn)->getHand();
+  if (trick.at(0).getSuit() == trick.back().getSuit() &&
+      trick.at(0).getValue() == trick.back().getValue())
   {
-    if (tr.back().getSuit() == SPADES)
+    if (trick.back().getSuit() == SPADES)
     {
       if (spadesBroken == true)
       {
-        leadSuit = SPADES;
+        ledSuit = SPADES;
         return true;
       }
       else
@@ -175,22 +207,22 @@ bool Spades::validMove(std::vector<Card> tr,
     }
     else
     {
-      leadSuit = (Suit)tr.back().getSuit();
+      ledSuit = (Suit)trick.back().getSuit();
       std::cout << "tr.back() was led" << std::endl;
     }
   }
-  if (tr.back().getSuit() == leadSuit)
+  if (trick.back().getSuit() == ledSuit)
   {
     return true;
   }
   for (auto c : h)
   {
-    if (c.getSuit() == leadSuit)
+    if (c.getSuit() == ledSuit)
     {
       return false;
     }
   }
-  if (tr.back().getSuit() == SPADES)
+  if (trick.back().getSuit() == SPADES)
   {
     spadesBroken = true;
   }
@@ -213,128 +245,31 @@ void Spades::score()
       int sc = bid * 10;
       for (int b = bid; b < tricks; b++)
       {
-        sc++;						
+        sc++;
+        bag++;
       }
-						p->setRoundScore(sc);
+      if (bag > 10)
+      {
+        p->setRoundScore(sc - 100);
+        p->setBags(bag % 10);
+      }
+      else
+      {
+        p->setRoundScore(sc);
+      }
     }
     else if (bid > tricks)
     {
-						for (int bags = tricks; bags < bid; bags++)
-						{
-							bag++;
-						}
-						if (bag > 10) {
-							p->setRoundScore(-100);
-							p->setBags(bag % 10);
-						}
-						else
-						{
-							p->setRoundScore(0);
-						}
+      p->setRoundScore(0);
     }
     std::cout << "p.getId() + p.getRoundScore() " << p->getId() << ":"
               << p->getRoundScore() << std::endl;
-  }
-}
-
-void Spades::validMoveFailLoop(bool vm,
-                               std::vector<Card>& trick,
-                               Suit ledSuit,
-                               int& i)
-{
-  while (vm == false)
-  {
-    std::cout << "Invalid Move!!!" << std::endl;
-    std::cout << std::endl;
-    auto sendBack = trick.back();
-    trick.pop_back();
-    players.at(turn)->insertCardToHand(sendBack);
-    waitingForMove = true;
-    players.at(turn)->requestMove();
-    while (waitingForMove)
+    if (p->getTotalScore() > 100)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    }
-    trick.push_back(movePlaceHolder);
-    vm = validMove(trick, turn, ledSuit, i);
-    if (vm && i == 0)
-    {
-      ledSuit = (Suit)trick.at(0).getSuit();
+      s = GAME_OVER;
+      UpdateGameStateMessage();
     }
   }
-}
-
-void Spades::beginTrick(std::vector<Card> trick, Suit ledSuit, int trickWinner)
-{
-  for (int i = 0; i < 4; i++)
-  {
-    waitingForMove = true;
-    players.at(turn)->requestMove();
-    while (waitingForMove)
-    {
-      std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    }
-    trick.push_back(movePlaceHolder);
-    if (validMove(trick, turn, ledSuit, i))
-    {
-      std::vector<Card> m;
-      m.push_back(trick.at(i));
-    }
-    else
-    {
-      bool vm = false;
-      validMoveFailLoop(vm, trick, ledSuit, i);
-    }
-    turn = getNextPlayer(turn);
-    if (players.at(turn)->getHand().empty())
-    {
-      s = ROUND_OVER;
-    }
-    std::cout << "Updating Connected Games..." << std::endl;
-  }
-  trickWinner = getTrickWinner(trick, trickWinner);
-  players.at(trickWinner)->incrementTricksWon();
-  SpadesLog(turn,
-            trickWinner,
-            trick,
-            players.at(turn)->getHand(),
-            players.at(turn)->getId());
-  trick.clear();
-  turn = trickWinner;
-}
-
-void Spades::beginRound(int starter)
-{
-  Suit ledSuit = HEARTS;
-  std::vector<Card> trick;
-  int trickWinner = 0;
-  int turn = 0;
-  while (s == PLAYING)
-  {
-    beginTrick(trick, ledSuit, trickWinner);
-  }
-  score();
-  initializeDeck();
-  s = BIDDING;
-  getBids();
-  s = PLAYING;
-  spadesBroken = false;
-  beginRound(getNextPlayer(starter));
-}
-
-void Spades::start()
-{
-  setDeck();
-  players.at(0)->initializeHand(deck, 13);
-  players.at(1)->initializeHand(deck, 13);
-  players.at(2)->initializeHand(deck, 13);
-  players.at(3)->initializeHand(deck, 13);
-  starter = 0;
-  s = BIDDING;
-  getBids();
-  s = PLAYING;
-  spadesBroken = false;
-  beginRound(0);
 }
 
 void Spades::setDeck()

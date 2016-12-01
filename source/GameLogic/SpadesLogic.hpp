@@ -13,20 +13,15 @@ class Spades : public Game
 {
 public:
   void setDeck();
-  void start();
-  void getBids();
-  void beginRound(int);
-  void beginTrick(std::vector<Card>, Suit, int);
-  bool validMove(std::vector<Card>, int, Suit&, int);
+  bool validMove();
   void receiveValidMove(Card);
   void receiveBid(int);
-  void validMoveFailLoop(bool, std::vector<Card>&, Suit, int&);
   int getTrickWinner(std::vector<Card>, int);
   int getNextPlayer(int);
   void score();
   Spades(){};
   Spades(std::vector<std::shared_ptr<Player>>);
-  ~Spades() {}
+  ~Spades(){}
 private:
   int starter;
   bool spadesBroken;
@@ -35,5 +30,8 @@ private:
   Card movePlaceHolder;
   std::atomic<bool> waitingForBid;
   std::atomic<bool> waitingForMove;
+		std::vector<Card> trick;
+		Suit ledSuit;
+		int trickWinner;
 };
 #endif

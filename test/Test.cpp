@@ -93,3 +93,107 @@ BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
     BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i + 1) % 4));
   }
 }
+
+//This first part tests all cases where an ace  of any suit is played
+//Player 0 should always win the trick for the sake of this test
+//I feel this is sufficient for cases where the hand is all of the same suit.
+BOOST_AUTO_TEST_CASE(SpadesTrickWinnerTestSameSuit) {
+	for (int j = 0; j < 4; j++) {
+		std::vector<Card> trick;
+		Card highCard((Suit)j, (Value)14);
+		int tw = 0;
+		trick.push_back(highCard);
+		for (int i = 2; i < 6; i++) {
+			Card c((Suit)j, (Value)i);
+			trick.push_back(c);
+		}
+		Spades s;
+		auto winner = s.getTrickWinner(trick, tw);
+		BOOST_CHECK_EQUAL(winner, 0);
+		trick.clear();
+
+		trick.push_back(highCard);
+		for (int i = 6; i < 10; i++) {
+			Card c((Suit)j, (Value)i);
+			trick.push_back(c);
+		}
+		winner = s.getTrickWinner(trick, tw);
+		BOOST_CHECK_EQUAL(winner, 0);
+		trick.clear();
+		
+		trick.push_back(highCard);
+		for (int i = 10; i < 14; i++) {
+			Card c((Suit)j, (Value)i);
+			trick.push_back(c);
+		}
+		winner = s.getTrickWinner(trick, tw);
+		BOOST_CHECK_EQUAL(winner, 0);
+	}
+}
+
+//This makes sure that the lead suit (if not trumped by spades) wins. ~SPADES equals 1~
+//Once again though not logically airtight, this should be enough to demonstrate that 
+//if a card is led, and the other cards are neither that same suit nor spades, the led card wins.
+BOOST_AUTO_TEST_CASE(SpadesTrickWinnerTestNotSpades) {
+	std::vector<Card> trick;
+	Card ledCard((Suit)0, (Value)2);
+	int tw = 0;
+	trick.push_back(ledCard);
+	for (int i = 2; i < 6; i++) {
+		Card c((Suit)2, (Value)i);
+		trick.push_back(c);
+	}
+	Spades s;
+	auto winner = s.getTrickWinner(trick, tw);
+	BOOST_CHECK_EQUAL(0, winner);
+	trick.clear();
+	winner = 0;
+
+	tw = 0;
+	trick.push_back(ledCard);
+	for (int i = 2; i < 6; i++) {
+		Card c((Suit)3, (Value)i);
+		trick.push_back(c);
+	}
+	winner = s.getTrickWinner(trick, tw);
+	BOOST_CHECK_EQUAL(0, winner);
+}
+
+//This test demonstrates that the dinkiest spade trumps the highest cards of other suits.
+BOOST_AUTO_TEST_CASE(SpadesTrickWinnerTestTrumpedBySpades) {
+	std::vector<Card> trick;
+	int tw = 0;
+	Card trump((Suit)1, (Value)2);
+	trick.push_back(trump);
+	for (int i = 11; i < 14; i++) {
+		Card c((Suit)0, (Value)i);
+		trick.push_back(c);
+	}
+	Spades s;
+	auto winner = s.getTrickWinner(trick, tw);
+	BOOST_CHECK_EQUAL(0, winner);
+	trick.clear();
+	winner = 0;
+
+	tw = 0;
+	trick.push_back(trump);
+	for (int i = 11; i < 14; i++) {
+		Card c((Suit)2, (Value)i);
+		trick.push_back(c);
+	}
+	winner = s.getTrickWinner(trick, tw);
+	BOOST_CHECK_EQUAL(0, winner);
+	trick.clear();
+	winner = 0;
+
+	tw = 0;
+	trick.push_back(trump);
+	for (int i = 11; i < 14; i++) {
+		Card c((Suit)3, (Value)i);
+		trick.push_back(c);
+	}
+	winner = s.getTrickWinner(trick, tw);
+	BOOST_CHECK_EQUAL(0, winner);
+	trick.clear();
+	winner = 0;
+}
