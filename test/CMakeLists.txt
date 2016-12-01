@@ -9,5 +9,6 @@ Test
 Game
 NetworkInterface
 GameLogic
+ServerLib
 ${externLibs}
 )
