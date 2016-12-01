@@ -156,3 +156,8 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(crad3), 10);
 }
+
+BOOST_AUTO_TEST_CASE(isValidMove)
+{
+  
+}

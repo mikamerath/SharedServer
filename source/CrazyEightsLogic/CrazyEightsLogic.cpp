@@ -1,18 +1,17 @@
 #include "CrazyEightsLogic.hpp"
 #include <iostream>
 
-CrazyEightsLogic::CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers)
+CrazyEightsLogic::CrazyEightsLogic(std::vector<Player>& netPlayers)
 {
   players = netPlayers;
   for (auto && player: players){
-      player.setValidateMove([this](Card c){isValidCard(c);});
-      player.setValidateSuit([this](Suit s){validateSuit(s);});
-  }
+   player.setValidateMove([this](Card c){isValidCard(c);});
+   player.setValidateSuit([this](Suit s){validateSuit(s);}); 
+ }
   deck = initializeDeck();
   deal(5);
   turn = 0;
   cardsDrawnCounter = 0;
-  // playGame();
 }
 
 void CrazyEightsLogic::playGame()
@@ -20,59 +19,61 @@ void CrazyEightsLogic::playGame()
   players = getPlayers();
 
   bool done = false;
-  // auto cardIndex = 0;
+  auto cardIndex = 0;
 
   while (!done)
   {
     std::cout << "Player " << getTurn() + 1 << " your turn!" << std::endl;
-    std::vector<Card> playerCards = players[getTurn()]->getHand();
+    std::vector<Card> playerCards = players[getTurn()].getHand();
 
-    displayHand(players[getTurn()]->getHand());
+    displayHand(players[getTurn()].getHand());
 
     std::cout << "Discard pile has "
               << convertRankToString(getDiscardPile().back().getValue())
               << " of "
               << convertSuitToString(getDiscardPile().back().getSuit())
               << std::endl;
-    // std::cout << "Pick a card to play or enter negative number to draw: ";
-    // std::cin >> cardIndex;
-    // std::cout << std::endl;
-    players[turn].requestMove();  // request move function instead of stuff above
+    std::cout << "Pick a card to play or enter negative number to draw: ";
+    std::cin >> cardIndex;
+    std::cout << std::endl;
+    // players[turn].requestMove();  // request move function instead of stuff above
 
     bool isPlayerTurn = true;
 
     while (isPlayerTurn)
     {
-      if (getCardsDrawnCounter() > 2)
+      if (cardIndex < 0)
       {
-        std::cout
-          << "You have drawn the max number of cards! Your turn is over!"
-          << std::endl;
-        isPlayerTurn = false;
-        setCardsDrawnCounter(0);
-        nextTurn();
-        players = getPlayers();
+        if (getCardsDrawnCounter() > 2)
+        {
+          std::cout
+            << "You have drawn the max number of cards! Your turn is over!"
+            << std::endl;
+          isPlayerTurn = false;
+          setCardsDrawnCounter(0);
+          nextTurn();
+          players = getPlayers();
+        }
+        else
+        {
+          std::cout << "You drew a card from the deck!" << std::endl;
+          drawCard();
+          std::cout << "Here is your hand: " << std::endl;
+          players = getPlayers();
+          playerCards = players[getTurn()].getHand();
+          displayHand(playerCards);
+          setCardsDrawnCounter(getCardsDrawnCounter() + 1);
+          std::cout << "Discard pile has "
+                    << convertRankToString(getDiscardPile().back().getValue())
+                    << " of "
+                    << convertSuitToString(getDiscardPile().back().getSuit())
+                    << std::endl;
+          std::cout
+            << "Pick a card to play or enter a negative number to draw: ";
+          std::cin >> cardIndex;
+        }
       }
-      else
-      {
-        std::cout << "You drew a card from the deck!" << std::endl;
-        drawCard();
-        std::cout << "Here is your hand: " << std::endl;
-        players = getPlayers();
-        playerCards = players[getTurn()].getHand();
-        displayHand(playerCards);
-        setCardsDrawnCounter(getCardsDrawnCounter() + 1);
-        std::cout << "Discard pile has "
-                  << convertRankToString(getDiscardPile().back().getValue())
-                  << " of "
-                  << convertSuitToString(getDiscardPile().back().getSuit())
-                  << std::endl;
-        // std::cout << "Pick a card to play or enter a negative number to draw: ";
-        // std::cin >> cardIndex;
-        players[turn].requestMove();  // request move function instead of stuff above
-      }
-
-      if (cardIndex >= 0 && isValidCard(playerCards[cardIndex]))
+      else if (cardIndex >= 0 && isValidCard(playerCards[cardIndex]))
       {
         std::cout << "Player " << getTurn() + 1 << " played "
                   << convertRankToString(playerCards[cardIndex].getValue())
@@ -95,7 +96,7 @@ void CrazyEightsLogic::playGame()
         {
           nextTurn();
           players = getPlayers();
-          playerCards = players[getTurn()]->getHand();
+          playerCards = players[getTurn()].getHand();
           isPlayerTurn = false;
         }
       }
@@ -105,12 +106,13 @@ void CrazyEightsLogic::playGame()
                   << " Card: " << playerCards[cardIndex].getSuit() << ", "
                   << playerCards[cardIndex].getValue() << std::endl;
         std::cout << "Invalid card!" << std::endl;
-        // std::cout << "Pick a card to play or enter negative number to draw: ";
-        // std::cin >> cardIndex;
+        std::cout << "Pick a card to play or enter negative number to draw: ";
+        std::cin >> cardIndex;
         players = getPlayers();
-        players[turn].requestMove();  // request move function instead of stuff above
       }
     }
+
+    std::cout << std::endl;
   }
 }
 
@@ -118,7 +120,7 @@ void CrazyEightsLogic::deal(int numCards)
 {
   for (int i = 0; i < players.size(); i++)
   {
-    players[i]->initializeHand(deck, numCards);
+    players[i].initializeHand(deck, numCards);
   }
   discardPile.push_back(deck.back());
   deck.pop_back();
@@ -126,7 +128,7 @@ void CrazyEightsLogic::deal(int numCards)
 
 bool CrazyEightsLogic::isGameOver()
 {
-  if (players[turn]->getHand().size() == 0)
+  if (players[turn].getHand().size() == 0)
   {
     return true;
   }
@@ -141,8 +143,8 @@ bool CrazyEightsLogic::isValidCard(Card card)
   Card topDiscard = discardPile.back();
   bool isInHand = false;
   bool isValidPlay = false;
-  std::shared_ptr<Player> currentPlayer = players[turn];
-  std::vector<Card> playerHand = currentPlayer->getHand();
+  Player currentPlayer = players[turn];
+  std::vector<Card> playerHand = currentPlayer.getHand();
 
   // Check to see if card is in hand
   for (int i = 0; i < playerHand.size(); i++)
@@ -186,11 +188,6 @@ bool CrazyEightsLogic::isValidCard(Card card)
   {
     return false;
   }
-
-  // if validMove {
-  updateGameStatus();
-  players[nextTurn].requestMove();
-}
 }
 
 void CrazyEightsLogic::displayHand(std::vector<Card> hand)
@@ -214,38 +211,40 @@ int CrazyEightsLogic::getTurn()
 *
 **/
 
-bool CrazyEightsLogic::validateSuit()
-{
-  int turn = getTurn();
-  std::vector<Player> players = getPlayers();
-  Suit selection = players[turn].receivedSuit();
-
-  if (selection < 1 || selection > 4)
-  {
-    std::cout << "Invalid selection.  Select a suit: " << std::endl;
-    std::cout << "1 - Hearts" << std::endl;
-    std::cout << "2 - Spades" << std::endl;
-    std::cout << "3 - Clubs" << std::endl;
-    std::cout << "4 - Diamonds" << std::endl;
-    players[turn].requestSuit();
-  }
- else {
-    UpdateGameStateMessage();
-    nextTurn();
-    players[turn].requestMove();
-  }
-}
+// bool CrazyEightsLogic::validateSuit()
+// {
+//   int turn = getTurn();
+//   std::vector<Player> players = getPlayers();
+//   Suit selection = players[turn].receivedSuit();
+//
+//   if (selection < 1 || selection > 4)
+//   {
+//     std::cout << "Invalid selection.  Select a suit: " << std::endl;
+//     std::cout << "1 - Hearts" << std::endl;
+//     std::cout << "2 - Spades" << std::endl;
+//     std::cout << "3 - Clubs" << std::endl;
+//     std::cout << "4 - Diamonds" << std::endl;
+//     players[turn].requestSuit();
+//   }
+//  else {
+//     UpdateGameStateMessage();
+//     nextTurn();
+//     players[turn].requestMove();
+//   }
+// }
 
 /**
 *
-*  playCard is used for networking
+* This playCard is used for Networking
 *
 */
-void CrazyEightsLogic::playCard(Card& card)
-{
-  discardPile.push_back(card);
-  players[turn].removeCardFromHand(card);
-}
+// void CrazyEightsLogic::playCard(Card& card)
+// {
+//
+//
+//   discardPile.push_back(card);
+//   players[turn].removeCardFromHand(card);
+// }
 
 void CrazyEightsLogic::playCard(Card& card)
 {
@@ -294,12 +293,12 @@ void CrazyEightsLogic::playCard(Card& card)
     }
   }
   discardPile.push_back(card);
-  players[turn]->removeCardFromHand(card);
+  players[turn].removeCardFromHand(card);
 }
 
 void CrazyEightsLogic::drawCard()
 {
-  players[turn]->insertCardToHand(deck.back());
+  players[turn].insertCardToHand(deck.back());
   deck.pop_back();
 }
 
@@ -318,14 +317,14 @@ int CrazyEightsLogic::getCardsDrawnCounter()
   return cardsDrawnCounter;
 }
 
-int CrazyEightsLogic::calculateScore(std::vector<std::shared_ptr<Player>> players)
+int CrazyEightsLogic::calculateScore(std::vector<Player> players)
 {
   int totalScore = 0;
   std::vector<Card> playerHand;
 
   for (int i = 0; i < players.size(); i++)
   {
-    playerHand = players[i]->getHand();
+    playerHand = players[i].getHand();
 
     for (int j = 0; j < playerHand.size(); j++)
     {
