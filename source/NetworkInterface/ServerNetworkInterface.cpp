@@ -21,15 +21,15 @@ void ServerNetworkInterface::startAccepting()
   }
 }
 
-std::string ServerNetworkInterface::getMessages()
-{
-  std::string msg = "";
-  for (int i = 0; i < knownConnections.size(); i++)
-  {
-    msg += knownConnections[i]->read();
-  }
-  return msg;
-}
+//std::string ServerNetworkInterface::getMessages()
+//{
+//  std::string msg = "";
+//  for (int i = 0; i < knownConnections.size(); i++)
+//  {
+//    msg += knownConnections[i]->read();
+//  }
+//  return msg;
+//}
 
 void ServerNetworkInterface::acceptConnection()
 {
