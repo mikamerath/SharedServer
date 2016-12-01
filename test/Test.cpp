@@ -5,9 +5,10 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
+#include "../source/GameLogic/CrazyEightsLogic.hpp"
+#include "../source/GameLogic/SpadesLogic.hpp"
 #include "../source/PlayerAPI/Card.hpp"
 #include "../source/PlayerAPI/Player.hpp"
-#include "/source/GameLogic/CrazyEightsLogic.hpp"
 
 // Standard Includes
 #include <sstream>
@@ -16,9 +17,9 @@
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/asio/io_service.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost\asio\io_service.hpp>
 
 BOOST_AUTO_TEST_CASE(startNewRound)
 {
@@ -47,7 +48,7 @@ BOOST_AUTO_TEST_CASE(startNewGame)
   BOOST_CHECK_EQUAL(player.getBid(), 0);
   BOOST_CHECK_EQUAL(player.getBags(), 0);
   BOOST_CHECK_EQUAL(player.getTricksWon(), 0);
-  BOOST_CHECK_EQUAL(player.getOverallScores().empty() , 1);
+  BOOST_CHECK_EQUAL(player.getOverallScores().empty(), 1);
 }
 
 BOOST_AUTO_TEST_CASE(insertCardToHand)
@@ -102,8 +103,8 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 
   int count = 4;
   for (int i = 0; i < count; i++) {
-    BOOST_CHECK_EQUAL(players[i].getId(), crazyEights.getPlayers().at(i).getId());
-    BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i).getHand().size(), 5);
+    BOOST_CHECK_EQUAL(players.at(i)->getId(), crazyEights.getPlayers().at(i)->getId());
+    BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i)->getHand().size(), 5);
   }
 
   BOOST_CHECK_EQUAL(crazyEights.getTurn(), 0);
@@ -118,9 +119,9 @@ BOOST_CHECK_EQUAL(crazyEightsDrawCard)
 
   CrazyEightsLogic crazyEights(players);
 
-  crazyEights.getPlayers().at(0).drawCard();
+  crazyEights.getPlayers().at(0)->drawCard();
 
-  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).getHand().size(), 6);
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->getHand().size(), 6);
 }
 
 BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
@@ -133,10 +134,10 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
   int numCards = 5;
   for (int i = 0; i < numCards; i++)
   {
-    crazyEights.getPlayers().at(0).playCard();
+    crazyEights.getPlayers().at(0)->playCard();
   }
 
-  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0).isGameOver(), 1);
+  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->isGameOver(), 1);
 
 }
 
@@ -157,7 +158,11 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(crad3), 10);
 }
 
-BOOST_AUTO_TEST_CASE(isValidMove)
+BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
 {
-  
+  Spades s;
+  for (int i = 0; i < 4; i++)
+  {
+    BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i + 1) % 4));
+  }
 }

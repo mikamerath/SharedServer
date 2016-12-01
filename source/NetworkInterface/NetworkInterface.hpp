@@ -1,24 +1,24 @@
 #ifndef NETWORK_INTERFACE
 #define NETWORK_INTERFACE
 
-#include <boost\asio.hpp>
+#include "GeneralMessage.hpp"
 #include "TCPConnection.hpp"
+#include "source/PlayerAPI/Player.hpp"
+#include <boost/asio.hpp>
 #include <iostream>
 #include <thread>
-#include "GeneralMessage.hpp"
-#include "source/PlayerAPI/Player.hpp"
 
 using namespace boost::asio;
 using ip::tcp;
 
 /*
-Core interface for creating a network connection. It encapsulates all the logic needed to 
-send and recieve messages based on a single request-reply pattern. 
+Core interface for creating a network connection. It encapsulates all the logic
+needed to
+send and recieve messages based on a single request-reply pattern.
 */
 class NetworkInterface
 {
 public:
-
 protected:
   io_service& ioService;
   int activePort;
@@ -33,9 +33,9 @@ protected:
   ~NetworkInterface()
   {
     active = false;
-    ioThread.join();
+    if(ioThread.joinable()) ioThread.join();
   }
   // A loop called to continuously proccess the io service
-  void ioLoop();  
+  void ioLoop();
 };
 #endif // !NETWORK_INTERFACE
