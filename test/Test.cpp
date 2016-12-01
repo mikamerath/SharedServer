@@ -5,18 +5,18 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
-#include "../source/GameLogic/CrazyEightsLogic.hpp"
-#include "source/PlayerAPI/Card.hpp"
-#include "source/PlayerAPI/Player.hpp"
 #include "source/Lobby.hpp"
-#include "../source/GameLogic/SpadesLogic.hpp"
+#include "source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/GameLogic/SpadesLogic.hpp"
 #include "source/NetworkInterface/ClientNetworkInterface.hpp"
 #include "source/NetworkInterface/ServerNetworkInterface.hpp"
+#include "source/PlayerAPI/Card.hpp"
+#include "source/PlayerAPI/Player.hpp"
 
 // Standard Includes
+#include <fstream>
 #include <sstream>
 #include <vector>
-#include <fstream>
 
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
@@ -107,14 +107,15 @@ BOOST_AUTO_TEST_CASE(initializeCrazyEights)
   CrazyEightsLogic crazyEights(players);
 
   int count = 4;
-  for (int i = 0; i < count; i++) {
-    BOOST_CHECK_EQUAL(players.at(i)->getId(), crazyEights.getPlayers().at(i)->getId());
+  for (int i = 0; i < count; i++)
+  {
+    BOOST_CHECK_EQUAL(
+      players.at(i)->getId(), crazyEights.getPlayers().at(i)->getId());
     BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(i)->getHand().size(), 5);
   }
 
   BOOST_CHECK_EQUAL(crazyEights.getTurn(), 0);
   BOOST_CHECK_EQUAL(crazyEights.getCardsDrawnCounter(), 0);
-
 }
 
 BOOST_AUTO_TEST_CASE(crazyEightsDrawCard)
@@ -153,7 +154,6 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
   crazyEights.playCard(card5);
 
   BOOST_CHECK_EQUAL(crazyEights.isGameOver(), 1);
-
 }
 
 BOOST_AUTO_TEST_CASE(checkCardScoreVals)
