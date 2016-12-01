@@ -9,7 +9,7 @@
 #include "source/PlayerAPI/Card.hpp"
 #include "source/PlayerAPI/Player.hpp"
 #include "source/Lobby.hpp"
-#include "source/Messages/Message.hpp"
+#include "source/Messages/GameMessage.hpp"
  #include "../source/GameLogic/SpadesLogic.hpp"
  #include "../source/PlayerAPI/Card.hpp"
  #include "../source/PlayerAPI/Player.hpp"
