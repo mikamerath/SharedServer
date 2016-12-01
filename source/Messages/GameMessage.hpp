@@ -1,5 +1,5 @@
-#indef MESSAGE_HPP
-#define MESSAGE_HPP
+#indef GAMEMESSAGE_HPP
+#define GAMEMESSAGE_HPP
 
 #include "source/PlayerAPI/Game.hpp"
 #include "source/PlayerAPI/Card.hpp"
@@ -7,7 +7,7 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/vector.hpp>
 
-class Message
+class GameMessage
 {
 	friend class boost::serialization::access;
 
@@ -19,12 +19,11 @@ public:
   std::vector<Card> playerHand;
   bool deckEmpty;
   
-  Message()
+  GameMessage()
   {
-
   }
 
-  Message(State state, bool t, std::vector<Card> f, std::vector<int> h, std::vector<Card> p, bool d)
+  GameMessage(State state, bool t, std::vector<Card> f, std::vector<int> h, std::vector<Card> p, bool d)
   {
     s = state;
     turn = t;
