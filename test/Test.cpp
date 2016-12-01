@@ -7,6 +7,7 @@
 // Project Includes
 #include "source/PlayerAPI/Card.hpp"
 #include "source/PlayerAPI/Player.hpp"
+#include "source/Lobby.hpp"
 
 // Standard Includes
 #include <sstream>
@@ -81,4 +82,20 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
+}
+
+BOOST_AUTO_TEST_CASE(Login)
+{
+	/*
+	boost::asio::io_service service;
+	Lobby lobby = Lobby();
+	std::shared_ptr<Player> player(new Player(1, TCPConnection::create(service)));
+	player->setName("testuser");
+
+	std::shared_ptr<Player> player2(new Player(2, TCPConnection::create(service)));
+	lobby.procRegister(player, "REGISTER testuser testpassword");
+	lobby.procLogin(player, "LOGIN testuser testpassword");
+
+	BOOST_CHECK_EQUAL(player->getName(), player2->getName());
+	*/
 }
