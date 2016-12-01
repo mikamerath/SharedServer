@@ -5,9 +5,9 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
+#include "../source/GameLogic/SpadesLogic.hpp"
 #include "../source/PlayerAPI/Card.hpp"
 #include "../source/PlayerAPI/Player.hpp"
-#include "../source/GameLogic/SpadesLogic.hpp"
 
 // Standard Includes
 #include <sstream>
@@ -85,9 +85,11 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
 }
 
-BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer) {
-	Spades s;
-	for (int i = 0; i < 4; i++) {
-		BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i+1)%4));
-	}
+BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
+{
+  Spades s;
+  for (int i = 0; i < 4; i++)
+  {
+    BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i + 1) % 4));
+  }
 }
