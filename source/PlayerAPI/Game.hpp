@@ -36,7 +36,7 @@ protected:
   std::vector<Card> field;
   int turn; // index in player vector
 public:
-  //virtual start();
+  // virtual start();
   // Function used to deal out a random deck of 52 cards
   std::vector<Card> initializeDeck()
   {
@@ -59,7 +59,7 @@ public:
   {
     for (auto&& player : players)
     {
-	player->updateGameStatus(/*coded message*/);
+      player->updateGameStatus(/*coded message*/);
     }
   }
   void deal(int numCards);
