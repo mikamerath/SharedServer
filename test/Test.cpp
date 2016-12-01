@@ -104,11 +104,11 @@ BOOST_AUTO_TEST_CASE(SerializeMessage)
 	std::vector<int> hands;
 	hands.push_back(5);
 	hands.push_back(9);
-	Message serializeMessage(PASSING, false, cards, hands, cards, true);
+	GameMessage serializeMessage(PASSING, false, cards, hands, cards, true);
 	boost::archive::text_oarchive oArchive(serialize);
 	oArchive << serializeMessage;
 
-	Message deserializeMessage;
+	GameMessage deserializeMessage;
 	std::stringstream deserialize(serialize.str());
 	boost::archive::text_iarchive iArchive(deserialize);
 	iArchive >> deserializeMessage;

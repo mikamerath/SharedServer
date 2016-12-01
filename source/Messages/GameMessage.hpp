@@ -1,4 +1,4 @@
-#indef GAMEMESSAGE_HPP
+#ifndef GAMEMESSAGE_HPP
 #define GAMEMESSAGE_HPP
 
 #include "source/PlayerAPI/Game.hpp"
