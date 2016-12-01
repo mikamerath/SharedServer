@@ -214,13 +214,24 @@ void Spades::score()
       int sc = bid * 10;
       for (int b = bid; b < tricks; b++)
       {
-        sc++;
+        sc++;						
       }
-      p->setRoundScore(sc);
+						p->setRoundScore(sc);
     }
     else if (bid > tricks)
     {
-      p->setRoundScore(0);
+						for (int bags = tricks; bags < bid; bags++)
+						{
+							bag++;
+						}
+						if (bag > 10) {
+							p->setRoundScore(-100);
+							p->setBags(bag % 10);
+						}
+						else
+						{
+							p->setRoundScore(0);
+						}
     }
     std::cout << "p.getId() + p.getRoundScore() " << p->getId() << ":"
               << p->getRoundScore() << std::endl;
