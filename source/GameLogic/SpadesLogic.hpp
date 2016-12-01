@@ -5,6 +5,9 @@
 #include <functional>
 #include <iostream>
 #include <vector>
+#include <atomic>
+#include <thread>
+#include <chrono>
 
 class Spades : public Game
 {
@@ -28,5 +31,9 @@ private:
   int starter;
   bool spadesBroken;
   Card globalCard;
+		std::atomic<int> bidPlaceHolder;
+		Card movePlaceHolder;
+		std::atomic<bool> waitingForBid;
+		std::atomic<bool> waitingForMove;
 };
 #endif

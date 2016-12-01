@@ -73,11 +73,16 @@ int next(int plId)
 
 void Spades::receiveValidMove(Card c)
 {
+	movePlaceHolder = c;
+	waitingForMove = false;
   // the return card is coming here!!
 }
 
 void Spades::receiveBid(int b)
 {
+	//do something with bid
+	bidPlaceHolder = b;
+	waitingForBid = false;
   // How do I figure which player gave it to me?
 }
 
@@ -87,15 +92,22 @@ Spades::Spades(std::vector<std::shared_ptr<Player>> p)
   for (auto&& player : players)
   {
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
+				player->setValidateBid([this](int bid) { receiveBid(bid); });
+
   }
 }
 
 void Spades::getBids()
 {
-  for (auto&& p : players)
+	  for (auto&& p : players)
   {
     p->setValidateBid([this](int b) { receiveBid(b); });
+				waitingForBid = true;
     p->requestBid();
+				while (waitingForBid) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(400));
+				}
+				p->setBid(bidPlaceHolder);
   }
 }
 
@@ -227,6 +239,12 @@ void Spades::validMoveFailLoop(bool vm,
     auto sendBack = trick.back();
     trick.pop_back();
     players.at(turn)->insertCardToHand(sendBack);
+				waitingForMove = true;
+				players.at(turn)->requestMove();
+				while (waitingForMove) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(400));
+				}
+				trick.push_back(movePlaceHolder);
     vm = validMove(trick, turn, ledSuit, i);
     if (vm && i == 0)
     {
@@ -239,7 +257,12 @@ void Spades::beginTrick(std::vector<Card> trick, Suit ledSuit, int trickWinner)
 {
   for (int i = 0; i < 4; i++)
   {
+			waitingForMove = true;
     players.at(turn)->requestMove();
+				while (waitingForMove) {
+					std::this_thread::sleep_for(std::chrono::milliseconds(400));
+				}
+				trick.push_back(movePlaceHolder);
     if (validMove(trick, turn, ledSuit, i))
     {
       std::vector<Card> m;
