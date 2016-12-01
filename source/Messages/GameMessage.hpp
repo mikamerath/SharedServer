@@ -21,6 +21,12 @@ public:
   
   GameMessage()
   {
+	  s = PASSING;
+	  turn = false;
+	  field = {};
+	  handSizes = { 0,0,0,0 };
+	  playerHand = {};
+	  deckEmpty = false;
   }
 
   GameMessage(State state, bool t, std::vector<Card> f, std::vector<int> h, std::vector<Card> p, bool d)
