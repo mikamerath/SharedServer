@@ -2,12 +2,12 @@
 #define SPADESLOGIC_HPP
 
 #include "source/PlayerAPI/Game.hpp"
+#include <atomic>
+#include <chrono>
 #include <functional>
 #include <iostream>
-#include <vector>
-#include <atomic>
 #include <thread>
-#include <chrono>
+#include <vector>
 
 class Spades : public Game
 {
@@ -36,4 +36,4 @@ private:
   std::atomic<bool> waitingForBid;
   std::atomic<bool> waitingForMove;
 };
- #endif
+#endif
