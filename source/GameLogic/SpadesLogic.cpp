@@ -1,26 +1,52 @@
 #include "source/GameLogic/SpadesLogic.hpp"
-/*
-class Spades : public Game
+
+void SpadesLog(
+  int turn, int i, std::vector<Card> hand, std::vector<Card> trick, int id)
 {
-public:
-        void setDeck();
-        void printPlayerHands();
-        void start();
-        void getBids();
-        void beginRound(int);
-        void startTrick();
-        bool validMove(std::vector<Card>, int, Suit&, int);
-        int getTrickWinner(std::vector<Card>, int);
-        int getNextPlayer(int);
-        void score();
-        void recordMove(std::vector<Card>);
-        Spades(std::vector<Player>);
-        ~Spades() {}
-private:
-        int starter;
-        bool spadesBroken;
-};
-*/
+  std::cout << "Turn: " << turn << std::endl;
+  std::cout << "TrickWinner: " << i << std::endl;
+  std::cout << "Hand:" << std::endl;
+  for (auto&& c : trick)
+  {
+    if (c.getSuit() == (Suit)SPADES)
+    {
+      std::cout << "\tSpades:" << c.getValue() << std::endl;
+    }
+    else if (c.getSuit() == (Suit)HEARTS)
+    {
+      std::cout << "\tHearts:" << c.getValue() << std::endl;
+    }
+    else if (c.getSuit() == (Suit)CLUBS)
+    {
+      std::cout << "\tClubs:" << c.getValue() << std::endl;
+    }
+    else if (c.getSuit() == (Suit)DIAMONDS)
+    {
+      std::cout << "\tDiamonds:" << c.getValue() << std::endl;
+    }
+  }
+  std::cout << "Trick: " << std::endl;
+  for (auto&& c : trick)
+  {
+    if (c.getSuit() == (Suit)SPADES)
+    {
+      std::cout << "\tSpades:" << c.getValue() << std::endl;
+    }
+    else if (c.getSuit() == (Suit)HEARTS)
+    {
+      std::cout << "\tHearts:" << c.getValue() << std::endl;
+    }
+    else if (c.getSuit() == (Suit)CLUBS)
+    {
+      std::cout << "\tClubs:" << c.getValue() << std::endl;
+    }
+    else if (c.getSuit() == (Suit)DIAMONDS)
+    {
+      std::cout << "\tDiamonds:" << c.getValue() << std::endl;
+    }
+  }
+}
+
 int Spades::getNextPlayer(int plId)
 {
   if (plId == 3)
@@ -45,58 +71,32 @@ int next(int plId)
   }
 }
 
-void printBoard(std::vector<Card> trick, std::vector<Card> hand, int turn)
+void Spades::receiveValidMove(Card c)
 {
-  int posZero = turn;
-  int posOne = next(turn);
-  int posTwo = next(posOne);
-  int posThree = next(posTwo);
-  std::cout << "..........................................Player " << posTwo
-            << "...........................\n";
-  std::cout << "..............................................................."
-               "..............\n";
-  std::cout
-    << ".Player " << posOne
-    << "....................................................................\n";
-  std::cout << "..............................................................."
-               "..............\n";
-  std::cout << "..............................................................."
-               "..............\n";
-  for (auto c : trick)
-  {
-    // c.tablePrint();
-  }
-  std::cout << "..............................................................."
-               "..............\n";
-  std::cout << "..............................................................."
-               "..............\n";
-  std::cout << "..............................................................."
-               ".....player "
-            << posThree << ".\n";
-  std::cout << "..............................................................."
-               "..............\n";
-  std::cout << "..................Player " << turn
-            << "...................................................\n";
+  // the return card is coming here!!
+}
+
+void Spades::receiveBid(int b)
+{
+  // How do I figure which player gave it to me?
 }
 
 Spades::Spades(std::vector<std::shared_ptr<Player>> p)
 {
   players = p;
-  start();
+  for (auto&& player : players)
+  {
+    player->setValidateMove([this](Card c) { receiveValidMove(c); });
+  }
 }
 
 void Spades::getBids()
 {
   for (auto&& p : players)
   {
+    p->setValidateBid([this](int b) { receiveBid(b); });
     p->requestBid();
   }
-}
-
-void Spades::recordMove(std::vector<Card> m)
-{
-  // essentially update field, then setup and send message to clients.
-  // m.at(0).print();
 }
 
 int Spades::getTrickWinner(std::vector<Card> trick, int tw)
@@ -215,73 +215,68 @@ void Spades::score()
   }
 }
 
+void Spades::validMoveFailLoop(bool vm,
+                               std::vector<Card>& trick,
+                               Suit ledSuit,
+                               int& i)
+{
+  while (vm == false)
+  {
+    std::cout << "Invalid Move!!!" << std::endl;
+    std::cout << std::endl;
+    auto sendBack = trick.back();
+    trick.pop_back();
+    players.at(turn)->insertCardToHand(sendBack);
+    vm = validMove(trick, turn, ledSuit, i);
+    if (vm && i == 0)
+    {
+      ledSuit = (Suit)trick.at(0).getSuit();
+    }
+  }
+}
+
+void Spades::beginTrick(std::vector<Card> trick, Suit ledSuit, int trickWinner)
+{
+  for (int i = 0; i < 4; i++)
+  {
+    players.at(turn)->requestMove();
+    if (validMove(trick, turn, ledSuit, i))
+    {
+      std::vector<Card> m;
+      m.push_back(trick.at(i));
+    }
+    else
+    {
+      bool vm = false;
+      validMoveFailLoop(vm, trick, ledSuit, i);
+    }
+    turn = getNextPlayer(turn);
+    if (players.at(turn)->getHand().empty())
+    {
+      s = ROUND_OVER;
+    }
+    std::cout << "Updating Connected Games..." << std::endl;
+  }
+  trickWinner = getTrickWinner(trick, trickWinner);
+  players.at(trickWinner)->incrementTricksWon();
+  SpadesLog(turn,
+            trickWinner,
+            trick,
+            players.at(turn)->getHand(),
+            players.at(turn)->getId());
+  trick.clear();
+  turn = trickWinner;
+}
+
 void Spades::beginRound(int starter)
-{ // a more accurate title might be "playRound()" the round logic is this
-  // function
+{
   Suit ledSuit = HEARTS;
-  // player 0 starts the round
   std::vector<Card> trick;
   int trickWinner = 0;
   int turn = 0;
   while (s == PLAYING)
   {
-    // s = ROUND_OVER;
-
-    for (int i = 0; i < 4; i++)
-    {
-
-      // trick.push_back(players.at(turn).requestMove());
-      if (validMove(trick, turn, ledSuit, i))
-      {
-        std::vector<Card> m;
-        m.push_back(trick.at(i));
-      }
-      else
-      {
-        bool vm = false;
-        while (vm == false)
-        {
-          std::cout << "Invalid Move!!!" << std::endl;
-          std::cout << std::endl;
-          // std::cout << "Trick: " << std::endl;
-          auto sendBack = trick.back();
-          trick.pop_back();
-          // for(auto c : trick){
-          //	c.print();
-          //}
-          players.at(turn)->insertCardToHand(sendBack);
-          // trick.push_back(players.at(turn).requestMove());
-          vm = validMove(trick, turn, ledSuit, i);
-          if (vm && i == 0)
-          {
-            ledSuit = (Suit)trick.at(0).getSuit();
-          }
-        }
-
-        // severe connection to client (you don't want to play with them
-        // anyway).
-      }
-      turn = getNextPlayer(turn);
-      if (players.at(turn)->getHand().empty())
-      {
-        s = ROUND_OVER;
-      }
-      // printBoard(trick, players.at(turn).getHand(), turn); <- These are the
-      // three pieces of information that need to be sent to the player.
-      std::cout << "Updating Connected Games..." << std::endl;
-      /*std::cout << "Trick: " << std::endl;
-      for(auto c : trick){
-      c.print();
-      }*/
-    }
-    trickWinner = getTrickWinner(trick, trickWinner);
-    std::cout << "Player " << trickWinner << " won the trick." << std::endl;
-    players.at(trickWinner)->incrementTricksWon();
-    std::cout << players.at(trickWinner)->getId() << " has won "
-              << players.at(trickWinner)->getTricksWon() << " tricks."
-              << std::endl;
-    trick.clear();
-    turn = trickWinner;
+    beginTrick(trick, ledSuit, trickWinner);
   }
   score();
   initializeDeck();
@@ -311,22 +306,3 @@ void Spades::setDeck()
 {
   initializeDeck();
 }
-
-void Spades::printPlayerHands()
-{
-}
-
-/*int main()
-{
-Player one(0, "192.168.0.1");
-Player two(1, "192.168.0.2");
-Player three(2, "192.168.0.3");
-Player four(3, "192.168.0.4");
-std::vector<Player> p;
-p.push_back(one);
-p.push_back(two);
-p.push_back(three);
-p.push_back(four);
-Spades mySpades(p);
-return 0;
-} //Working test.*/

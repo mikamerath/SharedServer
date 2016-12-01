@@ -18,10 +18,15 @@
 // Constructor for the Player class. Takes in the IP address of the client.
 Player::Player(int id, TCPConnection::pointer connection)
   : id(id), connection(connection),
-  roundScore(0), bid(0), bags(0), tricksWon(0)
+  roundScore(0), bid(0), bags(0), tricksWon(0), name("Guest")
 {
   std::stringstream ss;
-  ss << connection->getSocket().remote_endpoint();
+  try {
+    ss << connection->getSocket().remote_endpoint();
+  }
+  catch (...) {
+    ss << "0.0.0.0:0";
+  }
   ip = ss.str();
 }
 
@@ -224,6 +229,11 @@ void Player::setValidateBid(std::function<void(int)> func)
 {
   validateBid = func;
 }
+void Player::setProcLobbyCommand(
+  std::function<void(std::string,int)> func)
+{
+  procLobbyCommand = func;
+}
 
 bool operator==(const Player& p1, const Player& p2)
 {
@@ -266,6 +276,11 @@ void Player::updateGameStatus()
   connection->write(""/*List of cards and players*/);
 }
 
+void Player::readLobbyMessage()
+{
+  connection->aSyncRead(boost::bind(&Player::recievedLobbyMessage, this, _1));
+}
+
 void Player::readMessage()
 {
   connection->aSyncRead(boost::bind(&Player::recivedMessage,this,_1));
@@ -304,6 +319,11 @@ void Player::receivedSuit(std::string msg)
   coded >> decoded;
 
   validateSuit(decoded.getSuit());
+}
+
+void Player::recievedLobbyMessage(std::string msg)
+{
+  procLobbyCommand(msg,id);
 }
 
 void Player::recivedMessage(std::string msg)
