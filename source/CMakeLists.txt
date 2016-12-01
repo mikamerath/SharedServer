@@ -9,6 +9,10 @@ main.cpp
 Lobby.cpp
 Lobby.hpp
 )
+add_library(ServerLib
+Lobby.cpp
+Lobby.hpp
+)
 target_link_libraries(Server
 NetworkInterface
 Game

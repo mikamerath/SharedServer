@@ -6,13 +6,17 @@
 
 // Project Includes
 #include "../source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/PlayerAPI/Card.hpp"
+#include "source/PlayerAPI/Player.hpp"
+#include "source/Lobby.hpp"
 #include "../source/GameLogic/SpadesLogic.hpp"
-#include "../source/PlayerAPI/Card.hpp"
-#include "../source/PlayerAPI/Player.hpp"
+#include "source/NetworkInterface/ClientNetworkInterface.hpp"
+#include "source/NetworkInterface/ServerNetworkInterface.hpp"
 
 // Standard Includes
 #include <sstream>
 #include <vector>
+#include <fstream>
 
 // Boost Includes
 #include <boost/archive/text_iarchive.hpp>
@@ -158,6 +162,29 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card1), 50);
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card3), 10);
+}
+
+BOOST_AUTO_TEST_CASE(Login)
+{
+	boost::asio::io_service service;
+	boost::asio::io_service clientService;
+	Lobby lobby2 = Lobby();
+	ClientNetworkInterface* NI = new ClientNetworkInterface(5555, clientService, std::cout);
+	ServerNetworkInterface NI1(12000, service, std::cout, boost::bind(&Lobby::addPlayer, lobby2, _1));
+	NI1.startAccepting();
+	std::ofstream fout;
+	fout.open("database.txt");
+	fout << "USERS" << std::endl;
+	fout << "testuser" << std::endl;
+	fout << "testpassword" << std::endl;
+	fout.close();
+	Lobby lobby = Lobby();
+	std::shared_ptr<Player> player(new Player(1, TCPConnection::create(service)));
+	player->setName("testuser");
+	NI->connect("127.0.0.1", 12000);
+	std::shared_ptr<Player> player2(new Player(2, TCPConnection::create(service)));
+	lobby.procLogin(player2, "LOGIN testuser testpassword");
+	BOOST_CHECK_EQUAL(player->getName(), player2->getName());
 }
 
 BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
