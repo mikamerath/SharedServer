@@ -10,5 +10,6 @@ AI
 Game
 NetworkInterface
 GameLogic
+ServerLib
 ${externLibs}
 )
