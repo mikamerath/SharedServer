@@ -4,6 +4,7 @@ add_subdirectory(PlayerAPI)
 add_subdirectory(NetworkInterface)
 add_subdirectory(GameLogic)
 add_subdirectory(Messages)
+add_subdirectory(AI)
 add_executable(Server
 main.cpp
 Lobby.cpp
@@ -14,6 +15,7 @@ Lobby.cpp
 Lobby.hpp
 )
 target_link_libraries(Server
+AI
 NetworkInterface
 Game
 GameLogic

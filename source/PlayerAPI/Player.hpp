@@ -20,7 +20,7 @@
 
 class Player
 {
-private:
+protected:
   int id;
   std::string ip;
   std::string name;
