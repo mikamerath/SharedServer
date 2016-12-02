@@ -6,8 +6,10 @@ ${CMAKE_SOURCE_DIR})
 add_executable(Test Test.cpp)
 target_link_libraries(
 Test
+AI
 Game
 NetworkInterface
 GameLogic
+ServerLib
 ${externLibs}
 )
