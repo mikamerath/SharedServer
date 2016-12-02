@@ -21,6 +21,7 @@ public:
   std::string convertRankToString(Value value);
   void displayHand(std::vector<Card> hand);
   void drawCard();
+  void refillDeck();
   void setCardsDrawnCounter(int numDrawn);
   int getCardsDrawnCounter();
   void playCard(Card&);
