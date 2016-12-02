@@ -107,6 +107,7 @@ void Spades::receiveValidMove(Card c)
   }
   if (trick.size() < 4)
   {
+    UpdateGameStateMessage();
     players.at(turn)->requestMove();
   }
   else
@@ -121,6 +122,7 @@ void Spades::receiveValidMove(Card c)
     {
       turn = trickWinner;
       players.at(turn)->incrementTricksWon();
+      UpdateGameStateMessage();
       players.at(turn)->requestMove();
     }
   }
@@ -138,6 +140,7 @@ void Spades::receiveBid(int b)
   else
   {
     turn = getNextPlayer(turn);
+    UpdateGameStateMessage();
     players.at(turn)->requestMove();
   }
 }
