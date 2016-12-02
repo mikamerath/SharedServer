@@ -5,9 +5,9 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
-#include "source/Lobby.hpp"
 #include "source/GameLogic/CrazyEightsLogic.hpp"
 #include "source/GameLogic/SpadesLogic.hpp"
+#include "source/Lobby.hpp"
 #include "source/Messages/GameMessage.hpp"
 #include "source/NetworkInterface/ClientNetworkInterface.hpp"
 #include "source/NetworkInterface/ServerNetworkInterface.hpp"
@@ -92,7 +92,6 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
 }
 
-
 BOOST_AUTO_TEST_CASE(initializeCrazyEights)
 {
   boost::asio::io_service service;
@@ -161,20 +160,20 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
 
 BOOST_AUTO_TEST_CASE(checkCardScoreVals)
 {
-	Card card1(HEARTS, EIGHT);
-	Card card2(CLUBS, ACE);
-	Card card3(SPADES, KING);
+  Card card1(HEARTS, EIGHT);
+  Card card2(CLUBS, ACE);
+  Card card3(SPADES, KING);
 
-	boost::asio::io_service service;
-	auto player = std::make_shared<Player>(1, TCPConnection::create(service));
-	std::vector<std::shared_ptr<Player>> players;
-	players.push_back(player);
+  boost::asio::io_service service;
+  auto player = std::make_shared<Player>(1, TCPConnection::create(service));
+  std::vector<std::shared_ptr<Player>> players;
+  players.push_back(player);
 
-	CrazyEightsLogic crazyEights(players);
+  CrazyEightsLogic crazyEights(players);
 
-	BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card1), 50);
-	BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
-	BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card3), 10);
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card1), 50);
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
+  BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card3), 10);
 }
 
 BOOST_AUTO_TEST_CASE(SerializeMessage)
@@ -211,8 +210,7 @@ BOOST_AUTO_TEST_CASE(Login)
   boost::asio::io_service service;
   boost::asio::io_service clientService;
   Lobby lobby2 = Lobby();
-  ClientNetworkInterface* NI =
-    new ClientNetworkInterface(5555, clientService, std::cout);
+  ClientNetworkInterface NI(5555, clientService, std::cout);
   ServerNetworkInterface NI1(
     12000, service, std::cout, boost::bind(&Lobby::addPlayer, lobby2, _1));
   NI1.startAccepting();
@@ -225,7 +223,7 @@ BOOST_AUTO_TEST_CASE(Login)
   Lobby lobby = Lobby();
   std::shared_ptr<Player> player(new Player(1, TCPConnection::create(service)));
   player->setName("testuser");
-  NI->connect("127.0.0.1", 12000);
+  NI.connect("127.0.0.1", 12000);
   std::shared_ptr<Player> player2(
     new Player(2, TCPConnection::create(service)));
   lobby.procLogin(player2, "LOGIN testuser testpassword");
@@ -248,7 +246,8 @@ BOOST_AUTO_TEST_CASE(ValidMove)
   crazyEights.getPlayers().at(0)->getHand().push_back(newCard);
 
   std::cout << crazyEights.getDiscardPile().at(1).getSuit() << std::endl;
-  std::cout << crazyEights.getPlayers().at(0)->getHand().at(5).getSuit() << std::endl;
+  std::cout << crazyEights.getPlayers().at(0)->getHand().at(5).getSuit()
+            << std::endl;
 
   crazyEights.validCard(crazyEights.getPlayers().at(0)->getHand().at(5));
 
