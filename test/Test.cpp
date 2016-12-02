@@ -263,3 +263,29 @@ BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
     BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i + 1) % 4));
   }
 }
+
+BOOST_AUTO_TEST_CASE(checkAIDifficulty)
+{
+  boost::asio::io_service service;
+  AI player(1, TCPConnection::create(service));
+  BOOST_CHECK_EQUAL(player.isSmartAI(), false);
+  player.setSmartAI(true);
+  BOOST_CHECK_EQUAL(player.isSmartAI(), true);
+}
+
+BOOST_AUTO_TEST_CASE(makeDumbAIMove)
+{
+  boost::asio::io_service service;
+  std::vector<Card> deck;
+  deck.push_back(Card(HEARTS, EIGHT));
+  AI player(1, TCPConnection::create(service));
+  player.setValidateMove([](Card c) {});
+  player.initializeHand(deck, 1);
+  for (int i = 0; i <= player.getHand().size(); i++)
+  {
+    player.requestMove();
+  }
+  BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 1);
+  player.updateGameStatus();
+  BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 0);
+}
