@@ -61,7 +61,7 @@ int Spades::getNextPlayer(int plId)
 
 int next(int plId)
 {
-  if (plId == 3)
+  if (plId >= 3)
   {
     return 0;
   }
@@ -69,6 +69,26 @@ int next(int plId)
   {
     return ++plId;
   }
+}
+
+void Spades::roundOver(){
+ s = ROUND_OVER;
+ score();
+ UpdateGameStateMessage();
+}
+
+void Spades::startNewRound()
+{
+ setDeck();
+ for (auto player : players)
+ {
+  player->initializeHand(deck, 13);
+  player->startNewRound();
+ }
+ if (s != GAME_OVER)
+ {
+  players.at(turn)->requestBid();
+ }
 }
 
 void Spades::receiveValidMove(Card c)
@@ -93,18 +113,8 @@ void Spades::receiveValidMove(Card c)
     trickWinner = getTrickWinner(trick, trickWinner);
     if (players.at(turn)->getHand().size() < 1)
     {
-      s = ROUND_OVER;
-      score();
-      UpdateGameStateMessage();
-      setDeck();
-      for (auto player : players)
-      {
-        player->initializeHand(deck, 13);
-      }
-      if (s != GAME_OVER)
-      {
-        players.at(turn)->requestBid();
-      }
+     roundOver();
+     startNewRound(); 
     }
     else
     {
@@ -140,6 +150,7 @@ Spades::Spades(std::vector<std::shared_ptr<Player>> p)
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
     player->setValidateBid([this](int bid) { receiveBid(bid); });
     player->initializeHand(deck, 13);
+    player->startNewRound();
   }
   turn = 0;
   players.at(turn)->requestBid();
