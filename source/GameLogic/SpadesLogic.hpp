@@ -19,19 +19,16 @@ public:
   int getTrickWinner(std::vector<Card>, int);
   int getNextPlayer(int);
   void score();
+  void startNewRound();
+  void roundOver();
   Spades(){};
   Spades(std::vector<std::shared_ptr<Player>>);
   ~Spades(){}
 private:
   int starter;
   bool spadesBroken;
-  Card globalCard;
-  std::atomic<int> bidPlaceHolder;
-  Card movePlaceHolder;
-  std::atomic<bool> waitingForBid;
-  std::atomic<bool> waitingForMove;
-		std::vector<Card> trick;
-		Suit ledSuit;
-		int trickWinner;
+  std::vector<Card> trick;
+  Suit ledSuit;
+  int trickWinner;
 };
 #endif
