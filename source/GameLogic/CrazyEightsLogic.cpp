@@ -65,6 +65,19 @@ void CrazyEightsLogic::gameOver(std::vector<std::shared_ptr<Player>>& players)
   UpdateGameStateMessage();
 }
 
+void CrazyEightsLogic::refillDeck()
+{
+  Card card = getDiscardPile().back();
+  discardPile.pop_back();
+  deck = discardPile;
+  std::random_device rd;
+  std::mt19937 random(rd());
+  std::shuffle(deck.begin(), deck.end(), random);
+  discardPile.clear();
+  discardPile.push_back(card);
+}
+
+
 void CrazyEightsLogic::validCard(Card card)
 {
   if (card.getSuit() == UNDEFINED)
@@ -75,9 +88,7 @@ void CrazyEightsLogic::validCard(Card card)
     }
     else
     {
-      Card card = getDiscardPile().back();
-      deck = initializeDeck();
-      deck.erase(std::remove(deck.begin(), deck.end(), card), deck.end());
+      refillDeck();
       drawCard();
     }
   }

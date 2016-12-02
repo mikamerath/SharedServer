@@ -242,16 +242,23 @@ BOOST_AUTO_TEST_CASE(ValidMove)
   Card discardCard(HEARTS, SEVEN);
   Card newCard(HEARTS, KING);
 
-  crazyEights.getDiscardPile().push_back(discardCard);
-  crazyEights.getPlayers().at(0)->getHand().push_back(newCard);
+  std::vector<Card> currentDiscard = crazyEights.getDiscardPile();
 
-  std::cout << crazyEights.getDiscardPile().at(1).getSuit() << std::endl;
-  std::cout << crazyEights.getPlayers().at(0)->getHand().at(5).getSuit()
-            << std::endl;
+  currentDiscard.clear();
+  crazyEights.setDiscardPile(currentDiscard);
 
-  crazyEights.validCard(crazyEights.getPlayers().at(0)->getHand().at(5));
+  currentDiscard.push_back(discardCard);
+  crazyEights.setDiscardPile(currentDiscard);
 
-  BOOST_CHECK_EQUAL(crazyEights.getPlayers().at(0)->getHand().size(), 5);
+  crazyEights.getPlayers().at(0)->insertCardToHand(newCard);
+  std::vector<Card> playerHand = crazyEights.getPlayers().at(0)->getHand();
+  BOOST_CHECK_EQUAL(playerHand.size(), 6);
+
+  auto pos = std::find(playerHand.begin(), playerHand.end(), newCard);
+  auto index = std::distance(playerHand.begin(), pos);
+  crazyEights.validCard(crazyEights.getPlayers().at(0)->getHand().at(index));
+  playerHand = crazyEights.getPlayers().at(0)->getHand();
+  BOOST_CHECK_EQUAL(playerHand.size(), 5);
 }
 
 BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
