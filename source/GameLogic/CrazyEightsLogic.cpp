@@ -19,6 +19,7 @@ void CrazyEightsLogic::start()
 {
   UpdateGameStateMessage();
   players = getPlayers();
+  players[turn]->requestMove();
 }
 
 void CrazyEightsLogic::deal(int numCards)
@@ -43,16 +44,42 @@ bool CrazyEightsLogic::isGameOver()
   }
 }
 
-void CrazyEightsLogic::gameOver()
+void CrazyEightsLogic::gameOver(std::vector<std::shared_ptr<Player>>& players)
 {
   s = GAME_OVER;
+  // score for players
+  int winningPlayerScore = calculateScore(players);
+
+  for (int i = 0; i < players.size(); i++)
+  {
+    if (getTurn() == i)
+    {
+      players[i]->setRoundScore(winningPlayerScore);
+    }
+    else
+    {
+      players[i]->setRoundScore(0);
+    }
+  }
+
+  UpdateGameStateMessage();
 }
 
 void CrazyEightsLogic::validCard(Card card)
 {
   if (card.getSuit() == UNDEFINED)
   {
-    drawCard();
+    if (!getDiscardPile().empty())
+    {
+      drawCard();
+    }
+    else
+    {
+      Card card = getDiscardPile().back();
+      deck = initializeDeck();
+      deck.erase(std::remove(deck.begin(), deck.end(), card), deck.end());
+      drawCard();
+    }
   }
   else
   {
@@ -96,7 +123,8 @@ void CrazyEightsLogic::validCard(Card card)
       playCard(card);
       if (isGameOver())
       {
-        gameOver();
+        players = getPlayers();
+        gameOver(players);
       }
       else
       {
@@ -114,9 +142,6 @@ void CrazyEightsLogic::validCard(Card card)
     {
       players[getTurn()]->requestMove();
     }
-
-    UpdateGameStateMessage();
-    players[getTurn()]->requestMove();
   }
 }
 
