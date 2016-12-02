@@ -93,6 +93,7 @@ void Spades::startNewRound()
 
 void Spades::receiveValidMove(Card c)
 {
+  players.at(turn)->removeCardFromHand(c);
   trick.push_back(c);
   if (validMove())
   {
