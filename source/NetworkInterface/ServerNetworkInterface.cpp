@@ -47,13 +47,14 @@ void ServerNetworkInterface::acceptConnection()
 void ServerNetworkInterface::handleAccept(const boost::system::error_code & error)
 {
   time_t rawtime;
-  struct tm * timeinfo;
-
+  struct tm timeinfo;
+  char timestamp[32];
   time(&rawtime);
-  timeinfo = localtime(&rawtime);
+  localtime_s(&timeinfo, &rawtime);
+  asctime_s(timestamp, 32, &timeinfo);
 
   out << "Connection established with client : " 
-      << waitingConn->getSocket().remote_endpoint() << ". At :" << asctime(timeinfo);
+      << waitingConn->getSocket().remote_endpoint() << ". At :" << timestamp;
   if (!error)
   {
     std::shared_ptr<Player> newPlayer = std::make_shared<Player>(playerCounter, waitingConn);
