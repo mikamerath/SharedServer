@@ -2,31 +2,33 @@
 #define SPADESLOGIC_HPP
 
 #include "source/PlayerAPI/Game.hpp"
+#include <atomic>
+#include <chrono>
 #include <functional>
 #include <iostream>
+#include <thread>
 #include <vector>
 
 class Spades : public Game
 {
 public:
   void setDeck();
-  void start();
-  void getBids();
-  void beginRound(int);
-  void beginTrick(std::vector<Card>, Suit, int);
-  bool validMove(std::vector<Card>, int, Suit&, int);
+  bool validMove();
   void receiveValidMove(Card);
   void receiveBid(int);
-  void validMoveFailLoop(bool, std::vector<Card>&, Suit, int&);
   int getTrickWinner(std::vector<Card>, int);
   int getNextPlayer(int);
   void score();
+  void startNewRound();
+  void roundOver();
   Spades(){};
   Spades(std::vector<std::shared_ptr<Player>>);
-  ~Spades() {}
+  ~Spades(){}
 private:
   int starter;
   bool spadesBroken;
-  Card globalCard;
+  std::vector<Card> trick;
+  Suit ledSuit;
+  int trickWinner;
 };
 #endif

@@ -14,6 +14,9 @@
 #include <algorithm>
 #include <random>
 
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
+
 enum State
 {
   PASSING,
@@ -33,7 +36,7 @@ protected:
   std::vector<Card> field;
   int turn; // index in player vector
 public:
-  //virtual start();
+  // virtual start();
   // Function used to deal out a random deck of 52 cards
   std::vector<Card> initializeDeck()
   {
@@ -62,14 +65,15 @@ public:
   void deal(int numCards);
   std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
   std::vector<Card> getDiscardPile() { return discardPile; }
+  void setDiscardPile(std::vector<Card> dp){discardPile = dp;}
   std::vector<Card> getDeck() { return deck; }
 };
 
-class Message
-{
-  State s;
-  bool turn;
-  std::vector<Card> field;
-};
+//class Message
+//{
+//  State s;
+//  bool turn;
+//  std::vector<Card> field;
+//};
 
 #endif
