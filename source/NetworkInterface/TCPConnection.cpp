@@ -109,6 +109,11 @@ bool TCPConnection::isConnected()
   return connected;
 }
 
+void TCPConnection::setConnected(bool conn)
+{
+  connected = conn;
+}
+
 void TCPConnection::handleAsyncRead(const boost::system::error_code& e)
 {
   if (!e)
