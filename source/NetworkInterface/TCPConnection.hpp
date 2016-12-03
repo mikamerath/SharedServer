@@ -56,6 +56,8 @@ public:
   // returns if the socket is connected
   bool isConnected();
 
+  void setConnected(bool);
+
 private:
   void handleAsyncRead(const boost::system::error_code& e);
 

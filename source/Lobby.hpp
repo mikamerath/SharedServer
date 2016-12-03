@@ -61,8 +61,13 @@ public:
   void readInDatabase();
   // Writes data to database file
   void writeToDatabase();
+  // method for when the client requests to start a game and fill in AI
+  void procUserInitializedGame(std::shared_ptr<Player> p, std::string msg);
   // mehtod to start the game once it is full;
   void procStartGame(LobbyGame& game);
+
+  // keeps track of the number of AI's in the Lobby so they can be assigned ids
+  int numAis;
 
 private:
   // Helper to identify the sender of a message from known players
