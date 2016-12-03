@@ -1,22 +1,25 @@
 #include "TCPConnection.hpp"
 
-TCPConnection::TCPConnection(boost::asio::io_service& ioService, int port) 
-  : socket(ioService), resolver(ioService), 
-  acceptor(ioService, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
-  connected(false), accepting(false)
+TCPConnection::TCPConnection(boost::asio::io_service& ioService, int port)
+  : socket(ioService),
+    resolver(ioService),
+    acceptor(ioService,
+             boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
+    connected(false),
+    accepting(false)
 {
-
 }
 
-TCPConnection::pointer TCPConnection::create(boost::asio::io_service & io_service, int port)
+TCPConnection::pointer TCPConnection::create(
+  boost::asio::io_service& io_service, int port)
 {
-  return pointer(new TCPConnection(io_service,port));
+  return pointer(new TCPConnection(io_service, port));
 }
 
-void TCPConnection::connect(const char * host, const char * port)
+void TCPConnection::connect(const char* host, const char* port)
 {
-  boost::asio::ip::tcp::resolver::iterator endpoint = resolver.resolve(
-    boost::asio::ip::tcp::resolver::query(host, port));
+  boost::asio::ip::tcp::resolver::iterator endpoint =
+    resolver.resolve(boost::asio::ip::tcp::resolver::query(host, port));
   boost::asio::connect(socket, endpoint);
   connected = true;
 }
@@ -24,7 +27,8 @@ void TCPConnection::connect(const char * host, const char * port)
 void TCPConnection::accept()
 {
   accepting = true;
-  try {
+  try
+  {
     acceptor.accept(socket);
   }
   catch (std::exception& e)
@@ -44,7 +48,7 @@ std::string TCPConnection::read()
 {
   boost::system::error_code error;
   boost::asio::streambuf buffer;
-  try 
+  try
   {
     boost::asio::read_until(socket, buffer, "\n", error);
   }
@@ -62,24 +66,34 @@ std::string TCPConnection::read()
 void TCPConnection::aSyncRead(std::function<void(std::string)> callback)
 {
   nextCallback = callback;
-  boost::asio::async_read_until(socket, asycBuffer, "\n",
-    boost::bind(&TCPConnection::handleAsyncRead,this,boost::asio::placeholders::error));
+  boost::asio::async_read_until(
+    socket,
+    asycBuffer,
+    "\n",
+    boost::bind(
+      &TCPConnection::handleAsyncRead, this, boost::asio::placeholders::error));
 }
 
 void TCPConnection::write(std::string msg)
 {
-  try
+  /*if (connected)
+  {*/
+    try
+    {
+      boost::asio::write(socket, boost::asio::buffer(msg + "\n"));
+    }
+    catch (std::exception& e)
+    {
+      std::cerr << "Exception: " << e.what() << std::endl;
+    }
+  /*}
+  else
   {
-    boost::asio::write(socket, boost::asio::buffer(msg + "\n"));
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << "Exception: " << e.what() << std::endl;
-  }
+    std::cout << "Not connected. Message was: " << msg << "\n";
+  }*/
 }
 
-
-const char * TCPConnection::getPort()
+const char* TCPConnection::getPort()
 {
   std::string port = std::to_string(socket.local_endpoint().port());
   return (port.c_str());
@@ -95,21 +109,22 @@ bool TCPConnection::isConnected()
   return connected;
 }
 
-void TCPConnection::handleAsyncRead(const boost::system::error_code & e)
+void TCPConnection::handleAsyncRead(const boost::system::error_code& e)
 {
-  if (!e) {
+  if (!e)
+  {
     std::istream is(&asycBuffer);
     std::string line;
     std::getline(is, line);
     nextCallback(line);
   }
-  else {
-    // something bad happened, no easy way to handle it... best way may be to 
+  else
+  {
+    // something bad happened, no easy way to handle it... best way may be to
     // send the error up to the callback, but not sure... This block means most
-    // likely the client disconnected. Exception does not work since it will be 
+    // likely the client disconnected. Exception does not work since it will be
     // delt with in the io_service internally and cause a crash.
-    //throw new std::exception();
+    // throw new std::exception();
     connected = false;
   }
 }
-
