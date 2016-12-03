@@ -152,7 +152,7 @@ Spades::Spades(std::vector<std::shared_ptr<Player>>& p)
   {
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
     player->setValidateBid([this](int bid) { receiveBid(bid); });
-    //player->startNewRound();
+    player->startNewRound();
   }
   setDeck();
   deal();
@@ -301,5 +301,5 @@ void Spades::score()
 
 void Spades::setDeck()
 {
-  initializeDeck();
+  deck = initializeDeck();
 }
