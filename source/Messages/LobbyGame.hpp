@@ -6,8 +6,7 @@
 #include <memory>
 
 #include <boost/serialization/access.hpp>
-
-#include "source/PlayerAPI/Player.hpp"
+#include <boost/serialization/string.hpp>
 
 enum GameType
 {

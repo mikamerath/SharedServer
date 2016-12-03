@@ -13,6 +13,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 /// Application Includes
 #include "source/GameLogic/CrazyEightsLogic.hpp"
 #include "source/GameLogic/HeartsGame.hpp"
