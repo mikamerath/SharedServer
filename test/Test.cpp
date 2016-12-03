@@ -11,7 +11,7 @@
 #include "source/PlayerAPI/Player.hpp"
 #include "source/Lobby.hpp"
 #include "source/Messages/GameMessage.hpp"
-#include "/source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/GameLogic/CrazyEightsLogic.hpp"
 #include "source/NetworkInterface/ClientNetworkInterface.hpp"
 #include "source/NetworkInterface/ServerNetworkInterface.hpp"
 
