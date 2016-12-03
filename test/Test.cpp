@@ -375,6 +375,32 @@ BOOST_AUTO_TEST_CASE(SpadesTrickWinnerTestTrumpedBySpades) {
 	winner = 0;
 }
 
+BOOST_AUTO_TEST_CASE(InitializeSpades) {
+ boost::asio::io_service service;
+ auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
+ auto player2 = std::make_shared<Player>(2, TCPConnection::create(service));
+ auto player3 = std::make_shared<Player>(3, TCPConnection::create(service));
+ auto player4 = std::make_shared<Player>(4, TCPConnection::create(service));
+ std::vector<std::shared_ptr<Player>> players;
+
+ players.push_back(player1);
+ players.push_back(player2);
+ players.push_back(player3);
+ players.push_back(player4);
+
+ Spades s(players);
+
+ int count = 4;
+ for (int i = 0; i < count; i++)
+ {
+  BOOST_CHECK_EQUAL(
+   players.at(i)->getId(), s.getPlayers().at(i)->getId());
+  BOOST_CHECK_EQUAL(s.getPlayers().at(i)->getHand().size(), 13);
+ }
+
+ BOOST_CHECK_EQUAL(s.getTurn(), 0);
+}
+
 BOOST_AUTO_TEST_CASE(checkAIDifficulty)
 {
   boost::asio::io_service service;
