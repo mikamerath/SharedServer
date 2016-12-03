@@ -400,3 +400,24 @@ BOOST_AUTO_TEST_CASE(makeDumbAIMove)
   player.updateGameStatus();
   BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 0);
 }
+
+// for deserialization, must include boost/serialization/vector.hpp
+BOOST_AUTO_TEST_CASE(vectorLobbyGameSerial)
+{
+	std::vector<LobbyGame> games;
+	games.push_back(LobbyGame("Game1", HEARTGAME));
+	games.push_back(LobbyGame("Game2", SPADEGAME));
+	std::stringstream serialize;
+	boost::archive::text_oarchive oa(serialize);
+	oa & games;
+
+	std::vector<LobbyGame> gottenGames;
+	std::stringstream deserialize(serialize.str());
+	boost::archive::text_iarchive ia(deserialize);
+	ia & gottenGames;
+
+	BOOST_CHECK_EQUAL(gottenGames.at(0).name, "Game1");
+	BOOST_CHECK_EQUAL(gottenGames.at(0).type, HEARTGAME);
+	BOOST_CHECK_EQUAL(gottenGames.at(1).name, "Game2");
+	BOOST_CHECK_EQUAL(gottenGames.at(1).type, SPADEGAME);
+}
