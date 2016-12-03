@@ -1,6 +1,8 @@
 #include "Lobby.hpp"
+#include "source/AI/AI.hpp"
+#include <boost/asio/io_service.hpp>
 
-Lobby::Lobby()
+Lobby::Lobby() : numAis(0)
 {
   readInDatabase();
   currentAvailableGames.emplace(
@@ -53,6 +55,10 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
     {
       // willRemain = false;
       procJoinGame(p, msg);
+    }
+    else if (boost::algorithm::starts_with(msg, "START"))
+    {
+      procUserInitializedGame(p, msg);
     }
     else
       p->connection->write("No Such Command");
@@ -205,14 +211,54 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
     return;
   }
 
+  for (auto&& playerId : game.joinedPlayers)
+  {
+    if (p->getId() == playerId)
+    {
+      p->connection->write("FAILURE : CANNOT JOIN A GAME TWICE");
+      return;
+    }
+  }
+
   game.joinedPlayers.emplace_back(p->getId());
   game.playerNames.emplace_back(p->getName());
   game.numberJoined++;
 
-  p->connection->write("SUCCESS");
-
   if (game.numberJoined == 4)
   {
+    procStartGame(game);
+  }
+  else
+  {
+    p->connection->write("SUCCESS");
+  }
+}
+
+void Lobby::procUserInitializedGame(std::shared_ptr<Player> p, std::string msg)
+{
+  std::stringstream ss;
+  ss << msg;
+  std::string command, name;
+  ss >> command;
+  std::getline(ss, name);
+  name.erase(0, 1);
+
+  LobbyGame& game = findGame(name);
+  if (game.type == GameType::UNKNOWN)
+  {
+    p->connection->write("FAILURE : GAME NOT FOUND");
+  }
+  else
+  {
+    for (int i = game.numberJoined; i < 5; i++)
+    {
+      boost::asio::io_service service;
+      int id = 10000 + numAis;
+      ++numAis;
+      addPlayer(std::make_shared<AI>(
+        id, TCPConnection::pointer(TCPConnection::create(service))));
+      game.joinedPlayers.emplace_back(id);
+    }
     procStartGame(game);
   }
 }
@@ -220,6 +266,12 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
 void Lobby::procStartGame(LobbyGame& game)
 {
   std::shared_ptr<Game> newGame;
+  std::vector<std::shared_ptr<Player>> players = whoIs(game.joinedPlayers);
+  for (auto&& player : players)
+  {
+    player->connection->write("STARTING GAME");
+  }
+
   switch (game.type)
   {
   case GameType::EIGHTSGAME:
