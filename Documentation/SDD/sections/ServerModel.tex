@@ -14,11 +14,11 @@ Register res & Server $\rightarrow$ Client & "SUCCESS" $|$ "$<$ERROR$>$" & ERROR
 \hline
 Login & Client $\rightarrow$ Server & "LOGIN $<$USERNAME$>$ $<$PASSWORD$>$" & USERNAME: custom string PASSWORD: custom string\\
 \hline
-Login res & Server $\rightarrow$ Client & "SUCCESS" $|$ "<ERROR>" & ERROR: (PASSWORD INCORRECT $|$ USER NOT FOUND)\\
+Login res & Server $\rightarrow$ Client & "SUCCESS" $|$ "$<$ERROR$>$" & ERROR: (PASSWORD INCORRECT $|$ USER NOT FOUND)\\
 \hline
 Request games & Client $\rightarrow$ Server & "GET GAMES $<$TYPE$>$" & TYPE: (HEARTS $|$ SPADES $|$ EIGHTS $|$ default: ALL)\\
 \hline
-Games list & Server $\rightarrow$ Client & archive & LobbyGame instances\\
+Games list & Server $\rightarrow$ Client & archive & vector $<$LobbyGame$>$\\
 \hline
 Create game & Client $\rightarrow$ Server & "MAKE $<$TYPE$>$ $<$NAME$>$" & TYPE: (HEARTS $|$ SPADES $|$ EIGHTS) NAME: custom string\\
 \hline
