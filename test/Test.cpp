@@ -5,6 +5,7 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
+#include "source/AI/AI.hpp"
 #include "source/GameLogic/CrazyEightsLogic.hpp"
 #include "source/GameLogic/SpadesLogic.hpp"
 #include "source/Lobby.hpp"
