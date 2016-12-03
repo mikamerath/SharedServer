@@ -66,11 +66,4 @@ public:
   std::vector<Card> getDeck() { return deck; }
 };
 
-class Message
-{
-  State s;
-  bool turn;
-  std::vector<Card> field;
-};
-
 #endif
