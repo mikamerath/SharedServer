@@ -65,6 +65,7 @@ void CrazyEightsLogic::gameOver(std::vector<std::shared_ptr<Player>>& players)
   UpdateGameStateMessage();
 }
 
+// refills the deck when empty
 void CrazyEightsLogic::refillDeck()
 {
   Card card = getDiscardPile().back();
@@ -77,7 +78,7 @@ void CrazyEightsLogic::refillDeck()
   discardPile.push_back(card);
 }
 
-
+// validates whether or not a card is valid
 void CrazyEightsLogic::validCard(Card card)
 {
   if (card.getSuit() == UNDEFINED)

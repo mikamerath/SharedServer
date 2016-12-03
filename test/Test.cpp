@@ -12,8 +12,6 @@
 #include "source/Messages/GameMessage.hpp"
 #include "source/NetworkInterface/ClientNetworkInterface.hpp"
 #include "source/NetworkInterface/ServerNetworkInterface.hpp"
-#include "source/PlayerAPI/Card.hpp"
-#include "source/PlayerAPI/Player.hpp"
 
 // Standard Includes
 #include <fstream>
@@ -91,6 +89,36 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
+}
+
+
+BOOST_AUTO_TEST_CASE(SerializeMessage)
+{
+  std::stringstream serialize;
+  std::vector<Card> cards;
+  cards.push_back(Card(CLUBS, TWO));
+  cards.push_back(Card(HEARTS, ACE));
+  std::vector<int> hands;
+  hands.push_back(5);
+  hands.push_back(9);
+  GameMessage serializeMessage(PASSING, false, cards, hands, cards, true);
+  boost::archive::text_oarchive oArchive(serialize);
+  oArchive << serializeMessage;
+
+  GameMessage deserializeMessage;
+  std::stringstream deserialize(serialize.str());
+  boost::archive::text_iarchive iArchive(deserialize);
+  iArchive >> deserializeMessage;
+
+  BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING);
+  BOOST_CHECK_EQUAL(deserializeMessage.turn, false);
+  BOOST_CHECK_EQUAL(deserializeMessage.field.at(0).getSuit(), CLUBS);
+  BOOST_CHECK_EQUAL(deserializeMessage.field.at(1).getValue(), ACE);
+  BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(0), 5);
+  BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(1), 9);
+  BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(1).getSuit(), HEARTS);
+  BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(0).getValue(), TWO);
+  BOOST_CHECK_EQUAL(deserializeMessage.deckEmpty, true);
 }
 
 BOOST_AUTO_TEST_CASE(initializeCrazyEights)
@@ -175,35 +203,6 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card1), 50);
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card2), 1);
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card3), 10);
-}
-
-BOOST_AUTO_TEST_CASE(SerializeMessage)
-{
-  std::stringstream serialize;
-  std::vector<Card> cards;
-  cards.push_back(Card(CLUBS, TWO));
-  cards.push_back(Card(HEARTS, ACE));
-  std::vector<int> hands;
-  hands.push_back(5);
-  hands.push_back(9);
-  GameMessage serializeMessage(PASSING, false, cards, hands, cards, true);
-  boost::archive::text_oarchive oArchive(serialize);
-  oArchive << serializeMessage;
-
-  GameMessage deserializeMessage;
-  std::stringstream deserialize(serialize.str());
-  boost::archive::text_iarchive iArchive(deserialize);
-  iArchive >> deserializeMessage;
-
-  BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING);
-  BOOST_CHECK_EQUAL(deserializeMessage.turn, false);
-  BOOST_CHECK_EQUAL(deserializeMessage.field.at(0).getSuit(), CLUBS);
-  BOOST_CHECK_EQUAL(deserializeMessage.field.at(1).getValue(), ACE);
-  BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(0), 5);
-  BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(1), 9);
-  BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(1).getSuit(), HEARTS);
-  BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(0).getValue(), TWO);
-  BOOST_CHECK_EQUAL(deserializeMessage.deckEmpty, true);
 }
 
 BOOST_AUTO_TEST_CASE(Login)
