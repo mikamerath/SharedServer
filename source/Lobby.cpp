@@ -138,7 +138,19 @@ void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
   GameType t = getGameType(msg);
   std::stringstream ss;
   boost::archive::text_oarchive oa(ss);
-  if (t == GameType::ALL)
+  std::vector<LobbyGame> games;
+  if (t == GameType::ALL) {
+	  for (auto game : currentAvailableGames) {
+		  games.push_back(game.second);
+	  }
+  }
+  else {
+	  for (auto game : currentAvailableGames) {
+		  if (game.second.type == t) games.push_back(game.second);
+	  }
+  }
+  oa & games;
+  /*if (t == GameType::ALL)
   {
     for (auto game : currentAvailableGames)
     {
@@ -151,7 +163,7 @@ void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
     {
       if (game.second.type == t) oa << game.second;
     }
-  }
+  }*/
   p->connection->write(ss.str());
 }
 
