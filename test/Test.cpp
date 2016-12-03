@@ -5,12 +5,18 @@
 #define BOOST_TEST_MODULE const string test;
 
 // Project Includes
-#include "source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/AI/AI.hpp"
 #include "source/GameLogic/SpadesLogic.hpp"
 #include "source/PlayerAPI/Card.hpp"
 #include "source/PlayerAPI/Player.hpp"
+#include "source/Lobby.hpp"
+#include "source/Messages/GameMessage.hpp"
+#include "source/GameLogic/CrazyEightsLogic.hpp"
+#include "source/NetworkInterface/ClientNetworkInterface.hpp"
+#include "source/NetworkInterface/ServerNetworkInterface.hpp"
 
 // Standard Includes
+#include <fstream>
 #include <sstream>
 #include <vector>
 
@@ -19,6 +25,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_CASE(startNewRound)
@@ -84,6 +91,35 @@ BOOST_AUTO_TEST_CASE(SerializeCard)
 
   BOOST_CHECK_EQUAL(deserializeCard.getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeCard.getValue(), ACE);
+}
+
+BOOST_AUTO_TEST_CASE(SerializeMessage)
+{
+  std::stringstream serialize;
+  std::vector<Card> cards;
+  cards.push_back(Card(CLUBS, TWO));
+  cards.push_back(Card(HEARTS, ACE));
+  std::vector<int> hands;
+  hands.push_back(5);
+  hands.push_back(9);
+  GameMessage serializeMessage(PASSING, false, cards, hands, cards, true);
+  boost::archive::text_oarchive oArchive(serialize);
+  oArchive << serializeMessage;
+
+  GameMessage deserializeMessage;
+  std::stringstream deserialize(serialize.str());
+  boost::archive::text_iarchive iArchive(deserialize);
+  iArchive >> deserializeMessage;
+
+  BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING);
+  BOOST_CHECK_EQUAL(deserializeMessage.turn, false);
+  BOOST_CHECK_EQUAL(deserializeMessage.field.at(0).getSuit(), CLUBS);
+  BOOST_CHECK_EQUAL(deserializeMessage.field.at(1).getValue(), ACE);
+  BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(0), 5);
+  BOOST_CHECK_EQUAL(deserializeMessage.handSizes.at(1), 9);
+  BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(1).getSuit(), HEARTS);
+  BOOST_CHECK_EQUAL(deserializeMessage.playerHand.at(0).getValue(), TWO);
+  BOOST_CHECK_EQUAL(deserializeMessage.deckEmpty, true);
 }
 
 BOOST_AUTO_TEST_CASE(initializeCrazyEights)
@@ -170,6 +206,32 @@ BOOST_AUTO_TEST_CASE(checkCardScoreVals)
   BOOST_CHECK_EQUAL(crazyEights.getCardScoreValue(card3), 10);
 }
 
+BOOST_AUTO_TEST_CASE(Login)
+{
+  boost::asio::io_service service;
+  boost::asio::io_service clientService;
+  Lobby lobby2 = Lobby();
+  ClientNetworkInterface* NI =
+    new ClientNetworkInterface(5555, clientService, std::cout);
+  ServerNetworkInterface NI1(
+    12000, service, std::cout, boost::bind(&Lobby::addPlayer, lobby2, _1));
+  NI1.startAccepting();
+  std::ofstream fout;
+  fout.open("database.txt");
+  fout << "USERS" << std::endl;
+  fout << "testuser" << std::endl;
+  fout << "testpassword" << std::endl;
+  fout.close();
+  Lobby lobby = Lobby();
+  std::shared_ptr<Player> player(new Player(1, TCPConnection::create(service)));
+  player->setName("testuser");
+  NI->connect("127.0.0.1", 12000);
+  std::shared_ptr<Player> player2(
+    new Player(2, TCPConnection::create(service)));
+  lobby.procLogin(player2, "LOGIN testuser testpassword");
+  BOOST_CHECK_EQUAL(player->getName(), player2->getName());
+}
+
 BOOST_AUTO_TEST_CASE(ValidMove)
 {
   boost::asio::io_service service;
@@ -208,4 +270,30 @@ BOOST_AUTO_TEST_CASE(SpadesGetNextPlayer)
   {
     BOOST_CHECK_EQUAL(s.getNextPlayer(i), ((i + 1) % 4));
   }
+}
+
+BOOST_AUTO_TEST_CASE(checkAIDifficulty)
+{
+  boost::asio::io_service service;
+  AI player(1, TCPConnection::create(service));
+  BOOST_CHECK_EQUAL(player.isSmartAI(), false);
+  player.setSmartAI(true);
+  BOOST_CHECK_EQUAL(player.isSmartAI(), true);
+}
+
+BOOST_AUTO_TEST_CASE(makeDumbAIMove)
+{
+  boost::asio::io_service service;
+  std::vector<Card> deck;
+  deck.push_back(Card(HEARTS, EIGHT));
+  AI player(1, TCPConnection::create(service));
+  player.setValidateMove([](Card c) {});
+  player.initializeHand(deck, 1);
+  for (int i = 0; i <= player.getHand().size(); i++)
+  {
+    player.requestMove();
+  }
+  BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 1);
+  player.updateGameStatus();
+  BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 0);
 }
