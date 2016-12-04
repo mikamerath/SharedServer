@@ -10,6 +10,7 @@
 
 #include "Card.hpp"
 #include "Player.hpp"
+#include "source/AI/AI.hpp"
 
 #include <algorithm>
 #include <random>
@@ -59,17 +60,72 @@ public:
   {
     for (auto&& player : players)
     {
-      player->updateGameStatus(/*coded message*/);
+      if (player->getId() >= 10000)
+      {
+        std::static_pointer_cast<AI>(player)->updateGameStatus();
+      }
+      else
+      {
+        player->updateGameStatus();
+      }
     }
   }
   void deal(int numCards);
   std::vector<std::shared_ptr<Player>> getPlayers() { return players; }
   std::vector<Card> getDiscardPile() { return discardPile; }
-  void setDiscardPile(std::vector<Card> dp){discardPile = dp;}
+  void setDiscardPile(std::vector<Card> dp) { discardPile = dp; }
   std::vector<Card> getDeck() { return deck; }
+
+  void requestMove(std::shared_ptr<Player> player)
+  {
+    if (player->getId() >= 10000)
+    {
+      std::static_pointer_cast<AI>(player)->requestMove();
+    }
+    else
+    {
+      player->requestMove();
+    }
+  }
+
+  void requestPass(std::shared_ptr<Player> player)
+  {
+    if (player->getId() >= 10000)
+    {
+      std::static_pointer_cast<AI>(player)->requestPass();
+    }
+    else
+    {
+      player->requestPass();
+    }
+  }
+
+  void requestBid(std::shared_ptr<Player> player)
+  {
+    if (player->getId() >= 10000)
+    {
+      std::static_pointer_cast<AI>(player)->requestBid();
+    }
+    else
+    {
+      player->requestBid();
+    }
+  }
+
+  void requestSuit(std::shared_ptr<Player> player)
+  {
+    if (player->getId() >= 10000)
+    {
+      std::static_pointer_cast<AI>(player)->requestSuit();
+    }
+    else
+    {
+      player->requestSuit();
+    }
+  }
 };
 
-//class Message
+// class Message
 //{
 //  State s;
 //  bool turn;

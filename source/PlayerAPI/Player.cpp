@@ -37,6 +37,11 @@ Player::Player(int id, TCPConnection::pointer connection)
   ip = ss.str();
 }
 
+void Player::alertStartingGame()
+{
+  connection->write("STARTING GAME");
+}
+
 // Sets the name of the Player. In the future, this function will query the
 // database for the name instead.
 void Player::setName(std::string n)

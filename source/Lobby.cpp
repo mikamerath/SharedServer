@@ -139,17 +139,21 @@ void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
   std::stringstream ss;
   boost::archive::text_oarchive oa(ss);
   std::vector<LobbyGame> games;
-  if (t == GameType::ALL) {
-	  for (auto game : currentAvailableGames) {
-		  games.push_back(game.second);
-	  }
+  if (t == GameType::ALL)
+  {
+    for (auto game : currentAvailableGames)
+    {
+      games.push_back(game.second);
+    }
   }
-  else {
-	  for (auto game : currentAvailableGames) {
-		  if (game.second.type == t) games.push_back(game.second);
-	  }
+  else
+  {
+    for (auto game : currentAvailableGames)
+    {
+      if (game.second.type == t) games.push_back(game.second);
+    }
   }
-  oa & games;
+  oa& games;
   /*if (t == GameType::ALL)
   {
     for (auto game : currentAvailableGames)
@@ -262,14 +266,14 @@ void Lobby::procUserInitializedGame(std::shared_ptr<Player> p, std::string msg)
   }
   else
   {
-    for (int i = game.numberJoined; i < 5; i++)
+    for (int i = game.numberJoined; i < 4; i++)
     {
       boost::asio::io_service service;
       int id = 10000 + numAis;
       ++numAis;
-      addPlayer(std::make_shared<AI>(
-        id, TCPConnection::pointer(TCPConnection::create(service))));
+      addPlayer(std::make_shared<AI>(id, TCPConnection::create(service)));
       game.joinedPlayers.emplace_back(id);
+      std::cout << id << std::endl;
     }
     procStartGame(game);
   }
@@ -281,17 +285,25 @@ void Lobby::procStartGame(LobbyGame& game)
   std::vector<std::shared_ptr<Player>> players = whoIs(game.joinedPlayers);
   for (auto&& player : players)
   {
-    player->connection->write("STARTING GAME");
+    if (player->getId() >= 10000)
+    {
+      std::static_pointer_cast<AI>(player)->alertStartingGame();
+    }
+    else
+    {
+      player->alertStartingGame();
+    }
   }
 
   switch (game.type)
   {
-  case GameType::EIGHTSGAME:
+  case GameType::SPADEGAME:
   // newGame = std::make_shared<CrazyEightsLogic>(whoIs(game.joinedPlayers));
   case GameType::HEARTGAME:
   // newGame = std::make_shared<HeartsGame>(whoIs(game.joinedPlayers));
-  case GameType::SPADEGAME:
-    newGame = std::make_shared<Spades>(whoIs(game.joinedPlayers));
+  case GameType::EIGHTSGAME:
+    std::cout << "Creating Eights Game" << std::endl;
+    newGame = std::make_shared<CrazyEightsLogic>(whoIs(game.joinedPlayers));
   default:
     break;
   }
