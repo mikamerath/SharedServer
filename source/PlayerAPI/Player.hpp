@@ -42,6 +42,8 @@ public:
 
   Player(int id, TCPConnection::pointer connection);
 
+  void alertStartingGame();
+
   void setName(std::string);
   std::string getName() const;
   int getId();

@@ -1,10 +1,15 @@
 #include "ServerNetworkInterface.hpp"
 
-ServerNetworkInterface::ServerNetworkInterface(int port, io_service & service, 
-  std::ostream& outStream, std::function<void(std::shared_ptr<Player>)> addP)
+ServerNetworkInterface::ServerNetworkInterface(
+  int port,
+  io_service& service,
+  std::ostream& outStream,
+  std::function<void(std::shared_ptr<Player>)> addP)
   : NetworkInterface(port, service, outStream),
-  acceptor(service, tcp::endpoint(tcp::v4(), port)), accepting(false), addPlayer(addP),
-  playerCounter(0)
+    acceptor(service, tcp::endpoint(tcp::v4(), port)),
+    accepting(false),
+    addPlayer(addP),
+    playerCounter(0)
 {
   out << "Server network initialization complete..." << std::endl;
 }
@@ -12,16 +17,18 @@ ServerNetworkInterface::ServerNetworkInterface(int port, io_service & service,
 void ServerNetworkInterface::startAccepting()
 {
   out << "Preparing to accept new connections..." << std::endl;
-  if (accepting) {
+  if (accepting)
+  {
     return;
   }
-  else {
+  else
+  {
     accepting = true;
     acceptConnection();
   }
 }
 
-//std::string ServerNetworkInterface::getMessages()
+// std::string ServerNetworkInterface::getMessages()
 //{
 //  std::string msg = "";
 //  for (int i = 0; i < knownConnections.size(); i++)
@@ -33,33 +40,38 @@ void ServerNetworkInterface::startAccepting()
 
 void ServerNetworkInterface::acceptConnection()
 {
-  out << "Waiting for new connection request on " 
-    << acceptor.local_endpoint().address() <<":"
-    << acceptor.local_endpoint().port() << "..."<< std::endl;
-  waitingConn =
-    TCPConnection::create(acceptor.get_io_service());
+  out << "Waiting for new connection request on "
+      << acceptor.local_endpoint().address() << ":"
+      << acceptor.local_endpoint().port() << "..." << std::endl;
+  waitingConn = TCPConnection::create(acceptor.get_io_service());
 
   acceptor.async_accept(waitingConn->getSocket(),
-    boost::bind(&ServerNetworkInterface::handleAccept,this,
-      boost::asio::placeholders::error));
+                        boost::bind(&ServerNetworkInterface::handleAccept,
+                                    this,
+                                    boost::asio::placeholders::error));
+  waitingConn->setConnected(true);
 }
 
-void ServerNetworkInterface::handleAccept(const boost::system::error_code & error)
+void ServerNetworkInterface::handleAccept(
+  const boost::system::error_code& error)
 {
   time_t rawtime;
   struct tm *timeinfo;
   time(&rawtime);
   timeinfo = localtime(&rawtime);
 
-  out << "Connection established with client : " 
-      << waitingConn->getSocket().remote_endpoint() << ". At :" << asctime(timeinfo);
+  out << "Connection established with client : "
+      << waitingConn->getSocket().remote_endpoint()
+      << ". At :" << asctime(timeinfo);
   if (!error)
   {
-    std::shared_ptr<Player> newPlayer = std::make_shared<Player>(playerCounter, waitingConn);
+    std::shared_ptr<Player> newPlayer =
+      std::make_shared<Player>(playerCounter, waitingConn);
     addPlayer(newPlayer);
     playerCounter++;
   }
-  else {
+  else
+  {
     out << "An error occured establishing a connection";
   }
   acceptConnection();

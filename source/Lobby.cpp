@@ -1,6 +1,8 @@
 #include "Lobby.hpp"
+#include "source/AI/AI.hpp"
+#include <boost/asio/io_service.hpp>
 
-Lobby::Lobby()
+Lobby::Lobby() : numAis(0)
 {
   readInDatabase();
   currentAvailableGames.emplace(
@@ -53,6 +55,10 @@ void Lobby::proccessPlayerMessage(std::string msg, int id)
     {
       // willRemain = false;
       procJoinGame(p, msg);
+    }
+    else if (boost::algorithm::starts_with(msg, "START"))
+    {
+      procUserInitializedGame(p, msg);
     }
     else
       p->connection->write("No Such Command");
@@ -133,17 +139,21 @@ void Lobby::procGetGames(std::shared_ptr<Player> p, std::string msg)
   std::stringstream ss;
   boost::archive::text_oarchive oa(ss);
   std::vector<LobbyGame> games;
-  if (t == GameType::ALL) {
-	  for (auto game : currentAvailableGames) {
-		  games.push_back(game.second);
-	  }
+  if (t == GameType::ALL)
+  {
+    for (auto game : currentAvailableGames)
+    {
+      games.push_back(game.second);
+    }
   }
-  else {
-	  for (auto game : currentAvailableGames) {
-		  if (game.second.type == t) games.push_back(game.second);
-	  }
+  else
+  {
+    for (auto game : currentAvailableGames)
+    {
+      if (game.second.type == t) games.push_back(game.second);
+    }
   }
-  oa & games;
+  oa& games;
   /*if (t == GameType::ALL)
   {
     for (auto game : currentAvailableGames)
@@ -217,14 +227,54 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
     return;
   }
 
+  for (auto&& playerId : game.joinedPlayers)
+  {
+    if (p->getId() == playerId)
+    {
+      p->connection->write("FAILURE : CANNOT JOIN A GAME TWICE");
+      return;
+    }
+  }
+
   game.joinedPlayers.emplace_back(p->getId());
   game.playerNames.emplace_back(p->getName());
   game.numberJoined++;
 
-  p->connection->write("SUCCESS");
-
   if (game.numberJoined == 4)
   {
+    procStartGame(game);
+  }
+  else
+  {
+    p->connection->write("SUCCESS");
+  }
+}
+
+void Lobby::procUserInitializedGame(std::shared_ptr<Player> p, std::string msg)
+{
+  std::stringstream ss;
+  ss << msg;
+  std::string command, name;
+  ss >> command;
+  std::getline(ss, name);
+  name.erase(0, 1);
+
+  LobbyGame& game = findGame(name);
+  if (game.type == GameType::UNKNOWN)
+  {
+    p->connection->write("FAILURE : GAME NOT FOUND");
+  }
+  else
+  {
+    for (int i = game.numberJoined; i < 4; i++)
+    {
+      boost::asio::io_service service;
+      int id = 10000 + numAis;
+      ++numAis;
+      addPlayer(std::make_shared<AI>(id, TCPConnection::create(service)));
+      game.joinedPlayers.emplace_back(id);
+      std::cout << id << std::endl;
+    }
     procStartGame(game);
   }
 }
@@ -232,14 +282,28 @@ void Lobby::procJoinGame(std::shared_ptr<Player> p, std::string msg)
 void Lobby::procStartGame(LobbyGame& game)
 {
   std::shared_ptr<Game> newGame;
+  std::vector<std::shared_ptr<Player>> players = whoIs(game.joinedPlayers);
+  for (auto&& player : players)
+  {
+    if (player->getId() >= 10000)
+    {
+      std::static_pointer_cast<AI>(player)->alertStartingGame();
+    }
+    else
+    {
+      player->alertStartingGame();
+    }
+  }
+
   switch (game.type)
   {
-  case GameType::EIGHTSGAME:
+  case GameType::SPADEGAME:
   // newGame = std::make_shared<CrazyEightsLogic>(whoIs(game.joinedPlayers));
   case GameType::HEARTGAME:
   // newGame = std::make_shared<HeartsGame>(whoIs(game.joinedPlayers));
-  case GameType::SPADEGAME:
-    newGame = std::make_shared<Spades>(whoIs(game.joinedPlayers));
+  case GameType::EIGHTSGAME:
+    std::cout << "Creating Eights Game" << std::endl;
+    newGame = std::make_shared<CrazyEightsLogic>(whoIs(game.joinedPlayers));
   default:
     break;
   }
