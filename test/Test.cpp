@@ -375,6 +375,124 @@ BOOST_AUTO_TEST_CASE(SpadesTrickWinnerTestTrumpedBySpades) {
 	winner = 0;
 }
 
+BOOST_AUTO_TEST_CASE(InitializeSpades) {
+ boost::asio::io_service service;
+ auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
+ auto player2 = std::make_shared<Player>(2, TCPConnection::create(service));
+ auto player3 = std::make_shared<Player>(3, TCPConnection::create(service));
+ auto player4 = std::make_shared<Player>(4, TCPConnection::create(service));
+ std::vector<std::shared_ptr<Player>> players;
+
+ players.push_back(player1);
+ players.push_back(player2);
+ players.push_back(player3);
+ players.push_back(player4);
+
+ Spades s(players);
+
+ int count = 4;
+ for (int i = 0; i < count; i++)
+ {
+  BOOST_CHECK_EQUAL(
+   players.at(i)->getId(), s.getPlayers().at(i)->getId());
+  BOOST_CHECK_EQUAL(s.getPlayers().at(i)->getHand().size(), 13);
+ }
+
+ BOOST_CHECK_EQUAL(s.getTurn(), 0);
+}
+
+//Once again, not perfectly airtight tests, but sufficiently demonstrate basic cases.
+BOOST_AUTO_TEST_CASE(SpadesValidMove) {
+ boost::asio::io_service service;
+ auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
+ auto player2 = std::make_shared<Player>(2, TCPConnection::create(service));
+ auto player3 = std::make_shared<Player>(3, TCPConnection::create(service));
+ auto player4 = std::make_shared<Player>(4, TCPConnection::create(service));
+ std::vector<std::shared_ptr<Player>> players;
+
+ players.push_back(player1);
+ players.push_back(player2);
+ players.push_back(player3);
+ players.push_back(player4);
+
+ Spades spades(players);
+
+ std::vector<Card> trik;
+ //If the player only has one suit, that suit is a valid move.
+ players.at(0)->clearHand();
+ for (int j = 0; j < 4; j++) {
+  for (int i = 2; i < 15; i++) {
+   Card c((Suit)j, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+  trik.push_back(players.at(0)->getHand().at(j));
+  spades.setTrick(trik);
+  BOOST_CHECK_EQUAL(spades.validMove(), true);
+  trik.clear();
+ }
+ 
+ //if the player has even one of the suit lead, he must play that card
+ //this part of the test confirms that trying to play something else is invalid
+ trik.clear();
+ trik.push_back(Card((Suit)2, (Value)7));
+ players.at(0)->clearHand();
+ for (int i = 2; i < 15; i++) {
+  if (i != 5) {
+   Card c((Suit)0, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+  else {
+   Card c((Suit)2, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+ }
+ spades.setLedSuit((Suit)2);
+ trik.push_back(players.at(0)->getHand().at(1));
+ spades.setTrick(trik);
+ BOOST_CHECK_EQUAL(spades.validMove(), false);
+
+ //This piece demonstrates that if spades isn't broken, and the player has 
+ //at least one other card, trying to play a spade is invalid.
+ trik.clear();
+ trik.push_back(Card((Suit)1, (Value)7));
+ spades.setBrokenSpades(false);
+ players.at(0)->clearHand();
+ for (int i = 2; i < 15; i++) {
+  if (i != 5) {
+   Card c((Suit)1, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+  else {
+   Card c((Suit)2, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+ }
+ spades.setLedSuit((Suit)2);
+ trik.push_back(players.at(0)->getHand().at(1));
+ spades.setTrick(trik);
+ BOOST_CHECK_EQUAL(spades.validMove(), false);
+
+ //If the player doesn't have a card of the suit lead, he can play a different card
+ trik.clear();
+ trik.push_back(Card((Suit)1, (Value)7));
+ spades.setBrokenSpades(false);
+ players.at(0)->clearHand();
+ for (int i = 2; i < 15; i++) {
+  if (i != 5) {
+   Card c((Suit)2, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+  else {
+   Card c((Suit)0, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+ }
+ spades.setLedSuit((Suit)3);
+ trik.push_back(players.at(0)->getHand().at(1));
+ spades.setTrick(trik);
+ BOOST_CHECK_EQUAL(spades.validMove(), true);
+}
+
 BOOST_AUTO_TEST_CASE(checkAIDifficulty)
 {
   boost::asio::io_service service;
