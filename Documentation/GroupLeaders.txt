@@ -18,9 +18,9 @@ Assignment: Player API
 	Github: katiesweet
 	Other Members: Ligia F, Haley C, Madeline C
 
-Assignment: Unknown
+Assignment: Spades Game Logic
 	Project Manager: Adam Tew
-	Github: Unknown
+	Github: davidbrowning
 	Other Members: Matt W, Dave B, Scott H
 
 Assignment: Networking/Communication
