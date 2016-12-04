@@ -235,7 +235,6 @@ bool Spades::validMove()
     else
     {
       ledSuit = (Suit)trick.back().getSuit();
-      std::cout << "tr.back() was led" << std::endl;
     }
   }
   if (trick.back().getSuit() == ledSuit)
