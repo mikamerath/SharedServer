@@ -22,7 +22,8 @@ bool AI::isSmartAI()
 
 // I'm assuming here that you call updateGameStatus after a move is accepted...
 // If this is true, the request move should function appropriately.
-void AI::updateGameStatus(/*coded message of state*/)
+// Not sure how AI works so I'm not touching this more - C-Merrill
+void AI::updateGameStatus(GameMessage msg)
 {
   std::cout << "AI updating game status" << std::endl;
   numCardsTriedToPlay = 0;

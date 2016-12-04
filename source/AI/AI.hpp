@@ -18,7 +18,7 @@ public:
   AI(int, TCPConnection::pointer);
   void alertStartingGame();
   void setSmartAI(bool);
-  void updateGameStatus(/*coded message of state*/);
+  void updateGameStatus(GameMessage);
   void requestMove();
   void requestBid();
   void requestSuit();
