@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(startNewGame)
   BOOST_CHECK_EQUAL(player.getBid(), 0);
   BOOST_CHECK_EQUAL(player.getBags(), 0);
   BOOST_CHECK_EQUAL(player.getTricksWon(), 0);
-  BOOST_CHECK_EQUAL(player.getOverallScores().empty(), 1);
+  BOOST_CHECK_EQUAL(player.getOverallScores().empty(), true);
 }
 
 BOOST_AUTO_TEST_CASE(insertCardToHand)
@@ -71,8 +71,8 @@ BOOST_AUTO_TEST_CASE(removeCardFromHand)
   Player player(1, TCPConnection::create(service));
   Card card(HEARTS, TWO);
   player.insertCardToHand(card);
-  BOOST_CHECK_EQUAL(player.removeCardFromHand(card), 1);
-  BOOST_CHECK_EQUAL(player.removeCardFromHand(card), 0);
+  BOOST_CHECK_EQUAL(player.removeCardFromHand(card), true);
+  BOOST_CHECK_EQUAL(player.removeCardFromHand(card), false);
 }
 
 BOOST_AUTO_TEST_CASE(SerializeCard)
