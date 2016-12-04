@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_CASE(crazyEightsGameOver)
   crazyEights.playCard(card4);
   crazyEights.playCard(card5);
 
-  BOOST_CHECK_EQUAL(crazyEights.isGameOver(), 1);
+  BOOST_CHECK_EQUAL(crazyEights.isGameOver(), true);
 }
 
 BOOST_AUTO_TEST_CASE(checkCardScoreVals)
