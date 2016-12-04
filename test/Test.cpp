@@ -401,6 +401,39 @@ BOOST_AUTO_TEST_CASE(InitializeSpades) {
  BOOST_CHECK_EQUAL(s.getTurn(), 0);
 }
 
+BOOST_AUTO_TEST_CASE(SpadesValidMove) {
+ boost::asio::io_service service;
+ auto player1 = std::make_shared<Player>(1, TCPConnection::create(service));
+ auto player2 = std::make_shared<Player>(2, TCPConnection::create(service));
+ auto player3 = std::make_shared<Player>(3, TCPConnection::create(service));
+ auto player4 = std::make_shared<Player>(4, TCPConnection::create(service));
+ std::vector<std::shared_ptr<Player>> players;
+
+ players.push_back(player1);
+ players.push_back(player2);
+ players.push_back(player3);
+ players.push_back(player4);
+
+ Spades spades(players);
+
+ //If the player only has one suit, that suit is a valid move.
+ players.at(0)->clearHand();
+ for (int j = 0; j < 4; j++) {
+  for (int i = 2; i < 15; i++) {
+   Card c((Suit)j, (Value)i);
+   players.at(0)->insertCardToHand(c);
+  }
+  std::vector<Card> trik;
+  trik.push_back(players.at(0)->getHand().at(j));
+  spades.setTrick(trik);
+  BOOST_CHECK_EQUAL(spades.validMove(), true);
+  trik.clear();
+ }
+
+ 
+
+}
+
 BOOST_AUTO_TEST_CASE(checkAIDifficulty)
 {
   boost::asio::io_service service;

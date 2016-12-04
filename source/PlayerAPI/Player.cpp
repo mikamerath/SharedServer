@@ -116,6 +116,11 @@ bool Player::removeCardFromHand(const Card& c)
   return false;
 }
 
+//Added to simplify testing.
+void Player::clearHand() {
+ hand.clear();
+}
+
 // Returns a vector of Cards that matches the Player's hand.
 std::vector<Card> Player::getHand() const
 {

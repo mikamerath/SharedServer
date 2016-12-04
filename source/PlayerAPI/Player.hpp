@@ -79,6 +79,7 @@ public:
   void insertCardToHand(const Card&);
   bool removeCardFromHand(const Card&);
   std::vector<Card> getHand() const;
+  void clearHand();
 
   // The functions below allow for the management of a player's score.
   int getRoundScore() const;
