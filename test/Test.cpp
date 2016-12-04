@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(SerializeMessage)
   std::vector<int> hands;
   hands.push_back(5);
   hands.push_back(9);
-  GameMessage serializeMessage(PASSING, false, cards, hands, cards, true);
+  GameMessage serializeMessage(PASSING_m, false, cards, hands, cards, true);
   boost::archive::text_oarchive oArchive(serialize);
   oArchive << serializeMessage;
 
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(SerializeMessage)
   boost::archive::text_iarchive iArchive(deserialize);
   iArchive >> deserializeMessage;
 
-  BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING);
+  BOOST_CHECK_EQUAL(deserializeMessage.s, PASSING_m);
   BOOST_CHECK_EQUAL(deserializeMessage.turn, false);
   BOOST_CHECK_EQUAL(deserializeMessage.field.at(0).getSuit(), CLUBS);
   BOOST_CHECK_EQUAL(deserializeMessage.field.at(1).getValue(), ACE);
