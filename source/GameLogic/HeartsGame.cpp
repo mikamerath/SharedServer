@@ -113,10 +113,10 @@ void HeartsGame::validateMove(int index, Card move)
   {
     if (centerPile.size() == 0)
     {
-      if (move.getSuit() != CLUBS && move.getValue() != TWO)
-		  valid = false;
-      else
+      if (move.getSuit() == CLUBS && move.getValue() == TWO)
 		  valid = true;
+      else
+		  valid = false;
     }
     else
     {
@@ -226,8 +226,8 @@ void HeartsGame::validatePass(Card c, int id)
   if (currentPlayerIndex == -1) valid = false;
     for (auto c1 : players[currentPlayerIndex]->getHand())
     {
-      if (c.getSuit() != c1.getSuit() || c.getValue() != c1.getValue())
-		  valid = false;
+      if (c.getSuit() == c1.getSuit() && c.getValue() == c1.getValue())
+		  valid = true;
     }
   if (valid)
   {
