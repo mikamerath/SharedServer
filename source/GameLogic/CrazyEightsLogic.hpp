@@ -11,7 +11,7 @@ private:
   int cardsDrawnCounter = 0;       // needs to get reset after each turn
   Suit currentSuit = Suit::HEARTS; // player chooses suit if 8 is played
 public:
-  CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers);
+  CrazyEightsLogic(std::vector<std::shared_ptr<Player>> netPlayers);
   void deal(int numCards);
   bool isGameOver();
   void gameOver(std::vector<std::shared_ptr<Player>>& netPlayers);

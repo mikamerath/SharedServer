@@ -1,12 +1,14 @@
 #include "CrazyEightsLogic.hpp"
 #include <iostream>
 
-CrazyEightsLogic::CrazyEightsLogic(std::vector<std::shared_ptr<Player>>& netPlayers)
+CrazyEightsLogic::CrazyEightsLogic(
+  std::vector<std::shared_ptr<Player>> netPlayers)
 {
   players = netPlayers;
-  for (auto && player: players){
-      player->setValidateMove([this](Card c){validCard(c);});
-      player->setValidateSuit([this](Suit s){validateSuit(s);});
+  for (auto&& player : players)
+  {
+    player->setValidateMove([this](Card c) { validCard(c); });
+    player->setValidateSuit([this](Suit s) { validateSuit(s); });
   }
   deck = initializeDeck();
   deal(5);
@@ -19,7 +21,7 @@ void CrazyEightsLogic::start()
 {
   UpdateGameStateMessage();
   players = getPlayers();
-  players[turn]->requestMove();
+  requestMove(players[turn]);
 }
 
 void CrazyEightsLogic::deal(int numCards)
@@ -142,7 +144,7 @@ void CrazyEightsLogic::validCard(Card card)
       {
         if (card.getValue() == EIGHT)
         {
-          players[getTurn()]->requestSuit();
+          requestSuit(players[getTurn()]);
         }
         else
         {
@@ -152,7 +154,7 @@ void CrazyEightsLogic::validCard(Card card)
     }
     else
     {
-      players[getTurn()]->requestMove();
+      requestMove(players[getTurn()]);
     }
   }
 }
@@ -200,14 +202,14 @@ void CrazyEightsLogic::drawCard()
   players.at(turn)->insertCardToHand(deck.back());
   deck.pop_back();
   UpdateGameStateMessage();
-  players[turn]->requestMove();
+  requestMove(players[turn]);
 }
 
 void CrazyEightsLogic::nextTurn()
 {
   turn = (turn + 1) % players.size();
   UpdateGameStateMessage();
-  players[turn]->requestMove();
+  requestMove(players[turn]);
 }
 
 void CrazyEightsLogic::setCardsDrawnCounter(int numDrawn)
@@ -220,7 +222,8 @@ int CrazyEightsLogic::getCardsDrawnCounter()
   return cardsDrawnCounter;
 }
 
-int CrazyEightsLogic::calculateScore(std::vector<std::shared_ptr<Player>> players)
+int CrazyEightsLogic::calculateScore(
+  std::vector<std::shared_ptr<Player>> players)
 {
   int totalScore = 0;
   std::vector<Card> playerHand;
