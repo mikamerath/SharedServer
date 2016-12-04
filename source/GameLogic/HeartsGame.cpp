@@ -44,7 +44,7 @@ std::vector<Card> HeartsGame::initializeDeck()
 // returns the index of the player with the 2 of clubs
 int HeartsGame::findTwoOfClubs()
 {
-  for (size_t i = 0; i < players.size(); ++i)
+  for (int i = 0; i < players.size(); ++i)
   {
     std::vector<Card> temp = players[i]->getHand();
     for (auto j = 0; j < players[i]->getHand().size(); ++j)
@@ -252,8 +252,10 @@ bool HeartsGame::setPassCards(Card card, int id)
     if (players[i]->getId() == id)
     {
 
+
 		  if (!players[i]->removeCardFromHand(card)) return false;
         passCard(card, i);
+
     }
   }
   bool done = true;

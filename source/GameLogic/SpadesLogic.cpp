@@ -145,19 +145,31 @@ void Spades::receiveBid(int b)
   }
 }
 
-Spades::Spades(std::vector<std::shared_ptr<Player>> p)
+Spades::Spades(std::vector<std::shared_ptr<Player>>& p)
 {
   players = p;
-  setDeck();
   for (auto&& player : players)
   {
     player->setValidateMove([this](Card c) { receiveValidMove(c); });
     player->setValidateBid([this](int bid) { receiveBid(bid); });
-    player->initializeHand(deck, 13);
     player->startNewRound();
   }
+  setDeck();
+  deal();
   turn = 0;
-  players.at(turn)->requestBid();
+  start();
+}
+
+void Spades::start() {
+ UpdateGameStateMessage();
+ players = getPlayers();
+ players[turn]->requestBid();
+}
+
+void Spades::deal() {
+ for (auto player = 0; player < 4; player++) {
+  players.at(player)->initializeHand(deck, 13);
+ }
 }
 
 int Spades::getTrickWinner(std::vector<Card> trick, int tw)
@@ -223,7 +235,6 @@ bool Spades::validMove()
     else
     {
       ledSuit = (Suit)trick.back().getSuit();
-      std::cout << "tr.back() was led" << std::endl;
     }
   }
   if (trick.back().getSuit() == ledSuit)
@@ -289,5 +300,9 @@ void Spades::score()
 
 void Spades::setDeck()
 {
-  initializeDeck();
+  deck = initializeDeck();
+}
+
+void Spades::setLedSuit(Suit s) {
+ ledSuit = s;
 }

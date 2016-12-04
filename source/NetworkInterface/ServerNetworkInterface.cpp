@@ -47,8 +47,7 @@ void ServerNetworkInterface::acceptConnection()
 void ServerNetworkInterface::handleAccept(const boost::system::error_code & error)
 {
   time_t rawtime;
-  struct tm * timeinfo;
-
+  struct tm *timeinfo;
   time(&rawtime);
   timeinfo = localtime(&rawtime);
 
