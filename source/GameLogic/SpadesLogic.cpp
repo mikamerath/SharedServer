@@ -303,3 +303,7 @@ void Spades::setDeck()
 {
   deck = initializeDeck();
 }
+
+void Spades::setLedSuit(Suit s) {
+ ledSuit = s;
+}

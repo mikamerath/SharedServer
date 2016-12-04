@@ -19,6 +19,9 @@ public:
   int getTrickWinner(std::vector<Card>, int);
   int getNextPlayer(int);
   void setTrick(std::vector<Card> v) { trick = v; }
+  void setLedSuit(Suit);
+  void setTurn(int t) { turn = t; }
+  void setBrokenSpades(bool b) { spadesBroken = b; }
   int getTurn() { return turn; }
   void deal();
   void score();
