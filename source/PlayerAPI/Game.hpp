@@ -11,6 +11,7 @@
 #include "Card.hpp"
 #include "Player.hpp"
 #include "source/AI/AI.hpp"
+#include "source/Messages/GameMessage.hpp"
 
 #include <algorithm>
 #include <random>
@@ -56,17 +57,25 @@ public:
     std::shuffle(deck.begin(), deck.end(), generator);
     return deck;
   }
+  //This now does everything except turn. Not sure how it's tracked now. - C-Merrill
   void UpdateGameStateMessage()
   {
+	  GameMessage message;
+	  message.s = (MessageState)s;
+	  message.field = field;
+	  for (auto player : players) {
+		  message.handSizes.push_back(player->getHand().size());
+	  }
+	  message.deckEmpty = deck.empty();
     for (auto&& player : players)
     {
       if (player->getId() >= 10000)
       {
-        std::static_pointer_cast<AI>(player)->updateGameStatus();
+        std::static_pointer_cast<AI>(player)->updateGameStatus(message);
       }
       else
       {
-        player->updateGameStatus();
+        player->updateGameStatus(message);
       }
     }
   }

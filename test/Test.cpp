@@ -514,8 +514,9 @@ BOOST_AUTO_TEST_CASE(makeDumbAIMove)
   {
     player.requestMove();
   }
+  GameMessage m;
   BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 1);
-  player.updateGameStatus();
+  player.updateGameStatus(m);
   BOOST_CHECK_EQUAL(player.getNumCardsTriedToPlay(), 0);
 }
 

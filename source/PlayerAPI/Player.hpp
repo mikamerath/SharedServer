@@ -14,6 +14,7 @@
 
 #include "Card.hpp"
 #include "source/NetworkInterface/TCPConnection.hpp"
+#include "source/Messages/GameMessage.hpp"
 #include <functional>
 #include <string>
 #include <vector>
@@ -64,7 +65,7 @@ public:
   void requestBid();  // Spades
   void requestSuit(); // Crazy 8's
   void requestPass(); // Hearts
-  void updateGameStatus(/*coded message of state*/);
+  void updateGameStatus(GameMessage);
   void readLobbyMessage(); // lobby
   void readMessage();      // debugging and demo
 

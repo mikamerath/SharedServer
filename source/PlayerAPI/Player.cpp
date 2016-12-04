@@ -282,10 +282,14 @@ void Player::requestSuit()
   connection->aSyncRead(boost::bind(&Player::receivedSuit, this, _1));
 }
 
-void Player::updateGameStatus()
+void Player::updateGameStatus(GameMessage msg)
 {
-  connection->write("Status Update");
-  connection->write("" /*List of cards and players*/);
+	msg.playerHand = hand;
+  //connection->write("Status Update");
+	std::stringstream ss;
+	boost::archive::text_oarchive oa(ss);
+	oa << msg;
+  connection->write(ss.str());
 }
 
 void Player::readLobbyMessage()
